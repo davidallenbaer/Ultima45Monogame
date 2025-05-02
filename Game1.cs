@@ -3924,7 +3924,6 @@ public class Game1 : Game
         }
         else if (
             (currentMap == Maps.U4MapBritain ||
-            currentMap == Maps.U4MapBritain ||
             currentMap == Maps.U4MapBuccaneersDen ||
             currentMap == Maps.U4MapCove ||
             currentMap == Maps.U4MapEmpathAbbey ||
