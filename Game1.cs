@@ -24,22 +24,6 @@ public class Game1 : Game
         West = 4
     }
 
-    //public enum HorseFacing
-    //{
-    //    None = 0,
-    //    East = 1,
-    //    West = 2
-    //}
-
-    //public enum ShipFacing
-    //{
-    //    None = 0,
-    //    North = 1,
-    //    South = 2,
-    //    East = 3,
-    //    West = 4
-    //}
-
     public enum GameStates
     {
         LoadingIntro,
@@ -3236,7 +3220,7 @@ public class Game1 : Game
 
                     if (iCombatMapIndex < 1)
                     {
-                        iCombatMapIndex = 23;
+                        iCombatMapIndex = 24;
                     }
 
                     currentMap = GetCombatMap(iCombatMapIndex);
@@ -3251,7 +3235,7 @@ public class Game1 : Game
                 {
                     iCombatMapIndex++;
 
-                    if (iCombatMapIndex > 23)
+                    if (iCombatMapIndex > 24)
                     {
                         iCombatMapIndex = 1;
                     }
@@ -3811,7 +3795,7 @@ public class Game1 : Game
         switch (iCombatMapIndex)
         {
             case 1:
-                return Maps.U4CombatMapBRICK;
+                return Maps.U4MapOverworld;
             case 2:
                 return Maps.U4CombatMapBRIDGE;
             case 3:
@@ -3856,6 +3840,8 @@ public class Game1 : Game
                 return Maps.U4CombatMapSHORSHIP;
             case 23:
                 return Maps.U4CombatMapSHRINE;
+            case 24:
+                return Maps.U4CombatMapBRICK;
             default:
                 return Maps.U4MapOverworld;
         }
