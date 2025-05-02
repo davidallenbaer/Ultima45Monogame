@@ -3,10 +3,8 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using MonoGame.Extended.ECS;
 using System;
 using System.IO;
-using static Ultima45Monogame.Game1;
 using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame;
@@ -1695,7 +1693,7 @@ public class Game1 : Game
                     break;
             }
         }
-        else if (map == Maps.U4MapOverworld || map == Maps.U4MapBritain ||
+        else if (map == Maps.U4MapBritain ||
             map == Maps.U4MapBuccaneersDen || map == Maps.U4MapCove ||
             map == Maps.U4MapEmpathAbbey || map == Maps.U4MapJhelom ||
             map == Maps.U4MapLordBritishCastle1 || map == Maps.U4MapLordBritishCastle2 ||
@@ -1779,880 +1777,162 @@ public class Game1 : Game
 
     }
 
+    #region Update Main Display Grid Values
+
     public void UpdateMainDisplayGridValues(Maps map)
     {
         if (map == Maps.U4MapOverworld)
         {
-            int halfDisplay = mainDisplayGridSize / 2;
-
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int worldX = (pcOverworldLocationX - halfDisplay + x + overworldGridSize) % overworldGridSize;
-                    int worldY = (pcOverworldLocationY - halfDisplay + y + overworldGridSize) % overworldGridSize;
-
-                    OverworldEntity entity = overworldEntityManager.GetEntityAt(worldY, worldX);
-                    if (entity == null)
-                    {
-                        //If there is no persisted entity, use the normal map value
-                        mapMainDisplay[y, x] = mapUltima4Overworld[worldY, worldX];
-                    }
-                    else
-                    {
-                        //If there is a persisted entity, use its TileValue
-                        if (entity.IsVisible)
-                        {
-                            mapMainDisplay[y, x] = entity.TileValue;
-                        }
-                        else
-                        {
-                            mapMainDisplay[y, x] = mapUltima4Overworld[worldY, worldX];
-                        }
-                    }
-                }
-            }
+            UpdateOverworldGrid();
         }
-        else if (map == Maps.U4MapBritain)
+        else if (IsTownMap(map))
         {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Britain[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
+            UpdateTownGrid(GetTownMap(map));
         }
-        else if (map == Maps.U4MapBuccaneersDen)
+        else if (IsCombatMap(map))
         {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4BuccaneersDen[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
+            UpdateCombatGrid(GetCombatMapGrid(map));
         }
-        else if (map == Maps.U4MapCove)
+    }
+
+    private void UpdateOverworldGrid()
+    {
+        int halfDisplay = mainDisplayGridSize / 2;
+
+        for (int y = 0; y < mainDisplayGridSize; y++)
         {
-            for (int y = 0; y < mainDisplayGridSize; y++)
+            for (int x = 0; x < mainDisplayGridSize; x++)
             {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
+                int worldX = (pcOverworldLocationX - halfDisplay + x + overworldGridSize) % overworldGridSize;
+                int worldY = (pcOverworldLocationY - halfDisplay + y + overworldGridSize) % overworldGridSize;
 
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Cove[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
+                OverworldEntity entity = overworldEntityManager.GetEntityAt(worldY, worldX);
+                if (entity == null || !entity.IsVisible)
+                {
+                    mapMainDisplay[y, x] = mapUltima4Overworld[worldY, worldX];
                 }
-            }
-        }
-        else if (map == Maps.U4MapEmpathAbbey)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
+                else
                 {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4EmpathAbbey[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapJhelom)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Jhelom[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapLordBritishCastle1)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4LordBritishCastle1[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapLordBritishCastle2)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4LordBritishCastle2[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapLycaeum)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Lycaeum[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapMagincia)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Magincia[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapMinoc)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Minoc[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapMoonglow)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Moonglow[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4MapPaws)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Paws[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }                    
-                }
-            }
-        }
-        else if (map == Maps.U4MapSerpentIsle)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4SerpentIsle[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }                    
-                }
-            }
-        }
-        else if (map == Maps.U4MapSkaraBrae)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4SkaraBrae[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }                    
-                }
-            }
-        }
-        else if (map == Maps.U4MapTrinsic)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Trinsic[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }                    
-                }
-            }
-        }
-        else if (map == Maps.U4MapVesper)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Vesper[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }                    
-                }
-            }
-        }
-        else if (map == Maps.U4MapYew)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int townX = pcTownMapLocationX - mainDisplayCenter + x;
-                    int townY = pcTownMapLocationY - mainDisplayCenter + y;
-
-                    // Ensure townX and townY are within the bounds of the town grid
-                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4Yew[townY, townX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapBRICK) {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatBRICK[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapBRIDGE)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatBRIDGE[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapBRUSH)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatBRUSH[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapCAMP)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatCAMP[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG0)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG0[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG1)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG1[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG2)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG2[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG3)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG3[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG4)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG4[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG5)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG5[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDNG6)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDNG6[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapDUNGEON)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatDUNGEON[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapFOREST)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatFOREST[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapGRASS)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatGRASS[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapHILL)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatHILL[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapINN)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatINN[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapMARSH)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatMARSH[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHIPSEA)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHIPSEA[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHIPSHIP)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHIPSHIP[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHIPSHOR)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHIPSHOR[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHORE)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHORE[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHORSHIP)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHORSHIP[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
-                }
-            }
-        }
-        else if (map == Maps.U4CombatMapSHRINE)
-        {
-            for (int y = 0; y < mainDisplayGridSize; y++)
-            {
-                for (int x = 0; x < mainDisplayGridSize; x++)
-                {
-                    int combatX = 5 - mainDisplayCenter + x;
-                    int combatY = 5 - mainDisplayCenter + y;
-
-                    // Ensure combatY and combatX are within the bounds of the town grid
-                    if (combatX >= 0 && combatX < combatGridSize && combatY >= 0 && combatY < combatGridSize)
-                    {
-                        mapMainDisplay[y, x] = mapUltima4CombatSHRINE[combatY, combatX];
-                    }
-                    else
-                    {
-                        mapMainDisplay[y, x] = (int)TileType.Blank;
-                    }
+                    mapMainDisplay[y, x] = entity.TileValue;
                 }
             }
         }
     }
+
+    private void UpdateTownGrid(int[,] townMap)
+    {
+        for (int y = 0; y < mainDisplayGridSize; y++)
+        {
+            for (int x = 0; x < mainDisplayGridSize; x++)
+            {
+                int townX = pcTownMapLocationX - mainDisplayCenter + x;
+                int townY = pcTownMapLocationY - mainDisplayCenter + y;
+
+                if (IsWithinBounds(townX, townY, townGridSize))
+                {
+                    mapMainDisplay[y, x] = townMap[townY, townX];
+                }
+                else
+                {
+                    mapMainDisplay[y, x] = (int)TileType.Blank;
+                }
+            }
+        }
+    }
+
+    private void UpdateCombatGrid(int[,] combatMap)
+    {
+        for (int y = 0; y < mainDisplayGridSize; y++)
+        {
+            for (int x = 0; x < mainDisplayGridSize; x++)
+            {
+                int combatX = 5 - mainDisplayCenter + x;
+                int combatY = 5 - mainDisplayCenter + y;
+
+                if (IsWithinBounds(combatX, combatY, combatGridSize))
+                {
+                    mapMainDisplay[y, x] = combatMap[combatY, combatX];
+                }
+                else
+                {
+                    mapMainDisplay[y, x] = (int)TileType.Blank;
+                }
+            }
+        }
+    }
+
+    private bool IsWithinBounds(int x, int y, int gridSize)
+    {
+        return x >= 0 && x < gridSize && y >= 0 && y < gridSize;
+    }
+
+    private bool IsTownMap(Maps map)
+    {
+        return map >= Maps.U4MapBritain && map <= Maps.U4MapYew;
+    }
+
+    private bool IsCombatMap(Maps map)
+    {
+        return map >= Maps.U4CombatMapBRICK && map <= Maps.U4CombatMapSHRINE;
+    }
+
+    private int[,] GetTownMap(Maps map)
+    {
+        return map switch
+        {
+            Maps.U4MapBritain => mapUltima4Britain,
+            Maps.U4MapBuccaneersDen => mapUltima4BuccaneersDen,
+            Maps.U4MapCove => mapUltima4Cove,
+            Maps.U4MapEmpathAbbey => mapUltima4EmpathAbbey,
+            Maps.U4MapJhelom => mapUltima4Jhelom,
+            Maps.U4MapLordBritishCastle1 => mapUltima4LordBritishCastle1,
+            Maps.U4MapLordBritishCastle2 => mapUltima4LordBritishCastle2,
+            Maps.U4MapLycaeum => mapUltima4Lycaeum,
+            Maps.U4MapMagincia => mapUltima4Magincia,
+            Maps.U4MapMinoc => mapUltima4Minoc,
+            Maps.U4MapMoonglow => mapUltima4Moonglow,
+            Maps.U4MapPaws => mapUltima4Paws,
+            Maps.U4MapSerpentIsle => mapUltima4SerpentIsle,
+            Maps.U4MapSkaraBrae => mapUltima4SkaraBrae,
+            Maps.U4MapTrinsic => mapUltima4Trinsic,
+            Maps.U4MapVesper => mapUltima4Vesper,
+            Maps.U4MapYew => mapUltima4Yew,
+            _ => throw new ArgumentException("Invalid town map")
+        };
+    }
+
+    private int[,] GetCombatMapGrid(Maps map)
+    {
+        return map switch
+        {
+            Maps.U4CombatMapBRICK => mapUltima4CombatBRICK,
+            Maps.U4CombatMapBRIDGE => mapUltima4CombatBRIDGE,
+            Maps.U4CombatMapBRUSH => mapUltima4CombatBRUSH,
+            Maps.U4CombatMapCAMP => mapUltima4CombatCAMP,
+            Maps.U4CombatMapDNG0 => mapUltima4CombatDNG0,
+            Maps.U4CombatMapDNG1 => mapUltima4CombatDNG1,
+            Maps.U4CombatMapDNG2 => mapUltima4CombatDNG2,
+            Maps.U4CombatMapDNG3 => mapUltima4CombatDNG3,
+            Maps.U4CombatMapDNG4 => mapUltima4CombatDNG4,
+            Maps.U4CombatMapDNG5 => mapUltima4CombatDNG5,
+            Maps.U4CombatMapDNG6 => mapUltima4CombatDNG6,
+            Maps.U4CombatMapDUNGEON => mapUltima4CombatDUNGEON,
+            Maps.U4CombatMapFOREST => mapUltima4CombatFOREST,
+            Maps.U4CombatMapGRASS => mapUltima4CombatGRASS,
+            Maps.U4CombatMapHILL => mapUltima4CombatHILL,
+            Maps.U4CombatMapINN => mapUltima4CombatINN,
+            Maps.U4CombatMapMARSH => mapUltima4CombatMARSH,
+            Maps.U4CombatMapSHIPSEA => mapUltima4CombatSHIPSEA,
+            Maps.U4CombatMapSHIPSHIP => mapUltima4CombatSHIPSHIP,
+            Maps.U4CombatMapSHIPSHOR => mapUltima4CombatSHIPSHOR,
+            Maps.U4CombatMapSHORE => mapUltima4CombatSHORE,
+            Maps.U4CombatMapSHORSHIP => mapUltima4CombatSHORSHIP,
+            Maps.U4CombatMapSHRINE => mapUltima4CombatSHRINE,
+            _ => throw new ArgumentException("Invalid combat map")
+        };
+    }
+
+    #endregion
 
     public void DrawMainDisplayGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
     {
@@ -3223,7 +2503,7 @@ public class Game1 : Game
                         iCombatMapIndex = 24;
                     }
 
-                    currentMap = GetCombatMap(iCombatMapIndex);
+                    currentMap = GetCombatMapForDebugging(iCombatMapIndex);
                     UpdateMainDisplayGridValues(currentMap);
                     PlayBackgroundMusicBasedOnCurrentMap();
                     inputTimer = 0; // Reset the timer
@@ -3240,7 +2520,7 @@ public class Game1 : Game
                         iCombatMapIndex = 1;
                     }
 
-                    currentMap = GetCombatMap(iCombatMapIndex);
+                    currentMap = GetCombatMapForDebugging(iCombatMapIndex);
                     UpdateMainDisplayGridValues(currentMap);
                     PlayBackgroundMusicBasedOnCurrentMap();
                     inputTimer = 0; // Reset the timer
@@ -3790,11 +3070,13 @@ public class Game1 : Game
         UpdateMainDisplayGridValues(currentMap);
     }
 
-    private Maps GetCombatMap(int iCombatMapIndex)
+    private Maps GetCombatMapForDebugging(int iCombatMapIndex)
     {
         switch (iCombatMapIndex)
         {
             case 1:
+                //Include this to make sure the player can always return to the overworld
+                //when debugging
                 return Maps.U4MapOverworld;
             case 2:
                 return Maps.U4CombatMapBRIDGE;
@@ -3844,14 +3126,6 @@ public class Game1 : Game
                 return Maps.U4CombatMapBRICK;
             default:
                 return Maps.U4MapOverworld;
-        }
-    }
-
-    private void SpawnShip()
-    {
-        if (currentMap == Maps.U4MapOverworld)
-        {
-            mapMainDisplay[5, 5] = (int)TileType.ShipEast;
         }
     }
 
