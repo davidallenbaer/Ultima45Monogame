@@ -17,7 +17,7 @@ namespace Ultima45Monogame
         public bool IsVisible { get; set; } = true; // Visibility status of the entity
         public MoveDirection EntityFacing { get; set; } = MoveDirection.None;
 
-        public OverworldEntity(string entityType, int x, int y, int tileValue, bool visible, MoveDirection entityfacing = MoveDirection.None)
+        public OverworldEntity(string entityType, int y, int x, int tileValue, bool visible, MoveDirection entityfacing = MoveDirection.None)
         {
             EntityType = entityType;
             X = x;

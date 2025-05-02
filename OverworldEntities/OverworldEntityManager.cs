@@ -10,12 +10,12 @@ public class OverworldEntityManager
 {
     public List<OverworldEntity> Entities { get; set; } = new List<OverworldEntity>();
 
-    public void AddEntity(string entityType, int x, int y, int tileValue, bool visible, MoveDirection entityfacing = MoveDirection.None)
+    public void AddEntity(string entityType, int y, int x, int tileValue, bool visible, MoveDirection entityfacing = MoveDirection.None)
     {
-        Entities.Add(new OverworldEntity(entityType, x, y, tileValue, visible, entityfacing));
+        Entities.Add(new OverworldEntity(entityType, y, x, tileValue, visible, entityfacing));
     }
 
-    public void RemoveEntityAt(int x, int y)
+    public void RemoveEntityAt(int y, int x)
     {
         Entities.RemoveAll(e => e.X == x && e.Y == y);
     }
@@ -25,7 +25,7 @@ public class OverworldEntityManager
         Entities.RemoveAll(e => e.EntityType == entityType);
     }
 
-    public OverworldEntity? GetEntityAt(int x, int y)
+    public OverworldEntity? GetEntityAt(int y, int x)
     {
         return Entities.FirstOrDefault(e => e.X == x && e.Y == y);
     }

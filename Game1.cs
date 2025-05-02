@@ -439,11 +439,9 @@ public class Game1 : Game
 
         inputDelay = .125;
 
-        overworldEntityManager.AddEntity("Balloon", 233, 242, (int)TileType.Balloon, true);
-        overworldEntityManager.AddEntity("Horse", 97, 146, (int)TileType.HorseEast, true, MoveDirection.East);
-        overworldEntityManager.AddEntity("Ship", 82, 107, (int)TileType.ShipEast, true, MoveDirection.East);
-        //overworldEntityManager.AddEntity("Monster", 10, 15, (int)TileType.Monster);
-        //overworldEntityManager.AddEntity("GoldChest", 20, 25, (int)TileType.Chest);
+        overworldEntityManager.AddEntity("Balloon", 242, 233, (int)TileType.Balloon, true);
+        overworldEntityManager.AddEntity("Horse", 146, 97, (int)TileType.HorseEast, true, MoveDirection.East);
+        overworldEntityManager.AddEntity("Ship", 107, 82, (int)TileType.ShipEast, true, MoveDirection.East);
 
         base.Initialize();
     }
@@ -1053,11 +1051,11 @@ public class Game1 : Game
         return mapMainDisplay[y, x];
     }
 
-    public int GetCurrentMapValue(Maps map, int y, int x, int xx, int yy)
+    public int GetCurrentMapValue(Maps map, int y, int x, int yy, int xx)
     {
         if (map == Maps.U4MapOverworld)
         {
-            OverworldEntity entity = overworldEntityManager.GetEntityAt(x, y);
+            OverworldEntity entity = overworldEntityManager.GetEntityAt(y, x);
             if (entity == null)
             {
                 //If there is no persisted entity, use the normal map value
@@ -1810,7 +1808,7 @@ public class Game1 : Game
                     int worldX = (pcOverworldLocationX - halfDisplay + x + overworldGridSize) % overworldGridSize;
                     int worldY = (pcOverworldLocationY - halfDisplay + y + overworldGridSize) % overworldGridSize;
 
-                    OverworldEntity entity = overworldEntityManager.GetEntityAt(worldX, worldY);
+                    OverworldEntity entity = overworldEntityManager.GetEntityAt(worldY, worldX);
                     if (entity == null)
                     {
                         //If there is no persisted entity, use the normal map value
@@ -3556,7 +3554,7 @@ public class Game1 : Game
                     }
 
                     //Check if current location is the same as a persisted item 
-                    OverworldEntity entity = overworldEntityManager.GetEntityAt(pcOverworldLocationX, pcOverworldLocationY);
+                    OverworldEntity entity = overworldEntityManager.GetEntityAt(pcOverworldLocationY, pcOverworldLocationX);
                     if (entity != null)
                     {
                         //Enter the Balloon
