@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.IO;
+using Ultima45Monogame.Combat;
 using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame;
@@ -26,6 +27,9 @@ public class Game1 : Game
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
 
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
+    private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
+    private PartyPositionManager partyPositionManager = new PartyPositionManager();
+
     private KeyboardState oldKeyboardState;
     private KeyboardState newKeyboardState;
     private GamePadState gamePad1State;
@@ -1014,7 +1018,63 @@ public class Game1 : Game
         LoadUltima4SoundEffects();
         LoadUltima4Textures();
         LoadUltima4Maps();
-        LoadUltima4CombatMaps();        
+        LoadUltima4CombatMaps();
+        LoadUltima4CombatMapMonsterLocations();
+        LoadUltima4CombatMapPartyLocations();
+    }
+
+    private void LoadUltima4CombatMapMonsterLocations()
+    {
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapBRICK, "Combat\\Combat Starting Locations for Monsters BRICK.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapBRIDGE, "Combat\\Combat Starting Locations for Monsters BRIDGE.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapBRUSH, "Combat\\Combat Starting Locations for Monsters BRUSH.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapCAMP, "Combat\\Combat Starting Locations for Monsters CAMP.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG0, "Combat\\Combat Starting Locations for Monsters DNG0.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG1, "Combat\\Combat Starting Locations for Monsters DNG1.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG2, "Combat\\Combat Starting Locations for Monsters DNG2.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG3, "Combat\\Combat Starting Locations for Monsters DNG3.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG4, "Combat\\Combat Starting Locations for Monsters DNG4.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG5, "Combat\\Combat Starting Locations for Monsters DNG5.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDNG6, "Combat\\Combat Starting Locations for Monsters DNG6.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapDUNGEON, "Combat\\Combat Starting Locations for Monsters DUNGEON.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapFOREST, "Combat\\Combat Starting Locations for Monsters FOREST.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapGRASS, "Combat\\Combat Starting Locations for Monsters GRASS.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapHILL, "Combat\\Combat Starting Locations for Monsters HILL.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapINN, "Combat\\Combat Starting Locations for Monsters INN.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapMARSH, "Combat\\Combat Starting Locations for Monsters MARSH.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSEA, "Combat\\Combat Starting Locations for Monsters SHIPSEA.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSHIP, "Combat\\Combat Starting Locations for Monsters SHIPSHIP.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSHOR, "Combat\\Combat Starting Locations for Monsters SHIPSHOR.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHORE, "Combat\\Combat Starting Locations for Monsters SHORE.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHORSHIP, "Combat\\Combat Starting Locations for Monsters SHORSHIP.txt");
+        monsterPositionManager.LoadFromFile(Maps.U4CombatMapSHRINE, "Combat\\Combat Starting Locations for Monsters SHRINE.txt");
+    }
+
+    private void LoadUltima4CombatMapPartyLocations()
+    {
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapBRICK, "Combat\\Combat Starting Locations for Party BRICK.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapBRIDGE, "Combat\\Combat Starting Locations for Party BRIDGE.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapBRUSH, "Combat\\Combat Starting Locations for Party BRUSH.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapCAMP, "Combat\\Combat Starting Locations for Party CAMP.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG0, "Combat\\Combat Starting Locations for Party DNG0.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG1, "Combat\\Combat Starting Locations for Party DNG1.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG2, "Combat\\Combat Starting Locations for Party DNG2.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG3, "Combat\\Combat Starting Locations for Party DNG3.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG4, "Combat\\Combat Starting Locations for Party DNG4.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG5, "Combat\\Combat Starting Locations for Party DNG5.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDNG6, "Combat\\Combat Starting Locations for Party DNG6.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapDUNGEON, "Combat\\Combat Starting Locations for Party DUNGEON.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapFOREST, "Combat\\Combat Starting Locations for Party FOREST.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapGRASS, "Combat\\Combat Starting Locations for Party GRASS.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapHILL, "Combat\\Combat Starting Locations for Party HILL.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapINN, "Combat\\Combat Starting Locations for Party INN.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapMARSH, "Combat\\Combat Starting Locations for Party MARSH.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSEA, "Combat\\Combat Starting Locations for Party SHIPSEA.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSHIP, "Combat\\Combat Starting Locations for Party SHIPSHIP.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHIPSHOR, "Combat\\Combat Starting Locations for Party SHIPSHOR.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHORE, "Combat\\Combat Starting Locations for Party SHORE.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHORSHIP, "Combat\\Combat Starting Locations for Party SHORSHIP.txt");
+        partyPositionManager.LoadFromFile(Maps.U4CombatMapSHRINE, "Combat\\Combat Starting Locations for Party SHRINE.txt");
     }
 
     #endregion

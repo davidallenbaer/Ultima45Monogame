@@ -30,6 +30,144 @@
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Combat\Combat Starting Locations for Monsters BRICK.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters BRIDGE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters BRUSH.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters CAMP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG0.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DNG6.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters DUNGEON.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters FOREST.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters GRASS.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters HILL.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters INN.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters MARSH.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHIPSEA.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHIPSHIP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHIPSHOR.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHORE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHORSHIP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Monsters SHRINE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party BRICK.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party BRIDGE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party BRUSH.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party CAMP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG0.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DNG6.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party DUNGEON.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party FOREST.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party GRASS.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party HILL.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party INN.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party MARSH.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHIPSEA.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHIPSHIP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHIPSHOR.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHORE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHORSHIP.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Combat\Combat Starting Locations for Party SHRINE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Maps\U4 Combat Map BRICK.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
