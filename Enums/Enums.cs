@@ -10,6 +10,15 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum MoveDirection
+        {
+            None = 0,
+            North = 1,
+            South = 2,
+            East = 3,
+            West = 4
+        }
+
         public enum RPGRace
         {
             None = 0,

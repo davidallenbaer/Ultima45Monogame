@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Ultima45Monogame;
 using static Ultima45Monogame.Game1;
+using static Ultima45Monogame.RPGEnums;
 
 [Serializable]
 public class OverworldEntityManager
