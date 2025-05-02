@@ -12,7 +12,9 @@ F6 - Show Combat Map Prev
 F7 - Show Combat Map Next
 E - Enter Town or Vehicle
 X - Exit Vehicle
- 
+K - Klimb Stairs
+D - Descend Stairs
+
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
 Walking on the overworld map will wrap around when you reach the edge of the map.
