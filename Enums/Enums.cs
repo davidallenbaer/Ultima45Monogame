@@ -425,6 +425,28 @@ namespace Ultima45Monogame
             Balloon = 3
         }
 
+        public enum OverworldMonsterAppearanceType
+        {
+            None = 0,
+            NES = 1, //No visible Monsters on Overworld - Attacks are random
+            PC = 2, //Visible Monsters on Overworld
+        }
+
+        public enum CombatModeBattleType
+        {
+            None = 0,
+            TurnBased_Ultima = 1, //Turn based combat similar to Ultima 1-5
+            TurnBased_FinalFantasy = 2, //Turn based combat similar to Final Fantasy 1-6
+            TurnBased_Wizardry = 3, //Turn based combat similar to Bard's Tale and Wizardry
+        }
+
+        public enum CombatMode
+        {
+            None = 0,
+            Manual = 1,
+            Auto = 2,
+        }
+
         #endregion
 
     }

@@ -37,7 +37,9 @@ Version 2.0.0 - Implement Combat
 		Show Combat map.
 		Position all enemies on combat map.
 		Position all the players on combat map.
-	
+		Note: Figure out what is up with the indexes in "Combat Starting Locations for Party SHRINE.txt" because the indexes do not make sense.
+		Note: Figure out what is up with the indexes in "Combat Starting Locations for Monsters SHRINE.txt" because the indexes do not make sense.
+
 	4) Implement auto combat option.
 
 	5) After combat show gold chest on the map.
