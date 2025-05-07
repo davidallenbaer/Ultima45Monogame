@@ -26,23 +26,29 @@ The game is in a very early stage of development and is not yet playable.
 --TODO--
 
 Version 2.0.0 - Implement Combat
-	1) Combat mode Setting #1 - Implement random monsters on the map like the NES version with random attacks.
-	Monsters are not visible on the map - you just get randomly attacked and go into combat mode.
+	Combat mode Setting #1 - NES Random Attacks
 
-	2) Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
+		//TODO Implement UpdatePlayingCombat
+		//		Start Combat
+		//		Draw Combat Map
+		//		Place Monsters on Combat Map
+		//		Place Players on Combat Map
+		//TODO Implement DrawPlayingCombat
+
+Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
 	Monsters are visible on the map - you get attacked if you are adjacent to the monster.
 	Move these monsters around the map toward the player.
 	
-	3) Implement turn based combat
+Future - Implement turn based combat
 		Show Combat map.
 		Position all enemies on combat map.
 		Position all the players on combat map.
 		Note: Figure out what is up with the indexes in "Combat Starting Locations for Party SHRINE.txt" because the indexes do not make sense.
 		Note: Figure out what is up with the indexes in "Combat Starting Locations for Monsters SHRINE.txt" because the indexes do not make sense.
 
-	4) Implement auto combat option.
+Future - Implement auto combat option.
 
-	5) After combat show gold chest on the map.
+Future - After combat show gold chest on the map.
 
 Version 3.0.0 - Towns\Shops\Dialog
 

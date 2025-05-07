@@ -19,6 +19,7 @@ public class Game1 : Game
         LoadingIntro,
         Menu,
         Playing,
+        PlayingCombat,
         Paused,
         GameOver
     }
@@ -43,6 +44,9 @@ public class Game1 : Game
     private int iCombatMapIndex = 1;
     private bool bGamePaused = false;
     private FantasyPlayer player1 = new FantasyPlayer();
+    private int iNESAttackThreshold = 255;
+    private int iNESCurrentAttackTracker = 0;
+    private OverworldMonsterAppearanceType monsterAppearanceType = OverworldMonsterAppearanceType.NES;
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -1194,6 +1198,36 @@ public class Game1 : Game
         }
     }
 
+    public int GetCurrentMapValue(Maps map, int y, int x)
+    {
+        if (map == Maps.U4MapOverworld)
+        {
+            OverworldEntity entity = overworldEntityManager.GetEntityAt(y, x);
+            if (entity == null)
+            {
+                //If there is no persisted entity, use the normal map value
+                return mapUltima4Overworld[y, x];
+            }
+            else
+            {
+                //If there is a persisted entity, use its TileValue
+                if (entity.IsVisible)
+                {
+                    return entity.TileValue;
+                }
+                else
+                {
+                    //If the entity is not visible, use the normal map value
+                    return mapUltima4Overworld[y, x];
+                }
+            }
+        }
+        else
+        {
+            return (int)TileType.Blank;
+        }
+    }
+
     private Texture2D GetSpriteForMapValue(int mapValue)
     {
         switch (mapValue)
@@ -1985,6 +2019,28 @@ public class Game1 : Game
 
     #endregion
 
+    public void DrawMainDisplayCombatGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
+    {
+        int rows = mainDisplayGridSize;
+        int cols = mainDisplayGridSize;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                int x = startX + (col * cellSize * scaleFactor);
+                int y = startY + (row * cellSize * scaleFactor);
+
+                int mapValue = GetMainDisplayMapValue(row, col);
+
+                Texture2D sprite = GetSpriteForMapValue(mapValue);
+
+                // Draw the sprite with scaling
+                spriteBatch.Draw(sprite, new Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Color.White);
+            }
+        }
+    }
+
     public void DrawMainDisplayGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
     {
         int rows = mainDisplayGridSize;
@@ -2251,6 +2307,10 @@ public class Game1 : Game
                 DrawPlaying();
                 break;
 
+            case GameStates.PlayingCombat:
+                DrawPlayingCombat();
+                break;
+
             case GameStates.Paused:
                 DrawPaused();
                 break;
@@ -2286,6 +2346,16 @@ public class Game1 : Game
             Color color = (i == selectedMenuIndex) ? Color.Yellow : Color.White;
             _spriteBatch.DrawString(font, option, position, color);
         }
+    }
+
+    private void DrawPlayingCombat()
+    {
+        DrawMainDisplayCombatGrid(
+            _spriteBatch,
+            0,
+            0,
+            16 * scaleFactor
+        );
     }
 
     private void DrawPlaying()
@@ -2363,6 +2433,10 @@ public class Game1 : Game
                 UpdatePlaying(gameTime);
                 break;
 
+            case GameStates.PlayingCombat:
+                UpdatePlayingCombat(gameTime);
+                break;
+
             case GameStates.Paused:
                 UpdatePaused(gameTime);
                 break;
@@ -2415,6 +2489,17 @@ public class Game1 : Game
         }
 
         oldKeyboardState = newKeyboardState;
+    }
+
+    private void UpdatePlayingCombat(GameTime gameTime)
+    {
+        //Start Combat
+        //Draw Combat Map
+        //Place Monsters on Combat Map
+        //Place Players on Combat Map
+
+        //Nothing implemented so just change the state to GameStates.Playing for now
+        _currentState = GameStates.Playing;
     }
 
     private void UpdatePlaying(GameTime gameTime)
@@ -2583,6 +2668,19 @@ public class Game1 : Game
             {
                 _currentHeading = MoveDirection.West;
 
+                if (monsterAppearanceType == OverworldMonsterAppearanceType.NES)
+                {
+                    IncrementNESAttackTrackerValue();
+
+                    if (iNESCurrentAttackTracker >= iNESAttackThreshold)
+                    {
+                        iNESCurrentAttackTracker = 0;
+                        _currentState = GameStates.PlayingCombat;
+                        inputTimer = 0; // Reset the timer
+                        return;
+                    }
+                }
+
                 if (currentMap != Maps.U4MapOverworld && (pcTownMapLocationX - 1 < 0))
                 {
                     //ExitTownToOverworld
@@ -2644,6 +2742,19 @@ public class Game1 : Game
             else if (oldKeyboardState.IsKeyUp(Keys.Right) && newKeyboardState.IsKeyDown(Keys.Right))
             {
                 _currentHeading = MoveDirection.East;
+
+                if (monsterAppearanceType == OverworldMonsterAppearanceType.NES)
+                {
+                    IncrementNESAttackTrackerValue();
+
+                    if (iNESCurrentAttackTracker >= iNESAttackThreshold)
+                    {
+                        iNESCurrentAttackTracker = 0;
+                        _currentState = GameStates.PlayingCombat;
+                        inputTimer = 0; // Reset the timer
+                        return;
+                    }
+                }
 
                 if (currentMap != Maps.U4MapOverworld && (pcTownMapLocationX + 1 == townGridSize))
                 {
@@ -2707,6 +2818,19 @@ public class Game1 : Game
             {
                 _currentHeading = MoveDirection.North;
 
+                if (monsterAppearanceType == OverworldMonsterAppearanceType.NES)
+                {
+                    IncrementNESAttackTrackerValue();
+
+                    if (iNESCurrentAttackTracker >= iNESAttackThreshold)
+                    {
+                        iNESCurrentAttackTracker = 0;
+                        _currentState = GameStates.PlayingCombat;
+                        inputTimer = 0; // Reset the timer
+                        return;
+                    }
+                }
+
                 if (currentMap != Maps.U4MapOverworld && (pcTownMapLocationY - 1 < 0))
                 {
                     //ExitTownToOverworld
@@ -2769,6 +2893,19 @@ public class Game1 : Game
             else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
             {
                 _currentHeading = MoveDirection.South;
+
+                if (monsterAppearanceType == OverworldMonsterAppearanceType.NES)
+                {
+                    IncrementNESAttackTrackerValue();
+
+                    if (iNESCurrentAttackTracker >= iNESAttackThreshold)
+                    {
+                        iNESCurrentAttackTracker = 0;
+                        _currentState = GameStates.PlayingCombat;
+                        inputTimer = 0; // Reset the timer
+                        return;
+                    }
+                }
 
                 if (currentMap != Maps.U4MapOverworld && (pcTownMapLocationY + 1 == townGridSize))
                 {
@@ -3304,6 +3441,53 @@ public class Game1 : Game
             currentSong = Songs.U4SongNone;
             Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
         }
+    }
+
+    private void IncrementNESAttackTrackerValue()
+    {
+        if (monsterAppearanceType != OverworldMonsterAppearanceType.NES)
+        {
+            return;
+        }
+
+        int mapValue = 0;
+
+        mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
+
+        TileType tileType = (TileType)mapValue;
+        string tileTypeName = Enum.GetName(typeof(TileType), tileType);
+
+        int increaseLimit = 0;
+
+        if (tileType == TileType.DeepWater ||
+            tileType == TileType.MediumWater ||
+            tileType == TileType.ShallowWater ||
+            tileType == TileType.Grasslands)
+        {
+            increaseLimit = 8;
+        }
+        else if (tileType == TileType.Scrubland ||
+                 tileType == TileType.Hills)
+        {
+            increaseLimit = 12;
+        }
+        else if (tileType == TileType.Swamp ||
+                 tileType == TileType.Forest ||
+                 tileType == TileType.Bridge ||
+                 tileType == TileType.BridgeNorth ||
+                 tileType == TileType.BridgeSouth ||
+                 tileType == TileType.LavaFlow)
+        {
+            increaseLimit = 16;
+        }
+
+        if (increaseLimit == 0)
+        {
+            return;
+        }
+
+        Random random = new Random();
+        iNESCurrentAttackTracker += random.Next(1, increaseLimit);
     }
 
     private void UpdateMenu(GameTime gameTime)
