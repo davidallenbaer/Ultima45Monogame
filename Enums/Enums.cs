@@ -10,6 +10,18 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum CombatState
+        {
+            None = 0,
+            CombatInitialize = 1,
+            PlaceEnemies = 2,
+            PlacePlayers = 3,
+            PlayerTurn = 4,
+            EnemyTurn = 5,
+            CombatVictory = 6,
+            CombatDefeat = 7
+        }
+
         public enum MoveDirection
         {
             None = 0,

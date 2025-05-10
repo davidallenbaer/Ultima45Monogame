@@ -26,6 +26,7 @@ public class Game1 : Game
 
     private int selectedMenuIndex = 0;
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
+    private CombatState _combatState = CombatState.None;
 
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
@@ -2348,16 +2349,6 @@ public class Game1 : Game
         }
     }
 
-    private void DrawPlayingCombat()
-    {
-        DrawMainDisplayCombatGrid(
-            _spriteBatch,
-            0,
-            0,
-            16 * scaleFactor
-        );
-    }
-
     private void DrawPlaying()
     {
         bool bDrawAvatarInCenter = true;
@@ -2490,17 +2481,7 @@ public class Game1 : Game
 
         oldKeyboardState = newKeyboardState;
     }
-
-    private void UpdatePlayingCombat(GameTime gameTime)
-    {
-        //Start Combat
-        //Draw Combat Map
-        //Place Monsters on Combat Map
-        //Place Players on Combat Map
-
-        //Nothing implemented so just change the state to GameStates.Playing for now
-        _currentState = GameStates.Playing;
-    }
+    
 
     private void UpdatePlaying(GameTime gameTime)
     {
@@ -2676,6 +2657,8 @@ public class Game1 : Game
                     {
                         iNESCurrentAttackTracker = 0;
                         _currentState = GameStates.PlayingCombat;
+                        _combatState = CombatState.CombatInitialize;
+
                         inputTimer = 0; // Reset the timer
                         return;
                     }
@@ -2751,6 +2734,8 @@ public class Game1 : Game
                     {
                         iNESCurrentAttackTracker = 0;
                         _currentState = GameStates.PlayingCombat;
+                        _combatState = CombatState.CombatInitialize;
+
                         inputTimer = 0; // Reset the timer
                         return;
                     }
@@ -2826,6 +2811,8 @@ public class Game1 : Game
                     {
                         iNESCurrentAttackTracker = 0;
                         _currentState = GameStates.PlayingCombat;
+                        _combatState = CombatState.CombatInitialize;
+
                         inputTimer = 0; // Reset the timer
                         return;
                     }
@@ -2902,6 +2889,8 @@ public class Game1 : Game
                     {
                         iNESCurrentAttackTracker = 0;
                         _currentState = GameStates.PlayingCombat;
+                        _combatState = CombatState.CombatInitialize;
+
                         inputTimer = 0; // Reset the timer
                         return;
                     }
@@ -2970,6 +2959,15 @@ public class Game1 : Game
             {
                 Console.WriteLine($"{pcOverworldLocationY} {pcOverworldLocationX}");
                 Console.WriteLine($"{pcTownMapLocationY} {pcTownMapLocationX}");
+
+                int mapValue = 0;
+
+                mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
+
+                TileType tileType = (TileType)mapValue;
+                string tileTypeName = Enum.GetName(typeof(TileType), tileType);
+
+                Console.WriteLine($"{tileType} {tileTypeName}");
             }
             else if (oldKeyboardState.IsKeyUp(Keys.K) && newKeyboardState.IsKeyDown(Keys.K))
             {
@@ -3500,6 +3498,101 @@ public class Game1 : Game
     {
         //Not Implemented Yet... just move on to the Menu
         _currentState = GameStates.Menu;
+    }
+
+    private void UpdatePlayingCombat(GameTime gameTime)
+    {
+        newKeyboardState = Keyboard.GetState();
+
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_combatState == CombatState.CombatInitialize)
+        {
+            //Figure out what combat map we are supposed to show
+            //based on the current tile type
+            int mapValue = 0;
+            mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
+
+            TileType tileType = (TileType)mapValue;
+            string tileTypeName = Enum.GetName(typeof(TileType), tileType);
+
+            if (tileType == TileType.Grasslands)
+            {
+                currentMap = Maps.U4CombatMapGRASS;
+            }
+            else if (tileType == TileType.Bridge)
+            {
+                currentMap = Maps.U4CombatMapBRIDGE;
+            }
+            else if (tileType == TileType.Hills)
+            {
+                currentMap = Maps.U4CombatMapHILL;
+            }
+            else if (tileType == TileType.Swamp)
+            {
+                currentMap = Maps.U4CombatMapMARSH;
+            }
+            else if (tileType == TileType.Forest)
+            {
+                currentMap = Maps.U4CombatMapFOREST;
+            }
+
+            PlayBackgroundMusicBasedOnCurrentMap();
+
+            //We are done selecting the combat map - proceed to placing the enemies on the map
+            _combatState = CombatState.PlaceEnemies;
+        }
+        else if (_combatState == CombatState.PlaceEnemies)
+        {
+            //We are done placing the enemies on the map - proceed to placing the players on the map
+            _combatState = CombatState.PlacePlayers;
+        }
+        else if (_combatState == CombatState.PlacePlayers)
+        {
+            //We are done placing the players on the map - proceed to the player turn
+            _combatState = CombatState.PlayerTurn;
+        }
+        else if (_combatState == CombatState.PlayerTurn)
+        {
+            //We are done with the player turn - proceed to the enemy turn
+            _combatState = CombatState.EnemyTurn;
+        }
+        else if (_combatState == CombatState.EnemyTurn)
+        {
+            //We are done with the enemy turn - proceed to the combat victory for now
+            _combatState = CombatState.CombatVictory;
+        }
+        else if (_combatState == CombatState.CombatVictory)
+        {
+            //Press space to go back to the overworld for now
+            if (newKeyboardState.IsKeyDown(Keys.Space))
+            {
+                //We are done with the combat - go back to the normal play mode
+                _currentState = GameStates.Playing;
+                currentMap = Maps.U4MapOverworld;
+                return;
+            }
+        }
+        else if (_combatState == CombatState.CombatDefeat)
+        {
+            //We are done with the combat - go back to the normal play mode
+            _currentState = GameStates.Playing;
+        }
+
+        oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
+
+        UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private void DrawPlayingCombat()
+    {
+        DrawMainDisplayCombatGrid(
+            _spriteBatch,
+            0,
+            0,
+            16 * scaleFactor
+        );
     }
 
 }

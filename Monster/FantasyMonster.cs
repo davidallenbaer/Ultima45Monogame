@@ -1,4 +1,5 @@
 ﻿using System;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
 {
@@ -14,8 +15,10 @@ namespace Ultima45Monogame
         public string HitDice { get; set; }
         public int ChallengeRating { get; set; }
 
+        public TileType MonsterTile { get; set; } = TileType.Blank;
+
         public FantasyMonster(int id, string name, string type, string size, string alignment,
-            int armorClass, int hitPoints, string hitDice, int challengeRating)
+            int armorClass, int hitPoints, string hitDice, int challengeRating, TileType monsterTile)
         {
             ID = id;
             Name = name;
@@ -26,6 +29,7 @@ namespace Ultima45Monogame
             HitPoints = hitPoints;
             HitDice = hitDice;
             ChallengeRating = challengeRating;
+            MonsterTile = monsterTile;
         }
 
         public override string ToString()

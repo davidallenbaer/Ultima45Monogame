@@ -37,6 +37,8 @@ namespace Ultima45Monogame
 
         public bool Enabled { get; set; } = false;
 
+        public TileType PlayerTile { get; set; } = TileType.Blank;
+        
         // List of weapons
         [XmlArray("Weapons")]
         [XmlArrayItem("Weapon")]

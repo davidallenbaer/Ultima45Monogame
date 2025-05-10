@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima45Monogame;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
 {
@@ -18,7 +19,8 @@ namespace Ultima45Monogame
                     armorClass: 15,
                     hitPoints: 7,
                     hitDice: "2d6",
-                    challengeRating: 1
+                    challengeRating: 1,
+                    monsterTile: TileType.Blank
                 ),
                 new FantasyMonster(
                     id: 2,
@@ -29,7 +31,8 @@ namespace Ultima45Monogame
                     armorClass: 13,
                     hitPoints: 15,
                     hitDice: "2d8+6",
-                    challengeRating: 1
+                    challengeRating: 1,
+                    monsterTile: TileType.Blank
                 ),
                 new FantasyMonster(
                     id: 3,
@@ -40,7 +43,8 @@ namespace Ultima45Monogame
                     armorClass: 11,
                     hitPoints: 59,
                     hitDice: "7d10+21",
-                    challengeRating: 2
+                    challengeRating: 2,
+                    monsterTile: TileType.Blank
                 ),
                 new FantasyMonster(
                     id: 4,
@@ -51,7 +55,8 @@ namespace Ultima45Monogame
                     armorClass: 19,
                     hitPoints: 256,
                     hitDice: "19d12+133",
-                    challengeRating: 17
+                    challengeRating: 17,
+                    monsterTile: TileType.Blank
                 ),
                 new FantasyMonster(
                     id: 5,
@@ -62,7 +67,8 @@ namespace Ultima45Monogame
                     armorClass: 13,
                     hitPoints: 13,
                     hitDice: "2d8+4",
-                    challengeRating: 0
+                    challengeRating: 0,
+                    monsterTile: TileType.Blank
                 )
             };
         }
