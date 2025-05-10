@@ -3443,6 +3443,11 @@ public class Game1 : Game
 
     private void IncrementNESAttackTrackerValue()
     {
+        if (_currentVehicle == Vehicle.Balloon)
+        {
+            return;
+        }
+
         if (monsterAppearanceType != OverworldMonsterAppearanceType.NES)
         {
             return;
@@ -3457,10 +3462,21 @@ public class Game1 : Game
 
         int increaseLimit = 0;
 
-        if (tileType == TileType.DeepWater ||
+        if (tileType == TileType.HorseEast ||
+            tileType == TileType.HorseWest
+            )
+        {
+            increaseLimit = 4;
+        }
+        else if (tileType == TileType.DeepWater ||
             tileType == TileType.MediumWater ||
             tileType == TileType.ShallowWater ||
-            tileType == TileType.Grasslands)
+            tileType == TileType.Grasslands || 
+            tileType == TileType.ShipNorth ||
+            tileType == TileType.ShipSouth ||
+            tileType == TileType.ShipEast ||
+            tileType == TileType.ShipWest
+            )
         {
             increaseLimit = 8;
         }
@@ -3500,6 +3516,92 @@ public class Game1 : Game
         _currentState = GameStates.Menu;
     }
 
+    private bool IsAdjacentTileWater()
+    {
+        // Check north
+        int northValue = GetCurrentMapValue(currentMap, (pcOverworldLocationY - 1 + overworldGridSize) % overworldGridSize, pcOverworldLocationX);
+        TileType northTile = (TileType)northValue;
+        if (northTile == TileType.DeepWater || northTile == TileType.MediumWater)
+        {
+            return true;
+        }
+
+        // Check south
+        int southValue = GetCurrentMapValue(currentMap, (pcOverworldLocationY + 1) % overworldGridSize, pcOverworldLocationX);
+        TileType southTile = (TileType)southValue;
+        if (southTile == TileType.DeepWater || southTile == TileType.MediumWater)
+        {
+            return true;
+        }
+
+        // Check west
+        int westValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, (pcOverworldLocationX - 1 + overworldGridSize) % overworldGridSize);
+        TileType westTile = (TileType)westValue;
+        if (westTile == TileType.DeepWater || westTile == TileType.MediumWater)
+        {
+            return true;
+        }
+
+        // Check east
+        int eastValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, (pcOverworldLocationX + 1) % overworldGridSize);
+        TileType eastTile = (TileType)eastValue;
+        if (eastTile == TileType.DeepWater || eastTile == TileType.MediumWater)
+        {
+            return true;
+        }
+
+        // If none of the adjacent tiles are water, return false
+        return false;
+    }
+
+    private bool IsAdjacentTilesAllSea()
+    {
+        bool bNorthSea = false;
+        bool bSouthSea = false;
+        bool bWestSea = false;
+        bool bEastSea = false;
+
+        // Check north
+        int northValue = GetCurrentMapValue(currentMap, (pcOverworldLocationY - 1 + overworldGridSize) % overworldGridSize, pcOverworldLocationX);
+        TileType northTile = (TileType)northValue;
+        if (northTile == TileType.DeepWater || northTile == TileType.MediumWater)
+        {
+            bNorthSea = true;
+        }
+
+        // Check south
+        int southValue = GetCurrentMapValue(currentMap, (pcOverworldLocationY + 1) % overworldGridSize, pcOverworldLocationX);
+        TileType southTile = (TileType)southValue;
+        if (southTile == TileType.DeepWater || southTile == TileType.MediumWater)
+        {
+            bSouthSea = true;
+        }
+
+        // Check west
+        int westValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, (pcOverworldLocationX - 1 + overworldGridSize) % overworldGridSize);
+        TileType westTile = (TileType)westValue;
+        if (westTile == TileType.DeepWater || westTile == TileType.MediumWater)
+        {
+            bWestSea = true;
+        }
+
+        // Check east
+        int eastValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, (pcOverworldLocationX + 1) % overworldGridSize);
+        TileType eastTile = (TileType)eastValue;
+        if (eastTile == TileType.DeepWater || eastTile == TileType.MediumWater)
+        {
+            bEastSea = true;
+        }
+
+        // If we are surrounded by sea, return true
+        if (bNorthSea && bSouthSea && bWestSea && bEastSea)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private void UpdatePlayingCombat(GameTime gameTime)
     {
         newKeyboardState = Keyboard.GetState();
@@ -3517,26 +3619,95 @@ public class Game1 : Game
             TileType tileType = (TileType)mapValue;
             string tileTypeName = Enum.GetName(typeof(TileType), tileType);
 
-            if (tileType == TileType.Grasslands)
+            if (_currentVehicle == Vehicle.None || _currentVehicle == Vehicle.Horse)
             {
-                currentMap = Maps.U4CombatMapGRASS;
+                if (IsAdjacentTileWater())
+                {
+                    Random random = new Random();
+                    int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+
+                    if (randomValue <= 25)
+                    {
+                        currentMap = Maps.U4CombatMapSHORSHIP; // 25% chance
+                    }
+                    else
+                    {
+                        currentMap = Maps.U4CombatMapSHORE; // 75% chance
+                    }                    
+                }
+                else if (tileType == TileType.Grasslands)
+                {
+                    currentMap = Maps.U4CombatMapGRASS;
+                }
+                else if (tileType == TileType.Scrubland)
+                {
+                    currentMap = Maps.U4CombatMapBRUSH;
+                }
+                else if (tileType == TileType.Bridge ||
+                    tileType == TileType.BridgeNorth ||
+                    tileType == TileType.BridgeSouth)
+                {
+                    currentMap = Maps.U4CombatMapBRIDGE;
+                }
+                else if (tileType == TileType.Hills)
+                {
+                    currentMap = Maps.U4CombatMapHILL;
+                }
+                else if (tileType == TileType.Swamp)
+                {
+                    currentMap = Maps.U4CombatMapMARSH;
+                }
+                else if (tileType == TileType.Forest)
+                {
+                    currentMap = Maps.U4CombatMapFOREST;
+                }
+                else if (tileType == TileType.BrickFloor)
+                {
+                    currentMap = Maps.U4CombatMapBRICK;
+                }
+                else if (tileType == TileType.Shrine)
+                {
+                    currentMap = Maps.U4CombatMapSHRINE;
+                }
             }
-            else if (tileType == TileType.Bridge)
+            else if (_currentVehicle == Vehicle.Ship)
             {
-                currentMap = Maps.U4CombatMapBRIDGE;
+                if (IsAdjacentTilesAllSea())
+                {
+                    Random random = new Random();
+                    int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+
+                    if (randomValue <= 25)
+                    {
+                        currentMap = Maps.U4CombatMapSHIPSHIP; // 25% chance
+                    }
+                    else
+                    {
+                        currentMap = Maps.U4CombatMapSHIPSEA; // 75% chance
+                    }
+                }
+                else
+                {
+                    currentMap = Maps.U4CombatMapSHIPSHOR;
+                }
             }
-            else if (tileType == TileType.Hills)
-            {
-                currentMap = Maps.U4CombatMapHILL;
-            }
-            else if (tileType == TileType.Swamp)
-            {
-                currentMap = Maps.U4CombatMapMARSH;
-            }
-            else if (tileType == TileType.Forest)
-            {
-                currentMap = Maps.U4CombatMapFOREST;
-            }
+
+            /*
+            Resting Combat map that is not handled yet
+            //Maps.U4CombatMapCAMP            
+            
+            Dungeon Combat maps that are not handled yet
+
+            //Maps.U4CombatMapINN
+            //Maps.U4CombatMapDNG0
+            //Maps.U4CombatMapDNG1
+            //Maps.U4CombatMapDNG2
+            //Maps.U4CombatMapDNG3
+            //Maps.U4CombatMapDNG4
+            //Maps.U4CombatMapDNG5
+            //Maps.U4CombatMapDNG6
+            //Maps.U4CombatMapDUNGEON             
+            */
 
             PlayBackgroundMusicBasedOnCurrentMap();
 

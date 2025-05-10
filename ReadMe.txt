@@ -14,6 +14,7 @@ E - Enter Town or Vehicle
 X - Exit Vehicle
 K - Klimb Stairs
 D - Descend Stairs
+R - Rest
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -23,17 +24,13 @@ You can also enter and exit vehicles (Balloon, Horse, Ship).
 Music should play appropriately based on the map you are on.
 The game is in a very early stage of development and is not yet playable.
 
+Version 2.0.0 - NES Random Attacks
+
 --TODO--
 
-Version 2.0.0 - Implement Combat
-	Combat mode Setting #1 - NES Random Attacks
-
-		//TODO Implement UpdatePlayingCombat
-		//		Start Combat
-		//		Draw Combat Map
-		//		Place Monsters on Combat Map
-		//		Place Players on Combat Map
-		//TODO Implement DrawPlayingCombat
+		//TODO: Implement resting and resting Combat Map
+		//TODO: Place Monsters on Combat Map
+		//TODO: Place Players on Combat Map
 
 Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
 	Monsters are visible on the map - you get attacked if you are adjacent to the monster.
