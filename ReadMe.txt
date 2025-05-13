@@ -24,10 +24,10 @@ You can also enter and exit vehicles (Balloon, Horse, Ship).
 Music should play appropriately based on the map you are on.
 The game is in a very early stage of development and is not yet playable.
 
-Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map
+Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
+	Leave Gold Chest on overworld map after combat.
 
 --TODO--
-		//After combat show gold chest on the Map
 		//TODO: Place Monsters on Combat Map
 		//TODO: Place Players on Combat Map
 

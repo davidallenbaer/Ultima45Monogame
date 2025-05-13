@@ -3234,6 +3234,35 @@ public class Game1 : Game
                     }
                 }
             }
+            else if (oldKeyboardState.IsKeyUp(Keys.G) && newKeyboardState.IsKeyDown(Keys.G))
+            {
+                if (currentMap == Maps.U4MapOverworld)
+                {
+                    int mapValue = 0;
+
+                    mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
+
+                    TileType tileType = (TileType)mapValue;
+                    string tileTypeName = Enum.GetName(typeof(TileType), tileType);
+
+                    if (tileType == TileType.Chest)
+                    {
+                        //TODO Increase Player Gold
+
+                        //Remove Chest from Overworld Entity Manager
+                        overworldEntityManager.RemoveEntityAt(pcOverworldLocationY, pcOverworldLocationX);
+                    }
+                    else
+                    {
+                        _soundEffect_BadCommand.Play();
+                    }
+                }
+                else
+                {
+                    //TODO Handle Gold Chests in Towns
+                }
+            }
+
             //Handle the GamePad input
             else if (gamePad1State.IsConnected && gamePad1State.DPad.Left == ButtonState.Pressed)
             {
@@ -3839,6 +3868,8 @@ public class Game1 : Game
             //Press space to go back to the overworld for now
             if (newKeyboardState.IsKeyDown(Keys.Space))
             {
+                overworldEntityManager.AddEntity("GoldChest", pcOverworldLocationY, pcOverworldLocationX, (int)TileType.Chest, true);
+
                 //We are done with the combat - go back to the normal play mode
                 _currentState = GameStates.Playing;
                 currentMap = Maps.U4MapOverworld;
