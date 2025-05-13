@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.IO;
+using System.Reflection.Metadata;
 using Ultima45Monogame.Combat;
 using static Ultima45Monogame.RPGEnums;
 
@@ -13,6 +14,7 @@ namespace Ultima45Monogame;
 public class Game1 : Game
 {
     #region Declarations
+    private double mapCampDisplayTimer = 0;
 
     public enum GameStates
     {
@@ -20,6 +22,7 @@ public class Game1 : Game
         Menu,
         Playing,
         PlayingCombat,
+        PlayingCamp,
         Paused,
         GameOver
     }
@@ -2042,6 +2045,28 @@ public class Game1 : Game
         }
     }
 
+    public void DrawMainDisplayCampGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
+    {
+        int rows = mainDisplayGridSize;
+        int cols = mainDisplayGridSize;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                int x = startX + (col * cellSize * scaleFactor);
+                int y = startY + (row * cellSize * scaleFactor);
+
+                int mapValue = GetMainDisplayMapValue(row, col);
+
+                Texture2D sprite = GetSpriteForMapValue(mapValue);
+
+                // Draw the sprite with scaling
+                spriteBatch.Draw(sprite, new Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Color.White);
+            }
+        }
+    }
+
     public void DrawMainDisplayGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
     {
         int rows = mainDisplayGridSize;
@@ -2312,6 +2337,10 @@ public class Game1 : Game
                 DrawPlayingCombat();
                 break;
 
+            case GameStates.PlayingCamp:
+                DrawPlayingCamp();
+                break;
+
             case GameStates.Paused:
                 DrawPaused();
                 break;
@@ -2427,7 +2456,9 @@ public class Game1 : Game
             case GameStates.PlayingCombat:
                 UpdatePlayingCombat(gameTime);
                 break;
-
+            case GameStates.PlayingCamp:
+                UpdatePlayingCamp(gameTime);
+                break;
             case GameStates.Paused:
                 UpdatePaused(gameTime);
                 break;
@@ -3165,7 +3196,30 @@ public class Game1 : Game
 
                 inputTimer = 0; // Reset the timer
             }
-
+            else if (oldKeyboardState.IsKeyUp(Keys.H) && newKeyboardState.IsKeyDown(Keys.H))
+            {
+                //Hole Up & Camp
+                if (currentMap == Maps.U4MapOverworld)
+                {
+                    if (_currentVehicle != Vehicle.None)
+                    {
+                        _soundEffect_BadCommand.Play();
+                    }
+                    else
+                    {
+                        mapCampDisplayTimer = 0;
+                        iNESCurrentAttackTracker = 0;
+                        _currentState = GameStates.PlayingCamp;                            
+                        inputTimer = 0; // Reset the timer
+                        return;
+                    }
+                }
+                else
+                {
+                    _soundEffect_BadCommand.Play();
+                }
+                    
+            }
             else if (oldKeyboardState.IsKeyUp(Keys.X) && newKeyboardState.IsKeyDown(Keys.X))
             {
                 if (currentMap == Maps.U4MapOverworld)
@@ -3602,6 +3656,45 @@ public class Game1 : Game
         return false;
     }
 
+    private void UpdatePlayingCamp(GameTime gameTime)
+    {
+        currentMap = Maps.U4CombatMapCAMP;
+
+        mapCampDisplayTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        // Check if 10 seconds have passed
+        if (mapCampDisplayTimer >= 10)
+        {
+            // Random check to see if you were attacked while camping
+            Random random = new Random();
+            int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+
+            if (randomValue <= 25)
+            {
+                // Players were attacked while camping
+                iNESCurrentAttackTracker = 0;
+                currentMap = Maps.U4CombatMapCAMP;
+                _currentState = GameStates.PlayingCombat;
+                _combatState = CombatState.CombatInitialize;
+            }
+            else
+            {
+                // Heal Players
+
+                // Transition to the Playing state
+                iNESCurrentAttackTracker = 0;
+                _currentState = GameStates.Playing;
+                currentMap = Maps.U4MapOverworld;
+            }
+
+
+            // Reset the timer
+            mapCampDisplayTimer = 0;
+        }
+
+        UpdateMainDisplayGridValues(currentMap);
+    }
+
     private void UpdatePlayingCombat(GameTime gameTime)
     {
         newKeyboardState = Keyboard.GetState();
@@ -3611,103 +3704,110 @@ public class Game1 : Game
 
         if (_combatState == CombatState.CombatInitialize)
         {
-            //Figure out what combat map we are supposed to show
-            //based on the current tile type
-            int mapValue = 0;
-            mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
+            //We have to figure out what combat map to show
 
-            TileType tileType = (TileType)mapValue;
-            string tileTypeName = Enum.GetName(typeof(TileType), tileType);
-
-            if (_currentVehicle == Vehicle.None || _currentVehicle == Vehicle.Horse)
+            if (currentMap == Maps.U4CombatMapCAMP)
             {
-                if (IsAdjacentTileWater())
-                {
-                    Random random = new Random();
-                    int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+                //We are on the camp combat map
+                //Do any initialization here for combat while camping
+            }
+            else
+            {    
+                //Figure out what combat map we are supposed to show
+                //based on the current tile type
+                int mapValue = 0;
+                mapValue = GetCurrentMapValue(currentMap, pcOverworldLocationY, pcOverworldLocationX);
 
-                    if (randomValue <= 25)
+                TileType tileType = (TileType)mapValue;
+                string tileTypeName = Enum.GetName(typeof(TileType), tileType);
+
+                if (_currentVehicle == Vehicle.None || _currentVehicle == Vehicle.Horse)
+                {
+                    if (IsAdjacentTileWater())
                     {
-                        currentMap = Maps.U4CombatMapSHORSHIP; // 25% chance
+                        Random random = new Random();
+                        int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+
+                        if (randomValue <= 25)
+                        {
+                            currentMap = Maps.U4CombatMapSHORSHIP; // 25% chance
+                        }
+                        else
+                        {
+                            currentMap = Maps.U4CombatMapSHORE; // 75% chance
+                        }
+                    }
+                    else if (tileType == TileType.Grasslands)
+                    {
+                        currentMap = Maps.U4CombatMapGRASS;
+                    }
+                    else if (tileType == TileType.Scrubland)
+                    {
+                        currentMap = Maps.U4CombatMapBRUSH;
+                    }
+                    else if (tileType == TileType.Bridge ||
+                        tileType == TileType.BridgeNorth ||
+                        tileType == TileType.BridgeSouth)
+                    {
+                        currentMap = Maps.U4CombatMapBRIDGE;
+                    }
+                    else if (tileType == TileType.Hills)
+                    {
+                        currentMap = Maps.U4CombatMapHILL;
+                    }
+                    else if (tileType == TileType.Swamp)
+                    {
+                        currentMap = Maps.U4CombatMapMARSH;
+                    }
+                    else if (tileType == TileType.Forest)
+                    {
+                        currentMap = Maps.U4CombatMapFOREST;
+                    }
+                    else if (tileType == TileType.BrickFloor)
+                    {
+                        currentMap = Maps.U4CombatMapBRICK;
+                    }
+                    else if (tileType == TileType.Shrine)
+                    {
+                        currentMap = Maps.U4CombatMapSHRINE;
+                    }
+                }
+                else if (_currentVehicle == Vehicle.Ship)
+                {
+                    if (IsAdjacentTilesAllSea())
+                    {
+                        Random random = new Random();
+                        int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
+
+                        if (randomValue <= 25)
+                        {
+                            currentMap = Maps.U4CombatMapSHIPSHIP; // 25% chance
+                        }
+                        else
+                        {
+                            currentMap = Maps.U4CombatMapSHIPSEA; // 75% chance
+                        }
                     }
                     else
                     {
-                        currentMap = Maps.U4CombatMapSHORE; // 75% chance
-                    }                    
-                }
-                else if (tileType == TileType.Grasslands)
-                {
-                    currentMap = Maps.U4CombatMapGRASS;
-                }
-                else if (tileType == TileType.Scrubland)
-                {
-                    currentMap = Maps.U4CombatMapBRUSH;
-                }
-                else if (tileType == TileType.Bridge ||
-                    tileType == TileType.BridgeNorth ||
-                    tileType == TileType.BridgeSouth)
-                {
-                    currentMap = Maps.U4CombatMapBRIDGE;
-                }
-                else if (tileType == TileType.Hills)
-                {
-                    currentMap = Maps.U4CombatMapHILL;
-                }
-                else if (tileType == TileType.Swamp)
-                {
-                    currentMap = Maps.U4CombatMapMARSH;
-                }
-                else if (tileType == TileType.Forest)
-                {
-                    currentMap = Maps.U4CombatMapFOREST;
-                }
-                else if (tileType == TileType.BrickFloor)
-                {
-                    currentMap = Maps.U4CombatMapBRICK;
-                }
-                else if (tileType == TileType.Shrine)
-                {
-                    currentMap = Maps.U4CombatMapSHRINE;
-                }
-            }
-            else if (_currentVehicle == Vehicle.Ship)
-            {
-                if (IsAdjacentTilesAllSea())
-                {
-                    Random random = new Random();
-                    int randomValue = random.Next(1, 101); // Generates a number between 1 and 100
-
-                    if (randomValue <= 25)
-                    {
-                        currentMap = Maps.U4CombatMapSHIPSHIP; // 25% chance
-                    }
-                    else
-                    {
-                        currentMap = Maps.U4CombatMapSHIPSEA; // 75% chance
+                        currentMap = Maps.U4CombatMapSHIPSHOR;
                     }
                 }
-                else
-                {
-                    currentMap = Maps.U4CombatMapSHIPSHOR;
-                }
+
+                /*
+                Dungeon Combat maps that are not handled yet
+
+                //Maps.U4CombatMapINN
+                //Maps.U4CombatMapDNG0
+                //Maps.U4CombatMapDNG1
+                //Maps.U4CombatMapDNG2
+                //Maps.U4CombatMapDNG3
+                //Maps.U4CombatMapDNG4
+                //Maps.U4CombatMapDNG5
+                //Maps.U4CombatMapDNG6
+                //Maps.U4CombatMapDUNGEON             
+                */
             }
-
-            /*
-            Resting Combat map that is not handled yet
-            //Maps.U4CombatMapCAMP            
-            
-            Dungeon Combat maps that are not handled yet
-
-            //Maps.U4CombatMapINN
-            //Maps.U4CombatMapDNG0
-            //Maps.U4CombatMapDNG1
-            //Maps.U4CombatMapDNG2
-            //Maps.U4CombatMapDNG3
-            //Maps.U4CombatMapDNG4
-            //Maps.U4CombatMapDNG5
-            //Maps.U4CombatMapDNG6
-            //Maps.U4CombatMapDUNGEON             
-            */
 
             PlayBackgroundMusicBasedOnCurrentMap();
 
@@ -3766,4 +3866,13 @@ public class Game1 : Game
         );
     }
 
+    private void DrawPlayingCamp()
+    {
+        DrawMainDisplayCampGrid(
+            _spriteBatch,
+            0,
+            0,
+            16 * scaleFactor
+        );
+    }
 }

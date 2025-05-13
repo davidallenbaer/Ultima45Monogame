@@ -14,7 +14,7 @@ E - Enter Town or Vehicle
 X - Exit Vehicle
 K - Klimb Stairs
 D - Descend Stairs
-R - Rest
+H - Hole Up & Camp
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -24,11 +24,10 @@ You can also enter and exit vehicles (Balloon, Horse, Ship).
 Music should play appropriately based on the map you are on.
 The game is in a very early stage of development and is not yet playable.
 
-Version 2.0.0 - NES Random Attacks
+Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map
 
 --TODO--
-
-		//TODO: Implement resting and resting Combat Map
+		//After combat show gold chest on the Map
 		//TODO: Place Monsters on Combat Map
 		//TODO: Place Players on Combat Map
 
@@ -44,8 +43,6 @@ Future - Implement turn based combat
 		Note: Figure out what is up with the indexes in "Combat Starting Locations for Monsters SHRINE.txt" because the indexes do not make sense.
 
 Future - Implement auto combat option.
-
-Future - After combat show gold chest on the map.
 
 Version 3.0.0 - Towns\Shops\Dialog
 
