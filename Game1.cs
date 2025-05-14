@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Reflection.Metadata;
 using Ultima45Monogame.Combat;
+using Ultima45Monogame.Player;
 using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame;
@@ -34,6 +35,7 @@ public class Game1 : Game
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
+    private FantasyPlayerManager fantasyPlayerManager = new FantasyPlayerManager();
 
     private KeyboardState oldKeyboardState;
     private KeyboardState newKeyboardState;
@@ -47,7 +49,7 @@ public class Game1 : Game
     private int iSpawnVehicleIndex = 1;
     private int iCombatMapIndex = 1;
     private bool bGamePaused = false;
-    private FantasyPlayer player1 = new FantasyPlayer();
+
     private int iNESAttackThreshold = 255;
     private int iNESCurrentAttackTracker = 0;
     private OverworldMonsterAppearanceType monsterAppearanceType = OverworldMonsterAppearanceType.NES;
@@ -404,7 +406,6 @@ public class Game1 : Game
         IsMouseVisible = bIsMouseVisible;
         currentMap = Maps.U4MapOverworld;
         currentSong = Songs.U4SongNone;
-        player1.Enabled = true;
     }
 
     protected override void Initialize()
@@ -427,6 +428,8 @@ public class Game1 : Game
         overworldEntityManager.AddEntity("Balloon", 242, 233, (int)TileType.Balloon, true);
         overworldEntityManager.AddEntity("Horse", 146, 97, (int)TileType.HorseEast, true, MoveDirection.East);
         overworldEntityManager.AddEntity("Ship", 107, 82, (int)TileType.ShipEast, true, MoveDirection.East);
+
+        fantasyPlayerManager = new FantasyPlayerManager(FantasyPlayerFactory.GetAllFantasyPlayers());
 
         base.Initialize();
     }
@@ -3401,7 +3404,7 @@ public class Game1 : Game
     private void LoadGame()
     {
         string saveGamePath = "SaveSlot1\\Ultima4SaveGameVariables.xml";
-        string playerDataPath = "SaveSlot1\\FantasyPlayer01.xml";
+        string playerDataPath = "SaveSlot1\\FantasyPlayers.xml";
         string overworldEntityPath = "SaveSlot1\\OverworldEntities.xml";
         if (File.Exists(saveGamePath) && File.Exists(playerDataPath))
         {
@@ -3415,7 +3418,8 @@ public class Game1 : Game
             _currentVehicle = gameSaveVariables.CurrentVehicle;
             _currentHeading = gameSaveVariables.CurrentHeading;
 
-            player1 = Utilities.DeserializeFantasyPlayer(playerDataPath);
+            fantasyPlayerManager = FantasyPlayerManager.LoadFromFile(playerDataPath);
+
             overworldEntityManager = OverworldEntityManager.LoadFromFile(overworldEntityPath);
         }
     }
@@ -3433,7 +3437,7 @@ public class Game1 : Game
 
         Utilities.SerializeSaveGameVariables(gameSaveVariables, "SaveSlot1\\Ultima4SaveGameVariables.xml");
 
-        Utilities.SerializeFantasyPlayer(player1, "SaveSlot1\\FantasyPlayer01.xml");
+        Utilities.SerializeFantasyPlayers(fantasyPlayerManager, "SaveSlot1\\FantasyPlayers.xml");
 
         Utilities.SerializeOverworldEntities(overworldEntityManager, "SaveSlot1\\OverworldEntities.xml");
     }

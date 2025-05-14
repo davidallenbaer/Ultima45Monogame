@@ -1,10 +1,21 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
+using Ultima45Monogame.Player;
 
 namespace Ultima45Monogame
 {
     public static class Utilities
     {
+
+        public static void SerializeFantasyPlayers(FantasyPlayerManager manager, string filePath)
+        {
+            manager.SaveToFile(filePath);
+        }
+
+        public static FantasyPlayerManager DeserializeFantasyPlayers(string filePath)
+        {
+            return FantasyPlayerManager.LoadFromFile(filePath);
+        }
 
         public static void SerializeOverworldEntities(OverworldEntityManager manager, string filePath)
         {
