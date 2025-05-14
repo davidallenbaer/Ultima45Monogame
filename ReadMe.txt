@@ -25,7 +25,9 @@ Music should play appropriately based on the map you are on.
 The game is in a very early stage of development and is not yet playable.
 
 Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
-	Leave Gold Chest on overworld map after combat.
+	Leave Gold Chest on overworld map after combat,
+	Full Monster catalog with TileTypes,
+	Getting chest on overworld map increases party gold
 
 --TODO--
 		//TODO: Place Monsters on Combat Map
