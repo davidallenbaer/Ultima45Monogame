@@ -36,6 +36,7 @@ public class Game1 : Game
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
     private FantasyPlayerManager fantasyPlayerManager = new FantasyPlayerManager();
+    private FantasyMonsterManager monsterManager = new FantasyMonsterManager(FantasyMonsterFactory.GetAllFantasyMonsters());
 
     private KeyboardState oldKeyboardState;
     private KeyboardState newKeyboardState;
@@ -53,6 +54,8 @@ public class Game1 : Game
     private int iNESAttackThreshold = 255;
     private int iNESCurrentAttackTracker = 0;
     private OverworldMonsterAppearanceType monsterAppearanceType = OverworldMonsterAppearanceType.NES;
+    private int partyGP = 0;
+    private int partyFood = 500;
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -395,7 +398,6 @@ public class Game1 : Game
     private double inputDelay;
     private SoundEffect _soundEffect_Walk;
     private SoundEffect _soundEffect_BadCommand;
-    
 
     #endregion
 
@@ -3250,7 +3252,10 @@ public class Game1 : Game
 
                     if (tileType == TileType.Chest)
                     {
-                        //TODO Increase Player Gold
+                        //Increase Player Gold
+                        Random random = new Random();
+                        int goldFound = random.Next(1, 101);
+                        partyGP += goldFound;
 
                         //Remove Chest from Overworld Entity Manager
                         overworldEntityManager.RemoveEntityAt(pcOverworldLocationY, pcOverworldLocationX);
@@ -3417,6 +3422,8 @@ public class Game1 : Game
             pcTownMapLocationY = gameSaveVariables.pcTownMapLocationY;
             _currentVehicle = gameSaveVariables.CurrentVehicle;
             _currentHeading = gameSaveVariables.CurrentHeading;
+            partyGP = gameSaveVariables.GP;
+            partyFood = gameSaveVariables.Food;
 
             fantasyPlayerManager = FantasyPlayerManager.LoadFromFile(playerDataPath);
 
@@ -3434,6 +3441,8 @@ public class Game1 : Game
         gameSaveVariables.pcTownMapLocationY = pcTownMapLocationY;
         gameSaveVariables.CurrentVehicle = _currentVehicle;
         gameSaveVariables.CurrentHeading = _currentHeading;
+        gameSaveVariables.GP = partyGP;
+        gameSaveVariables.Food = partyFood;
 
         Utilities.SerializeSaveGameVariables(gameSaveVariables, "SaveSlot1\\Ultima4SaveGameVariables.xml");
 

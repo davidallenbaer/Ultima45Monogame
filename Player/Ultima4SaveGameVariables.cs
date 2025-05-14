@@ -21,5 +21,7 @@ namespace Ultima45Monogame
         public int pcDungeonMapLocationY { get; set; } = 0;
         public Vehicle CurrentVehicle { get; set; } = Vehicle.None;
         public MoveDirection CurrentHeading { get; set; } = MoveDirection.None;
+        public int GP { get; set; } = 0;
+        public int Food { get; set; } = 0;
     }
 }
