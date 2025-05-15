@@ -31,12 +31,13 @@ public class Game1 : Game
     private int selectedMenuIndex = 0;
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
     private CombatState _combatState = CombatState.None;
+    private CombatTracker combatTracker = new CombatTracker();
 
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
     private FantasyPlayerManager fantasyPlayerManager = new FantasyPlayerManager();
-    private FantasyMonsterManager monsterManager = new FantasyMonsterManager(FantasyMonsterFactory.GetAllFantasyMonsters());
+    private FantasyMonsterManager fantasyMonsterManager = new FantasyMonsterManager(FantasyMonsterFactory.GetAllFantasyMonsters());
 
     private KeyboardState oldKeyboardState;
     private KeyboardState newKeyboardState;
@@ -2042,6 +2043,22 @@ public class Game1 : Game
 
                 int mapValue = GetMainDisplayMapValue(row, col);
 
+                CombatEntity entity = combatTracker.GetCombatEntityAt(row,col);
+                if (entity != null)
+                {
+                    
+                    if (entity.EntityType == CombatEntityType.Monster)
+                    {
+                        string name = entity.Monster.Name;
+                        mapValue = ((int)entity.Monster.MonsterTiles[0]);
+                    }
+                    else if (entity.EntityType == CombatEntityType.Player)
+                    {
+                        string name = entity.Player.Name;
+                        mapValue = ((int)entity.Player.PlayerTile);
+                    }
+                }
+
                 Texture2D sprite = GetSpriteForMapValue(mapValue);
 
                 // Draw the sprite with scaling
@@ -3267,7 +3284,7 @@ public class Game1 : Game
                 }
                 else
                 {
-                    //TODO Handle Gold Chests in Towns
+                    //Handle Gold Chests in Towns
                 }
             }
 
@@ -3722,6 +3739,7 @@ public class Game1 : Game
             else
             {
                 // Heal Players
+                fantasyPlayerManager.HealAllPlayers();
 
                 // Transition to the Playing state
                 iNESCurrentAttackTracker = 0;
@@ -3739,6 +3757,8 @@ public class Game1 : Game
 
     private void UpdatePlayingCombat(GameTime gameTime)
     {
+        //TODO
+
         newKeyboardState = Keyboard.GetState();
 
         // Update the input timer
@@ -3747,11 +3767,10 @@ public class Game1 : Game
         if (_combatState == CombatState.CombatInitialize)
         {
             //We have to figure out what combat map to show
-
             if (currentMap == Maps.U4CombatMapCAMP)
             {
                 //We are on the camp combat map
-                //Do any initialization here for combat while camping
+                //Do any initialization here for combat while camping here
             }
             else
             {    
@@ -3851,6 +3870,10 @@ public class Game1 : Game
                 */
             }
 
+            //Initialize the combat tracker with the current combat map
+            combatTracker = new CombatTracker();
+            combatTracker.CombatMapType = currentMap;
+
             PlayBackgroundMusicBasedOnCurrentMap();
 
             //We are done selecting the combat map - proceed to placing the enemies on the map
@@ -3858,11 +3881,62 @@ public class Game1 : Game
         }
         else if (_combatState == CombatState.PlaceEnemies)
         {
+            //Place Monsters on the combat map
+            int monsterPosition = 0;
+            int monsterInitiativePosition = 1;
+
+            //TODO should create a fantasyMonsterManager.GetRandomMonsters()
+            //to return a random number of monsters based on the level of the players
+            foreach (var monster in fantasyMonsterManager.GetAllMonsters())
+            {
+                if (monsterPosition >= 16)
+                {
+                    break;
+                }
+
+                CombatMonsterStartingLocation loc = monsterPositionManager.GetMonsterPosition(currentMap, monsterPosition);
+
+                int y = loc.Y;
+                int x = loc.X;
+                CombatEntity combatEntity = new CombatEntity(CombatEntityType.Monster, y, x, true, monster.Initiative);
+                combatEntity.Monster = monster;
+
+                combatTracker.AddCombatEntity(combatEntity);
+                monsterInitiativePosition = monsterInitiativePosition + 2;
+                monsterPosition++;
+            }
+
             //We are done placing the enemies on the map - proceed to placing the players on the map
             _combatState = CombatState.PlacePlayers;
         }
         else if (_combatState == CombatState.PlacePlayers)
         {
+            //Place Players on the combat map
+            int partyPosition = 0;
+            int partyInitiativePosition = 0;
+            foreach (var player in fantasyPlayerManager.GetAllPlayers())
+            {
+                if (partyPosition >= 8)
+                {
+                    //Only 8 players can be on the map at once
+                    break;
+                }
+
+                if (player.Enabled)
+                {
+                    CombatPartyStartingLocation loc = partyPositionManager.GetPartyPosition(currentMap, partyPosition);
+
+                    int y = loc.Y;
+                    int x = loc.X;
+                    CombatEntity combatEntity = new CombatEntity(CombatEntityType.Player, y, x, true, player.Initiative);
+                    combatEntity.Player = player;
+
+                    combatTracker.AddCombatEntity(combatEntity);
+                    partyInitiativePosition = partyInitiativePosition + 2;
+                    partyPosition++;
+                }
+            }
+
             //We are done placing the players on the map - proceed to the player turn
             _combatState = CombatState.PlayerTurn;
         }
@@ -3878,6 +3952,8 @@ public class Game1 : Game
         }
         else if (_combatState == CombatState.CombatVictory)
         {
+            //TODO
+
             //Press space to go back to the overworld for now
             if (newKeyboardState.IsKeyDown(Keys.Space))
             {

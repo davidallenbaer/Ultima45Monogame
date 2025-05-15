@@ -22,6 +22,13 @@ namespace Ultima45Monogame
             CombatDefeat = 7
         }
 
+        public enum CombatEntityType
+        {
+            None = 0,
+            Player = 1,
+            Monster = 2,
+        }
+
         public enum MoveDirection
         {
             None = 0,

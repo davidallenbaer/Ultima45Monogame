@@ -73,5 +73,13 @@ namespace Ultima45Monogame.Player
             var players = (List<FantasyPlayer>)serializer.Deserialize(stream)!;
             return new FantasyPlayerManager(players);
         }
+
+        public void HealAllPlayers()
+        {
+            foreach (var player in _players)
+            {
+                player.HP = player.MaxHP;
+            }
+        }
     }
 }

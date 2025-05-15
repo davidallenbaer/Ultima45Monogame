@@ -17,14 +17,14 @@ namespace Ultima45Monogame.Combat
             PartyPositions.Add(new CombatPartyStartingLocation(map, partyposition, y, x));
         }
 
-        public void RemovePartyPosition(int partyposition)
+        public void RemovePartyPosition(Maps map, int partyposition)
         {
-            PartyPositions.RemoveAll(e => e.PartyPosition == partyposition);
+            PartyPositions.RemoveAll(e => e.CombatMap == map && e.PartyPosition == partyposition);
         }
 
-        public CombatPartyStartingLocation? GetPartyPosition(int partyposition)
+        public CombatPartyStartingLocation? GetPartyPosition(Maps map, int partyposition)
         {
-            return PartyPositions.FirstOrDefault(e => e.PartyPosition == partyposition);
+            return PartyPositions.FirstOrDefault(e => e.CombatMap == map && e.PartyPosition == partyposition);
         }
 
         public void LoadFromFile(Maps map, string filePath)

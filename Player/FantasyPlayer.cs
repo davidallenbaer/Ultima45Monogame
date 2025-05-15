@@ -39,9 +39,9 @@ namespace Ultima45Monogame
 
         public bool Visible { get; set; } = false;
 
-        public TileType PlayerTile { get; set; } = TileType.Blank;
-
         public int PartyPosition { get; set; } = 0;
+
+        public TileType PlayerTile { get; set; } = TileType.Blank;
 
         // List of weapons
         [XmlArray("Weapons")]

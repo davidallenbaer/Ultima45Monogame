@@ -15,6 +15,7 @@ X - Exit Vehicle
 K - Klimb Stairs
 D - Descend Stairs
 H - Hole Up & Camp
+G - Get Gold Chest
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -28,19 +29,19 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Leave Gold Chest on overworld map after combat,
 	Full Monster catalog with TileTypes,
 	Getting chest on overworld map increases party gold
+	Add CombatTracker class to track combat events
+	Place up to 16 Monsters on Combat Map using CombatTracker
+	Place up to 8 Players on Combat Map using CombatTracker
 
 --TODO--
-		//TODO: Place Monsters on Combat Map
-		//TODO: Place Players on Combat Map
+	Randomize the monster types and their number in the combat map when combat begins.
+
 
 Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
 	Monsters are visible on the map - you get attacked if you are adjacent to the monster.
 	Move these monsters around the map toward the player.
 	
 Future - Implement turn based combat
-		Show Combat map.
-		Position all enemies on combat map.
-		Position all the players on combat map.
 		Note: Figure out what is up with the indexes in "Combat Starting Locations for Party SHRINE.txt" because the indexes do not make sense.
 		Note: Figure out what is up with the indexes in "Combat Starting Locations for Monsters SHRINE.txt" because the indexes do not make sense.
 

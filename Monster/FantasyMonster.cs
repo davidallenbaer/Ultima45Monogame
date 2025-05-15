@@ -15,6 +15,7 @@ namespace Ultima45Monogame
         public int HitPoints { get; set; }
         public string HitDice { get; set; }
         public int ChallengeRating { get; set; }
+        public int Initiative { get; set; } = 0;
 
         public List<TileType> MonsterTiles { get; set; } = new List<TileType> { TileType.Blank };
 

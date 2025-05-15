@@ -17,14 +17,14 @@ namespace Ultima45Monogame.Combat
             MonsterPositions.Add(new CombatMonsterStartingLocation(map, monsterposition, y, x));
         }
 
-        public void RemoveMonsterPosition(int monsterposition)
+        public void RemoveMonsterPosition(Maps map, int monsterposition)
         {
-            MonsterPositions.RemoveAll(e => e.MonsterPosition == monsterposition);
+            MonsterPositions.RemoveAll(e => e.CombatMap == map && e.MonsterPosition == monsterposition);
         }
 
-        public CombatMonsterStartingLocation? GetMonsterPosition(int monsterposition)
+        public CombatMonsterStartingLocation? GetMonsterPosition(Maps map, int monsterposition)
         {
-            return MonsterPositions.FirstOrDefault(e => e.MonsterPosition == monsterposition);
+            return MonsterPositions.FirstOrDefault(e => e.CombatMap == map && e.MonsterPosition == monsterposition);
         }
 
         public void LoadFromFile(Maps map, string filePath)
