@@ -33,6 +33,8 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Place up to 16 Monsters on Combat Map using CombatTracker
 	Place up to 8 Players on Combat Map using CombatTracker
 
+Version 2.0.0 - Shrine combat locations
+
 --TODO--
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
 
@@ -41,8 +43,6 @@ Future - Combat mode Setting #2 - Implement random monsters visibly on the map (
 	Move these monsters around the map toward the player.
 	
 Future - Implement turn based combat
-		Note: Figure out what is up with the indexes in "Combat Starting Locations for Party SHRINE.txt" because the indexes do not make sense.
-		Note: Figure out what is up with the indexes in "Combat Starting Locations for Monsters SHRINE.txt" because the indexes do not make sense.
 
 Future - Implement auto combat option.
 
