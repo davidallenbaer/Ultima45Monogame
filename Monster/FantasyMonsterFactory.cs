@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Ultima45Monogame;
 using static Ultima45Monogame.RPGEnums;
 
@@ -6,6 +8,26 @@ namespace Ultima45Monogame
 {
     public static class FantasyMonsterFactory
     {
+        public static List<FantasyMonster> GetRandomMonsters(TileType terrain, int MaxNumEnemies)
+        {
+            // Cap the maximum number of enemies to 16
+            int maxEnemies = Math.Min(MaxNumEnemies, 16);
+
+            // Filter monsters by terrain
+            var eligibleMonsters = GetAllFantasyMonsters()
+                .Where(m => m.TerrainTiles != null && m.TerrainTiles.Contains(terrain))
+                .ToList();
+
+            // Shuffle and take up to maxEnemies
+            var random = new Random();
+            var randomMonsters = eligibleMonsters
+                .OrderBy(x => random.Next())
+                .Take(maxEnemies)
+                .ToList();
+
+            return randomMonsters;
+        }
+
         public static List<FantasyMonster> GetAllFantasyMonsters()
         {
             return new List<FantasyMonster>
@@ -20,7 +42,8 @@ namespace Ultima45Monogame
                     hitPoints: 50,
                     hitDice: "5d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.PirateShipEast, TileType.PirateShipNorth, TileType.PirateShipSouth, TileType.PirateShipWest }
+                    monsterTiles: new List<TileType> { TileType.PirateShipEast, TileType.PirateShipNorth, TileType.PirateShipSouth, TileType.PirateShipWest },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 2,
@@ -32,7 +55,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Nixie1, TileType.Nixie2 }
+                    monsterTiles: new List<TileType> { TileType.Nixie1, TileType.Nixie2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater, TileType.ShallowWater }
                 ),
                 new FantasyMonster(
                     id: 3,
@@ -44,7 +68,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.GiantSquid1, TileType.GiantSquid2 }
+                    monsterTiles: new List<TileType> { TileType.GiantSquid1, TileType.GiantSquid2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 4,
@@ -56,7 +81,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.SeaSerpent1, TileType.SeaSerpent2 }
+                    monsterTiles: new List<TileType> { TileType.SeaSerpent1, TileType.SeaSerpent2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 5,
@@ -68,7 +94,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Seahorse1, TileType.Seahorse2 }
+                    monsterTiles: new List<TileType> { TileType.Seahorse1, TileType.Seahorse2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 6,
@@ -80,7 +107,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Whirlpool1, TileType.Whirlpool2 }
+                    monsterTiles: new List<TileType> { TileType.Whirlpool1, TileType.Whirlpool2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 7,
@@ -92,7 +120,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Storm1, TileType.Storm2 }
+                    monsterTiles: new List<TileType> { TileType.Storm1, TileType.Storm2 },
+                    terrainTiles: new List<TileType> { TileType.DeepWater, TileType.MediumWater }
                 ),
                 new FantasyMonster(
                     id: 8,
@@ -104,7 +133,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Rat1, TileType.Rat2, TileType.Rat3, TileType.Rat4 }
+                    monsterTiles: new List<TileType> { TileType.Rat1, TileType.Rat2, TileType.Rat3, TileType.Rat4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Grasslands,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Scrubland,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 9,
@@ -116,7 +147,10 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Bat1, TileType.Bat2, TileType.Bat3, TileType.Bat4 }
+                    monsterTiles: new List<TileType> { TileType.Bat1, TileType.Bat2, TileType.Bat3, TileType.Bat4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Grasslands,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Scrubland,TileType.Swamp,TileType.DungeonEntrance }
+
                 ),
                 new FantasyMonster(
                     id: 10,
@@ -128,7 +162,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.GiantSpider1, TileType.GiantSpider2, TileType.GiantSpider3, TileType.GiantSpider4 }
+                    monsterTiles: new List<TileType> { TileType.GiantSpider1, TileType.GiantSpider2, TileType.GiantSpider3, TileType.GiantSpider4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 11,
@@ -140,7 +176,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Ghost1, TileType.Ghost2, TileType.Ghost3, TileType.Ghost4 }
+                    monsterTiles: new List<TileType> { TileType.Ghost1, TileType.Ghost2, TileType.Ghost3, TileType.Ghost4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 12,
@@ -152,7 +190,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Slime1, TileType.Slime2, TileType.Slime3, TileType.Slime4 }
+                    monsterTiles: new List<TileType> { TileType.Slime1, TileType.Slime2, TileType.Slime3, TileType.Slime4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 13,
@@ -164,7 +204,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Troll1, TileType.Troll2, TileType.Troll3, TileType.Troll4 }
+                    monsterTiles: new List<TileType> { TileType.Troll1, TileType.Troll2, TileType.Troll3, TileType.Troll4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance, TileType.Bridge, TileType.BridgeNorth, TileType.BridgeSouth }
                 ),
                 new FantasyMonster(
                     id: 14,
@@ -176,7 +218,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Gremlin1, TileType.Gremlin2, TileType.Gremlin3, TileType.Gremlin4 }
+                    monsterTiles: new List<TileType> { TileType.Gremlin1, TileType.Gremlin2, TileType.Gremlin3, TileType.Gremlin4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance, TileType.Bridge, TileType.BridgeNorth, TileType.BridgeSouth }
                 ),
                 new FantasyMonster(
                     id: 15,
@@ -188,7 +232,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Mimic1, TileType.Mimic2, TileType.Mimic3, TileType.Mimic4 }
+                    monsterTiles: new List<TileType> { TileType.Mimic1, TileType.Mimic2, TileType.Mimic3, TileType.Mimic4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 16,
@@ -200,7 +246,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Reaper1, TileType.Reaper2, TileType.Reaper3, TileType.Reaper4 }
+                    monsterTiles: new List<TileType> { TileType.Reaper1, TileType.Reaper2, TileType.Reaper3, TileType.Reaper4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 17,
@@ -212,7 +260,8 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.InsectSwarm1, TileType.InsectSwarm2, TileType.InsectSwarm3, TileType.InsectSwarm4 }
+                    monsterTiles: new List<TileType> { TileType.InsectSwarm1, TileType.InsectSwarm2, TileType.InsectSwarm3, TileType.InsectSwarm4 },
+                    terrainTiles: new List<TileType> { TileType.Forest, TileType.Hills, TileType.Mountains, TileType.Swamp }
                 ),
                 new FantasyMonster(
                     id: 18,
@@ -224,7 +273,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Gazer1, TileType.Gazer2, TileType.Gazer3, TileType.Gazer4 }
+                    monsterTiles: new List<TileType> { TileType.Gazer1, TileType.Gazer2, TileType.Gazer3, TileType.Gazer4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 19,
@@ -236,7 +287,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Phantom1, TileType.Phantom2, TileType.Phantom3, TileType.Phantom4 }
+                    monsterTiles: new List<TileType> { TileType.Phantom1, TileType.Phantom2, TileType.Phantom3, TileType.Phantom4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 20,
@@ -248,7 +301,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Orc1, TileType.Orc2, TileType.Orc3, TileType.Orc4 }
+                    monsterTiles: new List<TileType> { TileType.Orc1, TileType.Orc2, TileType.Orc3, TileType.Orc4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 21,
@@ -260,7 +315,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Skeleton1, TileType.Skeleton2, TileType.Skeleton3, TileType.Skeleton4 }
+                    monsterTiles: new List<TileType> { TileType.Skeleton1, TileType.Skeleton2, TileType.Skeleton3, TileType.Skeleton4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 22,
@@ -272,7 +329,10 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Rogue1, TileType.Rogue2, TileType.Rogue3, TileType.Rogue4 }
+                    monsterTiles: new List<TileType> { TileType.Rogue1, TileType.Rogue2, TileType.Rogue3, TileType.Rogue4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
+
                 ),
                 new FantasyMonster(
                     id: 23,
@@ -284,7 +344,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Python1, TileType.Python2, TileType.Python3, TileType.Python4 }
+                    monsterTiles: new List<TileType> { TileType.Python1, TileType.Python2, TileType.Python3, TileType.Python4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 24,
@@ -296,7 +358,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Ettin1, TileType.Ettin2, TileType.Ettin3, TileType.Ettin4 }
+                    monsterTiles: new List<TileType> { TileType.Ettin1, TileType.Ettin2, TileType.Ettin3, TileType.Ettin4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 25,
@@ -308,7 +372,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Headless1, TileType.Headless2, TileType.Headless3, TileType.Headless4 }
+                    monsterTiles: new List<TileType> { TileType.Headless1, TileType.Headless2, TileType.Headless3, TileType.Headless4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 26,
@@ -320,7 +386,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Cyclops1, TileType.Cyclops2, TileType.Cyclops3, TileType.Cyclops4 }
+                    monsterTiles: new List<TileType> { TileType.Cyclops1, TileType.Cyclops2, TileType.Cyclops3, TileType.Cyclops4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 27,
@@ -332,7 +400,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Wisp1, TileType.Wisp2, TileType.Wisp3, TileType.Wisp4 }
+                    monsterTiles: new List<TileType> { TileType.Wisp1, TileType.Wisp2, TileType.Wisp3, TileType.Wisp4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 28,
@@ -344,7 +414,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 }
+                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 29,
@@ -356,7 +428,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 }
+                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 30,
@@ -368,7 +442,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Lich1, TileType.Lich2, TileType.Lich3, TileType.Lich4 }
+                    monsterTiles: new List<TileType> { TileType.Lich1, TileType.Lich2, TileType.Lich3, TileType.Lich4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 31,
@@ -380,7 +456,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 }
+                    monsterTiles: new List<TileType> { TileType.EvilMage1, TileType.EvilMage2, TileType.EvilMage3, TileType.EvilMage4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 32,
@@ -392,7 +470,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.LavaLizard1, TileType.LavaLizard2, TileType.LavaLizard3, TileType.LavaLizard4 }
+                    monsterTiles: new List<TileType> { TileType.LavaLizard1, TileType.LavaLizard2, TileType.LavaLizard3, TileType.LavaLizard4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 33,
@@ -404,7 +484,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Zorn1, TileType.Zorn2, TileType.Zorn3, TileType.Zorn4 }
+                    monsterTiles: new List<TileType> { TileType.Zorn1, TileType.Zorn2, TileType.Zorn3, TileType.Zorn4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 34,
@@ -416,7 +498,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Daemon1, TileType.Daemon2, TileType.Daemon3, TileType.Daemon4 }
+                    monsterTiles: new List<TileType> { TileType.Daemon1, TileType.Daemon2, TileType.Daemon3, TileType.Daemon4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance, TileType.Shrine }
                 ),
                 new FantasyMonster(
                     id: 35,
@@ -428,7 +512,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Hydra1, TileType.Hydra2, TileType.Hydra3, TileType.Hydra4 }
+                    monsterTiles: new List<TileType> { TileType.Hydra1, TileType.Hydra2, TileType.Hydra3, TileType.Hydra4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 36,
@@ -440,7 +526,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Dragon1, TileType.Dragon2, TileType.Dragon3, TileType.Dragon4 }
+                    monsterTiles: new List<TileType> { TileType.Dragon1, TileType.Dragon2, TileType.Dragon3, TileType.Dragon4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
                 ),
                 new FantasyMonster(
                     id: 37,
@@ -452,7 +540,9 @@ namespace Ultima45Monogame
                     hitPoints: 10,
                     hitDice: "1d10",
                     challengeRating: 1,
-                    monsterTiles: new List<TileType> { TileType.Balron1, TileType.Balron2, TileType.Balron3, TileType.Balron4 }
+                    monsterTiles: new List<TileType> { TileType.Balron1, TileType.Balron2, TileType.Balron3, TileType.Balron4 },
+                    terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
+                        TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance, TileType.Shrine }
                 ),
             };
         }

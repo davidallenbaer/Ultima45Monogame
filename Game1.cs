@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Metadata;
 using Ultima45Monogame.Combat;
@@ -3084,6 +3085,7 @@ public class Game1 : Game
                     // Logic to enter a location (like a castle, town, etc.)
                     if (pcOverworldLocationY == 106 && pcOverworldLocationX == 82)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapBritain;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3092,6 +3094,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 86)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapLordBritishCastle1;
                         pcTownMapLocationY = 31;
                         pcTownMapLocationX = 15;
@@ -3100,6 +3103,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 145 && pcOverworldLocationX == 98)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapPaws;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3108,6 +3112,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 184 && pcOverworldLocationX == 106)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapTrinsic;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3116,6 +3121,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 90 && pcOverworldLocationX == 136)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapCove;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3124,6 +3130,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 50 && pcOverworldLocationX == 28)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapEmpathAbbey;
                         pcTownMapLocationY = 31;
                         pcTownMapLocationX = 15;
@@ -3132,6 +3139,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 222 && pcOverworldLocationX == 36)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapJhelom;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3140,6 +3148,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 218)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapLycaeum;
                         pcTownMapLocationY = 31;
                         pcTownMapLocationX = 15;
@@ -3148,6 +3157,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 43 && pcOverworldLocationX == 58)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapYew;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3156,6 +3166,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 59 && pcOverworldLocationX == 201)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapVesper;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3164,6 +3175,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 20 && pcOverworldLocationX == 159)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMinoc;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3172,6 +3184,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 135 && pcOverworldLocationX == 232)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMoonglow;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3180,6 +3193,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 169 && pcOverworldLocationX == 187)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMagincia;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3188,6 +3202,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 158 && pcOverworldLocationX == 136)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapBuccaneersDen;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3196,6 +3211,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 241 && pcOverworldLocationX == 146)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapSerpentIsle;
                         pcTownMapLocationY = 31;
                         pcTownMapLocationX = 15;
@@ -3204,6 +3220,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 128 && pcOverworldLocationX == 22)
                     {
+                        iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapSkaraBrae;
                         pcTownMapLocationY = 15;
                         pcTownMapLocationX = 0;
@@ -3881,13 +3898,18 @@ public class Game1 : Game
         }
         else if (_combatState == CombatState.PlaceEnemies)
         {
+            //Get Random Monsters for the combat map based on the terrain
+            int overworldTerrainMapValue = 0;
+            overworldTerrainMapValue = GetCurrentMapValue(Maps.U4MapOverworld, pcOverworldLocationY, pcOverworldLocationX);
+            TileType tileType = (TileType)overworldTerrainMapValue;
+
+            List<FantasyMonster> allMonsters = FantasyMonsterFactory.GetRandomMonsters(tileType, 16);
+
             //Place Monsters on the combat map
             int monsterPosition = 0;
             int monsterInitiativePosition = 1;
 
-            //TODO should create a fantasyMonsterManager.GetRandomMonsters()
-            //to return a random number of monsters based on the level of the players
-            foreach (var monster in fantasyMonsterManager.GetAllMonsters())
+            foreach (var monster in allMonsters)
             {
                 if (monsterPosition >= 16)
                 {
