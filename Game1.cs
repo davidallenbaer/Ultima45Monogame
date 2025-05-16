@@ -1209,8 +1209,20 @@ public class Game1 : Game
         }
     }
 
-    public int GetCurrentMapValue(Maps map, int y, int x)
+    public int GetCurrentMapValue(Maps map, int y, int x, bool bIgnoreEntity = false)
     {
+        if (bIgnoreEntity)
+        {
+            if (map == Maps.U4MapOverworld)
+            {
+                return mapUltima4Overworld[y, x];
+            }
+            else
+            {
+                return (int)TileType.Blank;
+            }
+        }
+
         if (map == Maps.U4MapOverworld)
         {
             OverworldEntity entity = overworldEntityManager.GetEntityAt(y, x);
@@ -3900,8 +3912,10 @@ public class Game1 : Game
         {
             //Get Random Monsters for the combat map based on the terrain
             int overworldTerrainMapValue = 0;
-            overworldTerrainMapValue = GetCurrentMapValue(Maps.U4MapOverworld, pcOverworldLocationY, pcOverworldLocationX);
-            TileType tileType = (TileType)overworldTerrainMapValue;
+            TileType tileType = TileType.Blank;
+            //tileType = (TileType)mapUltima4Overworld[pcOverworldLocationY, pcOverworldLocationX];
+            overworldTerrainMapValue = GetCurrentMapValue(Maps.U4MapOverworld, pcOverworldLocationY, pcOverworldLocationX, true);
+            tileType = (TileType)overworldTerrainMapValue;
 
             List<FantasyMonster> allMonsters = FantasyMonsterFactory.GetRandomMonsters(tileType, 16);
 
@@ -3979,7 +3993,18 @@ public class Game1 : Game
             //Press space to go back to the overworld for now
             if (newKeyboardState.IsKeyDown(Keys.Space))
             {
-                overworldEntityManager.AddEntity("GoldChest", pcOverworldLocationY, pcOverworldLocationX, (int)TileType.Chest, true);
+                if (_currentVehicle != Vehicle.Ship && _currentVehicle != Vehicle.Balloon)
+                {
+                    //Leave a Gold Chest
+                    overworldEntityManager.AddEntity("GoldChest", pcOverworldLocationY, pcOverworldLocationX, (int)TileType.Chest, true);
+                }
+                else
+                {
+                    //Increase Player Gold
+                    Random random = new Random();
+                    int goldFound = random.Next(1, 101);
+                    partyGP += goldFound;
+                }
 
                 //We are done with the combat - go back to the normal play mode
                 _currentState = GameStates.Playing;

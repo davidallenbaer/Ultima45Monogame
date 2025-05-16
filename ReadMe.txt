@@ -34,8 +34,7 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Place up to 8 Players on Combat Map using CombatTracker
 
 --TODO--
-	Randomize the monster types and their number in the combat map when combat begins.
-
+	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
 
 Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
 	Monsters are visible on the map - you get attacked if you are adjacent to the monster.

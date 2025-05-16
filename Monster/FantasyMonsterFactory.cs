@@ -20,10 +20,17 @@ namespace Ultima45Monogame
 
             // Shuffle and take up to maxEnemies
             var random = new Random();
-            var randomMonsters = eligibleMonsters
-                .OrderBy(x => random.Next())
-                .Take(maxEnemies)
-                .ToList();
+            var randomMonsters = new List<FantasyMonster>();
+
+            if (eligibleMonsters.Count == 0)
+                return randomMonsters;
+
+            for (int i = 0; i < maxEnemies; i++)
+            {
+                // Pick a random monster from the eligible list (allowing duplicates)
+                int index = random.Next(eligibleMonsters.Count);
+                randomMonsters.Add(eligibleMonsters[index]);
+            }
 
             return randomMonsters;
         }
