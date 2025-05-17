@@ -11,7 +11,10 @@ namespace Ultima45Monogame
         public static List<FantasyMonster> GetRandomMonsters(TileType terrain, int MaxNumEnemies)
         {
             // Cap the maximum number of enemies to 16
-            int maxEnemies = Math.Min(MaxNumEnemies, 16);
+
+            // Generate a random number between 1 and 16 for the number of enemies
+            var random1 = new Random();
+            int maxEnemies = random1.Next(1, Math.Min(MaxNumEnemies, 16) + 1);
 
             // Filter monsters by terrain
             var eligibleMonsters = GetAllFantasyMonsters()
@@ -19,7 +22,7 @@ namespace Ultima45Monogame
                 .ToList();
 
             // Shuffle and take up to maxEnemies
-            var random = new Random();
+            var random2 = new Random();
             var randomMonsters = new List<FantasyMonster>();
 
             if (eligibleMonsters.Count == 0)
@@ -28,7 +31,7 @@ namespace Ultima45Monogame
             for (int i = 0; i < maxEnemies; i++)
             {
                 // Pick a random monster from the eligible list (allowing duplicates)
-                int index = random.Next(eligibleMonsters.Count);
+                int index = random2.Next(eligibleMonsters.Count);
                 randomMonsters.Add(eligibleMonsters[index]);
             }
 
@@ -157,7 +160,6 @@ namespace Ultima45Monogame
                     monsterTiles: new List<TileType> { TileType.Bat1, TileType.Bat2, TileType.Bat3, TileType.Bat4 },
                     terrainTiles: new List<TileType> { TileType.Forest,TileType.Grasslands,TileType.Hills,TileType.Mountains,
                         TileType.Ruins,TileType.Scrubland,TileType.Swamp,TileType.DungeonEntrance }
-
                 ),
                 new FantasyMonster(
                     id: 10,
@@ -339,7 +341,6 @@ namespace Ultima45Monogame
                     monsterTiles: new List<TileType> { TileType.Rogue1, TileType.Rogue2, TileType.Rogue3, TileType.Rogue4 },
                     terrainTiles: new List<TileType> { TileType.Forest,TileType.Hills,TileType.Mountains,
                         TileType.Ruins,TileType.Swamp,TileType.DungeonEntrance }
-
                 ),
                 new FantasyMonster(
                     id: 23,
