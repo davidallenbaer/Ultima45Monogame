@@ -10,6 +10,8 @@ using System.Reflection.Metadata;
 using Ultima45Monogame.Combat;
 using Ultima45Monogame.Player;
 using static Ultima45Monogame.RPGEnums;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Ultima45Monogame;
 
@@ -25,6 +27,7 @@ public class Game1 : Game
         Playing,
         PlayingCombat,
         PlayingCamp,
+        PeerAtGem,
         Paused,
         GameOver
     }
@@ -127,6 +130,8 @@ public class Game1 : Game
     private int pcOverworldLocationY = 109; //Start at Lord British's Castle
     private int pcTownMapLocationX = 0;
     private int pcTownMapLocationY = 0;
+
+    public Texture2D peerAtGemMap;
 
     public Texture2D spriteDeepWater;
     public Texture2D spriteMediumWater;
@@ -2075,7 +2080,7 @@ public class Game1 : Game
                 Texture2D sprite = GetSpriteForMapValue(mapValue);
 
                 // Draw the sprite with scaling
-                spriteBatch.Draw(sprite, new Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Color.White);
+                spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Microsoft.Xna.Framework.Color.White);
             }
         }
     }
@@ -2097,7 +2102,7 @@ public class Game1 : Game
                 Texture2D sprite = GetSpriteForMapValue(mapValue);
 
                 // Draw the sprite with scaling
-                spriteBatch.Draw(sprite, new Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Color.White);
+                spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Microsoft.Xna.Framework.Color.White);
             }
         }
     }
@@ -2154,7 +2159,7 @@ public class Game1 : Game
                 Texture2D sprite = GetSpriteForMapValue(mapValue);
 
                 // Draw the sprite with scaling
-                spriteBatch.Draw(sprite, new Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Color.White);
+                spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Microsoft.Xna.Framework.Color.White);
             }
         }
     }
@@ -2350,7 +2355,7 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
+        GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
         _spriteBatch.Begin();
 
@@ -2372,6 +2377,10 @@ public class Game1 : Game
                 DrawPlayingCombat();
                 break;
 
+            case GameStates.PeerAtGem:
+                DrawPeerAtGem();
+                break;
+
             case GameStates.PlayingCamp:
                 DrawPlayingCamp();
                 break;
@@ -2390,6 +2399,15 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
+    private void DrawPeerAtGem()
+    {
+        // Draw the peer at gem screen
+        if (peerAtGemMap != null)
+        {
+            _spriteBatch.Draw(peerAtGemMap, new Microsoft.Xna.Framework.Rectangle(0, 0, peerAtGemMap.Width, peerAtGemMap.Height), Microsoft.Xna.Framework.Color.White);
+        }
+    }
+
     private void DrawGameOver()
     {
 
@@ -2401,14 +2419,14 @@ public class Game1 : Game
         var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
         string title = "--Paused--";
         Vector2 titlePosition = new Vector2(400, 200);
-        _spriteBatch.DrawString(font, title, titlePosition, Color.White);
+        _spriteBatch.DrawString(font, title, titlePosition, Microsoft.Xna.Framework.Color.White);
 
         // Draw menu options
         for (int i = 0; i < pauseMenuOptions.Length; i++)
         {
             string option = pauseMenuOptions[i];
             Vector2 position = new Vector2(400, 250 + i * 30);
-            Color color = (i == selectedMenuIndex) ? Color.Yellow : Color.White;
+            Microsoft.Xna.Framework.Color color = (i == selectedMenuIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
             _spriteBatch.DrawString(font, option, position, color);
         }
     }
@@ -2491,9 +2509,15 @@ public class Game1 : Game
             case GameStates.PlayingCombat:
                 UpdatePlayingCombat(gameTime);
                 break;
+
             case GameStates.PlayingCamp:
                 UpdatePlayingCamp(gameTime);
                 break;
+
+            case GameStates.PeerAtGem:
+                UpdatePeerAtGem(gameTime);
+                break;
+
             case GameStates.Paused:
                 UpdatePaused(gameTime);
                 break;
@@ -2504,6 +2528,60 @@ public class Game1 : Game
         }
 
         base.Update(gameTime);
+    }
+
+    private void UpdatePeerAtGem(GameTime gameTime)
+    {
+        newKeyboardState = Keyboard.GetState();
+
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        //View a Gem
+        if (peerAtGemMap == null)
+        {
+            if (currentMap == Maps.U4MapOverworld)
+            {
+                var subgrid = GetCenteredOverworldSubgrid(mapUltima4Overworld, pcOverworldLocationY, pcOverworldLocationX);
+
+                Bitmap bitmap = CreateBitmapFromSubgrid(subgrid);
+                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, bitmap);
+            }
+            else if (currentMap == Maps.U4MapBritain ||
+                currentMap == Maps.U4MapBuccaneersDen ||
+                currentMap == Maps.U4MapCove ||
+                currentMap == Maps.U4MapEmpathAbbey ||
+                currentMap == Maps.U4MapJhelom ||
+                currentMap == Maps.U4MapLordBritishCastle1 ||
+                currentMap == Maps.U4MapLordBritishCastle2 ||
+                currentMap == Maps.U4MapLycaeum ||
+                currentMap == Maps.U4MapMagincia ||
+                currentMap == Maps.U4MapMinoc ||
+                currentMap == Maps.U4MapMoonglow ||
+                currentMap == Maps.U4MapPaws ||
+                currentMap == Maps.U4MapSerpentIsle ||
+                currentMap == Maps.U4MapSkaraBrae ||
+                currentMap == Maps.U4MapTrinsic ||
+                currentMap == Maps.U4MapVesper ||
+                currentMap == Maps.U4MapYew
+                )
+            {
+                var subgrid = GetCenteredOverworldSubgrid(GetGridForMap(currentMap), 16, 16, 32);
+
+                Bitmap bitmap = CreateBitmapFromSubgrid(subgrid);
+                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, bitmap);
+            }
+        }
+
+        //Press space to go back to the overworld after peering at the gem
+        if (newKeyboardState.IsKeyDown(Keys.Space))
+        {
+            _currentState = GameStates.Playing;
+            UpdateMainDisplayGridValues(currentMap);
+            return;
+        }
+
+        oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
     }
 
     private void UpdateGameOver(GameTime gameTime)
@@ -3260,7 +3338,7 @@ public class Game1 : Game
                     {
                         mapCampDisplayTimer = 0;
                         iNESCurrentAttackTracker = 0;
-                        _currentState = GameStates.PlayingCamp;                            
+                        _currentState = GameStates.PlayingCamp;
                         inputTimer = 0; // Reset the timer
                         return;
                     }
@@ -3269,7 +3347,7 @@ public class Game1 : Game
                 {
                     _soundEffect_BadCommand.Play();
                 }
-                    
+
             }
             else if (oldKeyboardState.IsKeyUp(Keys.X) && newKeyboardState.IsKeyDown(Keys.X))
             {
@@ -3315,6 +3393,13 @@ public class Game1 : Game
                 {
                     //Handle Gold Chests in Towns
                 }
+            }
+            else if (oldKeyboardState.IsKeyUp(Keys.V) && newKeyboardState.IsKeyDown(Keys.V))
+            {
+                peerAtGemMap = null;
+                _currentState = GameStates.PeerAtGem;
+                inputTimer = 0; // Reset the timer
+                return;
             }
 
             //Handle the GamePad input
@@ -3786,8 +3871,6 @@ public class Game1 : Game
 
     private void UpdatePlayingCombat(GameTime gameTime)
     {
-        //TODO
-
         newKeyboardState = Keyboard.GetState();
 
         // Update the input timer
@@ -4042,4 +4125,166 @@ public class Game1 : Game
             16 * scaleFactor
         );
     }
+
+    #region Peer At Gem Map
+
+    private int[,] GetGridForMap(Maps currentMap)
+    {
+        return currentMap switch
+        {
+            Maps.U4MapOverworld => mapUltima4Overworld,
+            Maps.U4MapBritain => mapUltima4Britain,
+            Maps.U4MapBuccaneersDen => mapUltima4BuccaneersDen,
+            Maps.U4MapCove => mapUltima4Cove,
+            Maps.U4MapEmpathAbbey => mapUltima4EmpathAbbey,
+            Maps.U4MapJhelom => mapUltima4Jhelom,
+            Maps.U4MapLordBritishCastle1 => mapUltima4LordBritishCastle1,
+            Maps.U4MapLordBritishCastle2 => mapUltima4LordBritishCastle2,
+            Maps.U4MapLycaeum => mapUltima4Lycaeum,
+            Maps.U4MapMagincia => mapUltima4Magincia,
+            Maps.U4MapMinoc => mapUltima4Minoc,
+            Maps.U4MapMoonglow => mapUltima4Moonglow,
+            Maps.U4MapPaws => mapUltima4Paws,
+            Maps.U4MapSerpentIsle => mapUltima4SerpentIsle,
+            Maps.U4MapSkaraBrae => mapUltima4SkaraBrae,
+            Maps.U4MapTrinsic => mapUltima4Trinsic,
+            Maps.U4MapVesper => mapUltima4Vesper,
+            Maps.U4MapYew => mapUltima4Yew,
+            Maps.U4CombatMapBRICK => mapUltima4CombatBRICK,
+            Maps.U4CombatMapBRIDGE => mapUltima4CombatBRIDGE,
+            Maps.U4CombatMapBRUSH => mapUltima4CombatBRUSH,
+            Maps.U4CombatMapCAMP => mapUltima4CombatCAMP,
+            Maps.U4CombatMapDNG0 => mapUltima4CombatDNG0,
+            Maps.U4CombatMapDNG1 => mapUltima4CombatDNG1,
+            Maps.U4CombatMapDNG2 => mapUltima4CombatDNG2,
+            Maps.U4CombatMapDNG3 => mapUltima4CombatDNG3,
+            Maps.U4CombatMapDNG4 => mapUltima4CombatDNG4,
+            Maps.U4CombatMapDNG5 => mapUltima4CombatDNG5,
+            Maps.U4CombatMapDNG6 => mapUltima4CombatDNG6,
+            Maps.U4CombatMapDUNGEON => mapUltima4CombatDUNGEON,
+            Maps.U4CombatMapFOREST => mapUltima4CombatFOREST,
+            Maps.U4CombatMapGRASS => mapUltima4CombatGRASS,
+            Maps.U4CombatMapHILL => mapUltima4CombatHILL,
+            Maps.U4CombatMapINN => mapUltima4CombatINN,
+            Maps.U4CombatMapMARSH => mapUltima4CombatMARSH,
+            Maps.U4CombatMapSHIPSEA => mapUltima4CombatSHIPSEA,
+            Maps.U4CombatMapSHIPSHIP => mapUltima4CombatSHIPSHIP,
+            Maps.U4CombatMapSHIPSHOR => mapUltima4CombatSHIPSHOR,
+            Maps.U4CombatMapSHORE => mapUltima4CombatSHORE,
+            Maps.U4CombatMapSHORSHIP => mapUltima4CombatSHORSHIP,
+            Maps.U4CombatMapSHRINE => mapUltima4CombatSHRINE,
+        };
+    }
+
+    public int[,] GetCenteredOverworldSubgrid(int[,] overworldMap, int centerY, int centerX, int subgridSize = 50)
+    {
+        /*
+            This method returns a 50x50 subgrid from overworldMap, centered on the given coordinates.
+            It wraps around the edges of the overworld map if needed.
+        */
+
+        int overworldSizeY = overworldMap.GetLength(0);
+        int overworldSizeX = overworldMap.GetLength(1);
+        int[,] subgrid = new int[subgridSize, subgridSize];
+
+        int half = subgridSize / 2;
+
+        for (int y = 0; y < subgridSize; y++)
+        {
+            for (int x = 0; x < subgridSize; x++)
+            {
+                // Calculate wrapped coordinates
+                int srcY = (centerY - half + y + overworldSizeY) % overworldSizeY;
+                int srcX = (centerX - half + x + overworldSizeX) % overworldSizeX;
+                subgrid[y, x] = overworldMap[srcY, srcX];
+            }
+        }
+
+        return subgrid;
+    }
+
+    public Bitmap CreateBitmapFromSubgrid(int[,] subgrid, int tileSize = 16)
+    {
+        int rows = subgrid.GetLength(0);
+        int cols = subgrid.GetLength(1);
+
+        // Create a new bitmap with the correct size
+        Bitmap bitmap = new Bitmap(cols * tileSize, rows * tileSize, PixelFormat.Format32bppArgb);
+
+        using (Graphics g = Graphics.FromImage(bitmap))
+        {
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    int mapValue = subgrid[y, x];
+
+                    // Get the corresponding Texture2D for this map value
+                    Texture2D sprite = GetSpriteForMapValue(mapValue);
+
+                    // Convert Texture2D to Bitmap
+                    Bitmap spriteBitmap = Texture2DToBitmap(sprite);
+
+                    // Draw the sprite onto the final bitmap
+                    g.DrawImage(spriteBitmap, x * tileSize, y * tileSize, tileSize, tileSize);
+
+                    spriteBitmap.Dispose();
+                }
+            }
+        }
+
+        return bitmap;
+    }
+
+    // Helper method to convert Texture2D to Bitmap
+    private Bitmap Texture2DToBitmap(Texture2D texture)
+    {
+        // Get pixel data from Texture2D
+        Microsoft.Xna.Framework.Color[] data = new Microsoft.Xna.Framework.Color[texture.Width * texture.Height];
+        texture.GetData(data);
+
+        Bitmap bmp = new Bitmap(texture.Width, texture.Height, PixelFormat.Format32bppArgb);
+
+        for (int y = 0; y < texture.Height; y++)
+        {
+            for (int x = 0; x < texture.Width; x++)
+            {
+                var c = data[y * texture.Width + x];
+                bmp.SetPixel(x, y, System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B));
+            }
+        }
+
+        return bmp;
+    }
+
+    public Texture2D BitmapToTexture2D(GraphicsDevice graphicsDevice, Bitmap bitmap)
+    {
+        // Lock the bitmap's bits
+        var rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+        var bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+        // Create a buffer to hold the bitmap data
+        int bufferSize = bmpData.Stride * bitmap.Height;
+        byte[] bytes = new byte[bufferSize];
+        System.Runtime.InteropServices.Marshal.Copy(bmpData.Scan0, bytes, 0, bufferSize);
+
+        // Unlock the bits
+        bitmap.UnlockBits(bmpData);
+
+        // Create the Texture2D
+        Texture2D texture = new Texture2D(graphicsDevice, bitmap.Width, bitmap.Height, false, SurfaceFormat.Color);
+
+        // MonoGame expects Color in RGBA, but Bitmap gives BGRA, so swap R and B
+        for (int i = 0; i < bytes.Length; i += 4)
+        {
+            byte b = bytes[i];
+            bytes[i] = bytes[i + 2];
+            bytes[i + 2] = b;
+        }
+
+        texture.SetData(bytes);
+        return texture;
+    }
+
+    #endregion
 }
