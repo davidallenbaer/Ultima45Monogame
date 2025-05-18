@@ -2545,7 +2545,8 @@ public class Game1 : Game
                 var subgrid = GetCenteredOverworldSubgrid(mapUltima4Overworld, pcOverworldLocationY, pcOverworldLocationX);
 
                 Bitmap bitmap = CreateBitmapFromSubgrid(subgrid);
-                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, bitmap);
+                Bitmap resizedBitmap = ResizeBitmapToScreen(bitmap);
+                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, resizedBitmap);
             }
             else if (currentMap == Maps.U4MapBritain ||
                 currentMap == Maps.U4MapBuccaneersDen ||
@@ -2569,7 +2570,8 @@ public class Game1 : Game
                 var subgrid = GetCenteredOverworldSubgrid(GetGridForMap(currentMap), 16, 16, 32);
 
                 Bitmap bitmap = CreateBitmapFromSubgrid(subgrid);
-                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, bitmap);
+                Bitmap resizedBitmap = ResizeBitmapToScreen(bitmap);
+                peerAtGemMap = BitmapToTexture2D(GraphicsDevice, resizedBitmap);
             }
         }
 
@@ -4284,6 +4286,22 @@ public class Game1 : Game
 
         texture.SetData(bytes);
         return texture;
+    }
+
+    public Bitmap ResizeBitmapToScreen(Bitmap original)
+    {
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        Bitmap resized = new Bitmap(screenWidth, screenHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+        using (Graphics g = Graphics.FromImage(resized))
+        {
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(original, 0, 0, screenWidth, screenHeight);
+        }
+
+        return resized;
     }
 
     #endregion
