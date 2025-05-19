@@ -42,7 +42,7 @@ public class Game1 : Game
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
     private CombatState _combatState = CombatState.None;
     private CombatTracker combatTracker = new CombatTracker();
-    private bool bDrawMainDisplayStretched = false;
+    private bool bDrawMainDisplayStretched = true;
 
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
@@ -2111,8 +2111,7 @@ public class Game1 : Game
     {
         if (bDrawMainDisplayStretched)
         {
-            //TODO: Stretched grid to fit the screen
-            DrawMainDisplayCampGrid_Normal(spriteBatch, startY, startX, cellSize);
+            DrawMainDisplayCampGrid_Stretched(spriteBatch, startY, startX, cellSize);
         }
         else
         {
@@ -2138,6 +2137,34 @@ public class Game1 : Game
 
                 // Draw the sprite with scaling
                 spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, cellSize * scaleFactor, cellSize * scaleFactor), Microsoft.Xna.Framework.Color.White);
+            }
+        }
+    }
+
+    public void DrawMainDisplayCampGrid_Stretched(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
+    {
+        int rows = mainDisplayGridSize;
+        int cols = mainDisplayGridSize;
+
+        // Calculate dynamic tile size to stretch grid to screen
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+        int tileWidth = screenWidth / cols;
+        int tileHeight = screenHeight / rows;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                int x = startX + (col * tileWidth);
+                int y = startY + (row * tileHeight);
+
+                int mapValue = GetMainDisplayMapValue(row, col);
+
+                Texture2D sprite = GetSpriteForMapValue(mapValue);
+
+                // Draw the sprite stretched to fit the calculated tile size
+                spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, tileWidth, tileHeight), Microsoft.Xna.Framework.Color.White);
             }
         }
     }
