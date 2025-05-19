@@ -36,10 +36,10 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 
 Version 2.0.0 - Shrine combat locations
 	Peer at Gem on Overworld map and in Towns
+	Stretch all the maps to fit the screen
 
 --TODO--
-	Stretch the map to fit the screen
-
+	
 	Populate towns with NPCs
 	
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.

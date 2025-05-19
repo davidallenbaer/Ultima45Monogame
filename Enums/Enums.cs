@@ -10,6 +10,15 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum PlayerStatus
+        {
+            None = 0,
+            Good = 1,
+            Poisoned = 2,
+            Sleeping = 3,
+            Dead = 4
+        }
+
         public enum CombatState
         {
             None = 0,

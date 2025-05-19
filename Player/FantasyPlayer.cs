@@ -35,6 +35,8 @@ namespace Ultima45Monogame
         public int GP { get; set; } = 0;
         public int Rations { get; set; } = 0;
 
+        public PlayerStatus Status { get; set; } = PlayerStatus.Good; //Good, Poisoned, Sleeping, Dead
+
         public bool Enabled { get; set; } = false;
 
         public bool Visible { get; set; } = false;
