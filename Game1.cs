@@ -3,15 +3,21 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using MonoGame.Extended.ECS;
+using MonoGame.Extended.Screens;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection.Metadata;
-using Ultima45Monogame.Combat;
-using Ultima45Monogame.Player;
-using static Ultima45Monogame.RPGEnums;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
+using Ultima45Monogame.Combat;
+using Ultima45Monogame.Player;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame;
 
@@ -36,6 +42,7 @@ public class Game1 : Game
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
     private CombatState _combatState = CombatState.None;
     private CombatTracker combatTracker = new CombatTracker();
+    private bool bDrawMainDisplayStretched = false;
 
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
@@ -985,7 +992,7 @@ public class Game1 : Game
     {
         try
         {
-            string[] lines = File.ReadAllLines(sMapFileName);
+            string[] lines = System.IO.File.ReadAllLines(sMapFileName);
 
             if (lines.Length != iMapSize)
             {
@@ -2047,7 +2054,22 @@ public class Game1 : Game
 
     #endregion
 
+    #region Draw Main Display Grids
+
     public void DrawMainDisplayCombatGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
+    {
+        if (bDrawMainDisplayStretched)
+        {
+            //TODO: Stretched grid to fit the screen
+            DrawMainDisplayCombatGrid_Normal(spriteBatch, startY, startX, cellSize);
+        }
+        else
+        {
+            DrawMainDisplayCombatGrid_Normal(spriteBatch, startY, startX, cellSize);
+        }
+    }
+
+    public void DrawMainDisplayCombatGrid_Normal(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
     {
         int rows = mainDisplayGridSize;
         int cols = mainDisplayGridSize;
@@ -2061,10 +2083,10 @@ public class Game1 : Game
 
                 int mapValue = GetMainDisplayMapValue(row, col);
 
-                CombatEntity entity = combatTracker.GetCombatEntityAt(row,col);
+                CombatEntity entity = combatTracker.GetCombatEntityAt(row, col);
                 if (entity != null)
                 {
-                    
+
                     if (entity.EntityType == CombatEntityType.Monster)
                     {
                         string name = entity.Monster.Name;
@@ -2087,6 +2109,19 @@ public class Game1 : Game
 
     public void DrawMainDisplayCampGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
     {
+        if (bDrawMainDisplayStretched)
+        {
+            //TODO: Stretched grid to fit the screen
+            DrawMainDisplayCampGrid_Normal(spriteBatch, startY, startX, cellSize);
+        }
+        else
+        {
+            DrawMainDisplayCampGrid_Normal(spriteBatch, startY, startX, cellSize);
+        }
+    }
+
+    public void DrawMainDisplayCampGrid_Normal(SpriteBatch spriteBatch, int startY, int startX, int cellSize)
+    {
         int rows = mainDisplayGridSize;
         int cols = mainDisplayGridSize;
 
@@ -2108,6 +2143,18 @@ public class Game1 : Game
     }
 
     public void DrawMainDisplayGrid(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
+    {
+        if (bDrawMainDisplayStretched)
+        {
+            DrawMainDisplayGrid_Stretched(spriteBatch, startY, startX, cellSize, bDrawAvatarInCenter);
+        }
+        else
+        {
+            DrawMainDisplayGrid_Normal(spriteBatch, startY, startX, cellSize, bDrawAvatarInCenter);
+        }
+    }
+
+    public void DrawMainDisplayGrid_Normal(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
     {
         int rows = mainDisplayGridSize;
         int cols = mainDisplayGridSize;
@@ -2163,6 +2210,71 @@ public class Game1 : Game
             }
         }
     }
+
+    public void DrawMainDisplayGrid_Stretched(SpriteBatch spriteBatch, int startY, int startX, int cellSize, bool bDrawAvatarInCenter = true)
+    {
+        //Stretched grid to fit the screen
+        int rows = mainDisplayGridSize;
+        int cols = mainDisplayGridSize;
+
+        // Calculate dynamic tile size to stretch grid to screen
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+        int tileWidth = screenWidth / cols;
+        int tileHeight = screenHeight / rows;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                int x = startX + (col * tileWidth);
+                int y = startY + (row * tileHeight);
+
+                int mapValue = GetMainDisplayMapValue(row, col);
+
+                if (bDrawAvatarInCenter)
+                {
+                    if (row == mainDisplayCenter && col == mainDisplayCenter)
+                    {
+                        // Always draw the avatar/vehicle in the center of the main display grid
+                        // unless it is a combat map
+
+                        if (_currentVehicle == RPGEnums.Vehicle.None)
+                        {
+                            mapValue = (int)TileType.Avatar;
+                        }
+                        else if (_currentVehicle == RPGEnums.Vehicle.Balloon)
+                        {
+                            mapValue = (int)TileType.Balloon;
+                        }
+                        else if (_currentVehicle == RPGEnums.Vehicle.Horse)
+                        {
+                            OverworldEntity entity = overworldEntityManager.GetEntityByEntityType("Horse");
+                            if (entity != null)
+                            {
+                                mapValue = entity.TileValue;
+                            }
+                        }
+                        else if (_currentVehicle == RPGEnums.Vehicle.Ship)
+                        {
+                            OverworldEntity entity = overworldEntityManager.GetEntityByEntityType("Ship");
+                            if (entity != null)
+                            {
+                                mapValue = entity.TileValue;
+                            }
+                        }
+                    }
+                }
+
+                Texture2D sprite = GetSpriteForMapValue(mapValue);
+
+                // Draw the sprite stretched to fit the calculated tile size
+                spriteBatch.Draw(sprite, new Microsoft.Xna.Framework.Rectangle(x, y, tileWidth, tileHeight), Microsoft.Xna.Framework.Color.White);
+            }
+        }
+    }
+
+    #endregion
 
     private void TeleportAvatar(int iTownIndex)
     {
@@ -3544,7 +3656,7 @@ public class Game1 : Game
         string saveGamePath = "SaveSlot1\\Ultima4SaveGameVariables.xml";
         string playerDataPath = "SaveSlot1\\FantasyPlayers.xml";
         string overworldEntityPath = "SaveSlot1\\OverworldEntities.xml";
-        if (File.Exists(saveGamePath) && File.Exists(playerDataPath))
+        if (System.IO.File.Exists(saveGamePath) && System.IO.File.Exists(playerDataPath))
         {
             Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
             gameSaveVariables = Utilities.DeserializeSaveGameVariables(saveGamePath);
@@ -4175,6 +4287,7 @@ public class Game1 : Game
             Maps.U4CombatMapSHORE => mapUltima4CombatSHORE,
             Maps.U4CombatMapSHORSHIP => mapUltima4CombatSHORSHIP,
             Maps.U4CombatMapSHRINE => mapUltima4CombatSHRINE,
+            _ => new int[0, 0]
         };
     }
 

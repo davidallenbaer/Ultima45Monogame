@@ -16,6 +16,7 @@ K - Klimb Stairs
 D - Descend Stairs
 H - Hole Up & Camp
 G - Get Gold Chest
+V - View (Peer at Gem)
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -34,21 +35,16 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Place up to 8 Players on Combat Map using CombatTracker
 
 Version 2.0.0 - Shrine combat locations
+	Peer at Gem on Overworld map and in Towns
 
 --TODO--
-	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
-
-Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
-	Monsters are visible on the map - you get attacked if you are adjacent to the monster.
-	Move these monsters around the map toward the player.
-	
-Future - Implement turn based combat
-
-Future - Implement auto combat option.
-
-Version 3.0.0 - Towns\Shops\Dialog
+	Stretch the map to fit the screen
 
 	Populate towns with NPCs
+	
+	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
+
+Version 3.0.0 - Towns\Shops\Dialog
 
 	Randomly move NPCs around the town map.
 
@@ -60,7 +56,6 @@ Version 4.0.0 - Menu System
 	Implement a quest system.
 	Implement a spell system.
 	Implement a journal.
-	Implement a map.
 	Implement a menu to equip and unequip items.
 	Implement a spell book with a spell system.
 
@@ -68,6 +63,14 @@ Version 5.0.0 - Implement dungeons
 	Dungeons should be a separate map that you can enter from the overworld map.
 	A dungeon level will be similar to a tile based town map (Not first person view like in the original game).
 	Saving in dungeons should be possible.
+
+Future - Combat mode Setting #2 - Implement random monsters visibly on the map (like PC Ultima IV).
+	Monsters are visible on the map - you get attacked if you are adjacent to the monster.
+	Move these monsters around the map toward the player.
+	
+Future - Implement turn based combat
+
+Future - Implement auto combat option.
 
 --Extra Ideas--
 Ability to purchase shops for income.
