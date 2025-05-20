@@ -4403,16 +4403,92 @@ public class Game1 : Game
                 {
                     int mapValue = subgrid[y, x];
 
-                    // Get the corresponding Texture2D for this map value
-                    Texture2D sprite = GetSpriteForMapValue(mapValue);
+                    // Draw the Avatar tile at the center of the grid on the Maps.U4MapOverworld
+                    if (y == rows / 2 && x == cols / 2 && currentMap == Maps.U4MapOverworld)
+                    {
+                        Texture2D sprite;
+                        sprite = spriteAvatar;
 
-                    // Convert Texture2D to Bitmap
-                    Bitmap spriteBitmap = Texture2DToBitmap(sprite);
+                        if (_currentVehicle == Vehicle.Balloon)
+                        {
+                            sprite = spriteBalloon;
+                        }
+                        else if (_currentVehicle == Vehicle.Ship)
+                        {
+                            if (_currentHeading == MoveDirection.North)
+                            {
+                                sprite = spriteShipNorth;
+                            }
+                            else if (_currentHeading == MoveDirection.South)
+                            {
+                                sprite = spriteShipSouth;
+                            }
+                            else if (_currentHeading == MoveDirection.East)
+                            {
+                                sprite = spriteShipEast;
+                            }
+                            else if (_currentHeading == MoveDirection.West)
+                            {
+                                sprite = spriteShipWest;
+                            }
+                            else
+                            {
+                                sprite = spriteShipEast; // Default to ShipEast if heading is unknown
+                            }
+                        }
+                        if (_currentVehicle == Vehicle.Horse)
+                        {
+                            if (_currentHeading == MoveDirection.North)
+                            {
+                                sprite = spriteHorseEast;
+                            }
+                            else if (_currentHeading == MoveDirection.South)
+                            {
+                                sprite = spriteHorseWest;
+                            }
+                            else if (_currentHeading == MoveDirection.East)
+                            {
+                                sprite = spriteHorseEast;
+                            }
+                            else if (_currentHeading == MoveDirection.West)
+                            {
+                                sprite = spriteHorseWest;
+                            }
+                            else
+                            {
+                                sprite = spriteHorseEast; // Default to HorseEast if heading is unknown
+                            }
+                        }
 
-                    // Draw the sprite onto the final bitmap
-                    g.DrawImage(spriteBitmap, x * tileSize, y * tileSize, tileSize, tileSize);
+                        Bitmap spriteBitmap = Texture2DToBitmap(sprite);
+                        g.DrawImage(spriteBitmap, x * tileSize, y * tileSize, tileSize, tileSize);
+                        spriteBitmap.Dispose();
+                    }
+                    // Draw the Avatar at the correct position in a town map
+                    else if (
+                        currentMap >= Maps.U4MapBritain && currentMap <= Maps.U4MapYew &&
+                        x == (cols / 2) + (pcTownMapLocationX - townGridSize / 2) &&
+                        y == (rows / 2) + (pcTownMapLocationY - townGridSize / 2)
+                    )
+                    {
+                        Texture2D sprite = spriteAvatar;
+                        Bitmap spriteBitmap = Texture2DToBitmap(sprite);
+                        g.DrawImage(spriteBitmap, x * tileSize, y * tileSize, tileSize, tileSize);
+                        spriteBitmap.Dispose();
+                    }
+                    else
+                    {
+                        // Get the corresponding Texture2D for this map value
+                        Texture2D sprite = GetSpriteForMapValue(mapValue);
 
-                    spriteBitmap.Dispose();
+                        // Convert Texture2D to Bitmap
+                        Bitmap spriteBitmap = Texture2DToBitmap(sprite);
+
+                        // Draw the sprite onto the final bitmap
+                        g.DrawImage(spriteBitmap, x * tileSize, y * tileSize, tileSize, tileSize);
+
+                        spriteBitmap.Dispose();
+                    }
                 }
             }
         }

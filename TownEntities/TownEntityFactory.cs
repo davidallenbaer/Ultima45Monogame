@@ -16,10 +16,11 @@ namespace Ultima45Monogame
             {
                 entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
+                    entityName: "Iolo",
                     entityType: "NPC",
-                    entityid: 1,
-                    y: 10,
-                    x: 12,
+                    entityId: 1,
+                    startY: 10,
+                    startX: 12,
                     tileValue: 83,
                     visible: true,
                     movement: 0,

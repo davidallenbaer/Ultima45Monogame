@@ -11,14 +11,14 @@ public class TownEntityManager
 {
     public List<TownEntity> Entities { get; set; } = new List<TownEntity>();
 
-    public void AddEntity(Maps townMap, string entityType, int entityid, int y, int x, int tileValue, bool visible, int movement, int schedule, int dialogindex)
+    public void AddEntity(Maps townMap, string entityName, string entityType, int entityid, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex)
     {
-        Entities.Add(new TownEntity(townMap, entityType, entityid, y, x, tileValue, visible, movement, schedule, dialogindex));
+        Entities.Add(new TownEntity(townMap, entityName, entityType, entityid, startY, startX, tileValue, visible, movement, schedule, dialogindex));
     }
 
-    public void RemoveEntityAt(int y, int x)
+    public void RemoveEntityAt(int currentY, int currentX)
     {
-        Entities.RemoveAll(e => e.X == x && e.Y == y);
+        Entities.RemoveAll(e => e.CurrentX == currentX && e.CurrentY == currentY);
     }
 
     public void RemoveEntityByEntityID(int entityID)
@@ -26,9 +26,9 @@ public class TownEntityManager
         Entities.RemoveAll(e => e.EntityID == entityID);
     }
 
-    public TownEntity? GetEntityAt(int y, int x)
+    public TownEntity? GetEntityAt(int currentY, int currentX)
     {
-        return Entities.FirstOrDefault(e => e.X == x && e.Y == y);
+        return Entities.FirstOrDefault(e => e.CurrentX == currentX && e.CurrentY == currentY);
     }
 
     public TownEntity? GetEntityByEntityID(int entityID)
