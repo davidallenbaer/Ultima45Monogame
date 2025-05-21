@@ -2545,6 +2545,39 @@ public class Game1 : Game
             return false;
         }
 
+        // --- TownEntity collision check ---
+        if (IsTownMap(map))
+        {
+            int targetX = pcTownMapLocationX;
+            int targetY = pcTownMapLocationY;
+
+            switch (direction)
+            {
+                case MoveDirection.North:
+                    targetY -= 1;
+                    break;
+                case MoveDirection.South:
+                    targetY += 1;
+                    break;
+                case MoveDirection.East:
+                    targetX += 1;
+                    break;
+                case MoveDirection.West:
+                    targetX -= 1;
+                    break;
+            }
+
+            if (targetX >= 0 && targetX < townGridSize && targetY >= 0 && targetY < townGridSize)
+            {
+                TownEntity? townEntity = townEntityManager.GetEntityAt(map, targetY, targetX);
+                if (townEntity != null && townEntity.IsVisible && townEntity.PreventEnteringTile)
+                {
+                    return false;
+                }
+            }
+        }
+        // --- End TownEntity collision check ---
+
         if (direction == MoveDirection.North)
         {
             mapValue = GetMainDisplayMapValue(mainDisplayOneNorthOfCenter, mainDisplayCenter);
