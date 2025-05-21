@@ -11,9 +11,9 @@ public class TownEntityManager
 {
     private List<TownEntity> _townEntities = new();
 
-    public void AddEntity(Maps townMap, string entityName, string entityType, int entityid, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex)
+    public void AddEntity(Maps townMap, string entityName, string entityType, int entityid, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile)
     {
-        _townEntities.Add(new TownEntity(townMap, entityName, entityType, entityid, startY, startX, tileValue, visible, movement, schedule, dialogindex));
+        _townEntities.Add(new TownEntity(townMap, entityName, entityType, entityid, startY, startX, tileValue, visible, movement, schedule, dialogindex, preventEnteringTile));
     }
 
     public void RemoveEntityAt(Maps townMap, int currentY, int currentX)

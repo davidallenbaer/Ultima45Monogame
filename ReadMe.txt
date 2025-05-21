@@ -37,13 +37,15 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 Version 3.0.0 - Shrine combat locations
 	Peer at Gem on Overworld map and in Towns
 	Stretch all the maps to fit the screen
-	Town Entity
+	Town Entity, Town Entity Manager, Town Entity Factory
+	Draw Lord British Town Entity on the map
 
 --TODO--
+	Prevent player from moving on top of NPCs in towns.
+
+	Populate towns with NPCs Town Entity's.
 
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
-	
-	Populate towns with NPCs Town Entity's.
 	
 Version 3.0.0 - Towns\Shops\Dialog
 

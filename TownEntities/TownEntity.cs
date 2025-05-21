@@ -22,8 +22,9 @@ namespace Ultima45Monogame
         public int Movement { get; set; } = 0;
         public int Schedule { get; set; } = 0;
         public int DialogIndex { get; set; } = 0;
+        public bool PreventEnteringTile { get; set; }
 
-        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex)
+        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile)
         {
             EntityType = entityType;
             EntityName = entityName;
@@ -38,6 +39,7 @@ namespace Ultima45Monogame
             Movement = movement;
             Schedule = schedule;
             DialogIndex = dialogindex;
+            PreventEnteringTile = preventEnteringTile;
         }
 
         // Parameterless constructor for serialization
