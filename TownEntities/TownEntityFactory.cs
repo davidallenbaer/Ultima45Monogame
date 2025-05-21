@@ -6,30 +6,25 @@ namespace Ultima45Monogame
     public static class TownEntityFactory
     {
         /// <summary>
-        /// Returns a list of all default TownEntities for a given map.
+        /// Returns a list of all default TownEntities.
         /// </summary>
-        public static List<TownEntity> GetDefaultTownEntities(Maps townMap)
+        public static List<TownEntity> GetAllTownEntities()
         {
             var entities = new List<TownEntity>();
 
-            if (townMap == Maps.U4MapBritain)
-            {
                 entities.Add(new TownEntity(
-                    townMap: Maps.U4MapBritain,
-                    entityName: "Iolo",
+                    townMap: Maps.U4MapLordBritishCastle2,
+                    entityName: "Lord British",
                     entityType: "NPC",
                     entityId: 1,
-                    startY: 10,
-                    startX: 12,
-                    tileValue: 83,
+                    startY: 7,
+                    startX: 19,
+                    tileValue: (int)TileType.LordBritish1,
                     visible: true,
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1
                 ));
-                // Add more entities as needed...
-            }
-            // Add other towns and their default entities here as needed
 
             return entities;
         }

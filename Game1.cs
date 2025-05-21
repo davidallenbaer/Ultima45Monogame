@@ -49,6 +49,7 @@ public class Game1 : Game
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
     private FantasyPlayerManager fantasyPlayerManager = new FantasyPlayerManager();
     private FantasyMonsterManager fantasyMonsterManager = new FantasyMonsterManager(FantasyMonsterFactory.GetAllFantasyMonsters());
+    private TownEntityManager townEntityManager = new TownEntityManager(TownEntityFactory.GetAllTownEntities());
 
     private KeyboardState oldKeyboardState;
     private KeyboardState newKeyboardState;
@@ -2237,6 +2238,23 @@ public class Game1 : Game
 
                 int mapValue = GetMainDisplayMapValue(row, col);
 
+                // Check for TownEntity if currentMap is a town map
+                if (IsTownMap(currentMap))
+                {
+                    // Calculate the actual town map coordinates
+                    int townX = pcTownMapLocationX - mainDisplayCenter + col;
+                    int townY = pcTownMapLocationY - mainDisplayCenter + row;
+
+                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
+                    {
+                        TownEntity townEntity = townEntityManager.GetEntityAt(currentMap, townY, townX);
+                        if (townEntity != null && townEntity.IsVisible)
+                        {
+                            mapValue = townEntity.TileValue;
+                        }
+                    }
+                }
+
                 if (bDrawAvatarInCenter)
                 {
                     if (row == mainDisplayCenter && col == mainDisplayCenter)
@@ -2300,6 +2318,23 @@ public class Game1 : Game
                 int y = startY + (row * tileHeight);
 
                 int mapValue = GetMainDisplayMapValue(row, col);
+
+                // Check for TownEntity if currentMap is a town map
+                if (IsTownMap(currentMap))
+                {
+                    // Calculate the actual town map coordinates
+                    int townX = pcTownMapLocationX - mainDisplayCenter + col;
+                    int townY = pcTownMapLocationY - mainDisplayCenter + row;
+
+                    if (townX >= 0 && townX < townGridSize && townY >= 0 && townY < townGridSize)
+                    {
+                        TownEntity townEntity = townEntityManager.GetEntityAt(currentMap, townY, townX);
+                        if (townEntity != null && townEntity.IsVisible)
+                        {
+                            mapValue = townEntity.TileValue;
+                        }
+                    }
+                }
 
                 if (bDrawAvatarInCenter)
                 {

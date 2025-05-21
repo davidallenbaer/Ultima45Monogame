@@ -9,31 +9,45 @@ using static Ultima45Monogame.RPGEnums;
 [Serializable]
 public class TownEntityManager
 {
-    public List<TownEntity> Entities { get; set; } = new List<TownEntity>();
+    private List<TownEntity> _townEntities = new();
 
     public void AddEntity(Maps townMap, string entityName, string entityType, int entityid, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex)
     {
-        Entities.Add(new TownEntity(townMap, entityName, entityType, entityid, startY, startX, tileValue, visible, movement, schedule, dialogindex));
+        _townEntities.Add(new TownEntity(townMap, entityName, entityType, entityid, startY, startX, tileValue, visible, movement, schedule, dialogindex));
     }
 
-    public void RemoveEntityAt(int currentY, int currentX)
+    public void RemoveEntityAt(Maps townMap, int currentY, int currentX)
     {
-        Entities.RemoveAll(e => e.CurrentX == currentX && e.CurrentY == currentY);
+        _townEntities.RemoveAll(e => e.TownMap == townMap && e.CurrentX == currentX && e.CurrentY == currentY);
     }
 
-    public void RemoveEntityByEntityID(int entityID)
+    public void RemoveEntityByEntityID(Maps townMap, int entityID)
     {
-        Entities.RemoveAll(e => e.EntityID == entityID);
+        _townEntities.RemoveAll(e => e.TownMap == townMap && e.EntityID == entityID);
     }
 
-    public TownEntity? GetEntityAt(int currentY, int currentX)
+    public TownEntity? GetEntityAt(Maps townMap, int currentY, int currentX)
     {
-        return Entities.FirstOrDefault(e => e.CurrentX == currentX && e.CurrentY == currentY);
+        return _townEntities.FirstOrDefault(e => e.TownMap == townMap && e.CurrentX == currentX && e.CurrentY == currentY);
     }
 
-    public TownEntity? GetEntityByEntityID(int entityID)
+    public TownEntity? GetEntityByEntityID(Maps townMap, int entityID)
     {
-        return Entities.FirstOrDefault(e => e.EntityID == entityID);
+        return _townEntities.FirstOrDefault(e => e.TownMap == townMap && e.EntityID == entityID);
+    }
+
+    // Default constructor
+    public TownEntityManager()
+    {
+    }
+
+    // Constructor that accepts a list of TownEntity
+    public TownEntityManager(List<TownEntity> townEntities)
+    {
+        if (townEntities != null)
+            _townEntities = new List<TownEntity>(townEntities);
+        else
+            _townEntities = new List<TownEntity>();
     }
 
     public void SaveToFile(string filePath)
