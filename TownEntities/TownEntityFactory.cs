@@ -141,6 +141,201 @@ namespace Ultima45Monogame
                     preventEnteringTile: false
                     ));
 
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Shepherd1",
+                    entityType: "NPC",
+                    entityId: 9,
+                    startY: 1,
+                    startX: 30,
+                    tileValue: (int)TileType.Shepherd1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Beggar",
+                    entityType: "NPC",
+                    entityId: 10,
+                    startY: 9,
+                    startX: 19,
+                    tileValue: (int)TileType.Beggar1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Child",
+                    entityType: "NPC",
+                    entityId: 11,
+                    startY: 27,
+                    startX: 28,
+                    tileValue: (int)TileType.Child1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Child",
+                    entityType: "NPC",
+                    entityId: 12,
+                    startY: 28,
+                    startX: 27,
+                    tileValue: (int)TileType.Child1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Child",
+                    entityType: "NPC",
+                    entityId: 13,
+                    startY: 28,
+                    startX: 29,
+                    tileValue: (int)TileType.Child1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Iolo",
+                    entityType: "NPC",
+                    entityId: 14,
+                    startY: 29,
+                    startX: 28,
+                    tileValue: (int)TileType.Bard1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Manor Dude",
+                    entityType: "NPC",
+                    entityId: 15,
+                    startY: 13,
+                    startX: 26,
+                    tileValue: (int)TileType.Citizen1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Spirits",
+                    entityType: "NPC",
+                    entityId: 16,
+                    startY: 1,
+                    startX: 20,
+                    tileValue: (int)TileType.Citizen1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Food",
+                    entityType: "NPC",
+                    entityId: 17,
+                    startY: 7,
+                    startX: 19,
+                    tileValue: (int)TileType.Citizen2,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Healing",
+                    entityType: "NPC",
+                    entityId: 18,
+                    startY: 30,
+                    startX: 4,
+                    tileValue: (int)TileType.Citizen1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Druid",
+                    entityType: "NPC",
+                    entityId: 19,
+                    startY: 28,
+                    startX: 3,
+                    tileValue: (int)TileType.Druid2,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Weapons",
+                    entityType: "NPC",
+                    entityId: 20,
+                    startY: 2,
+                    startX: 5,
+                    tileValue: (int)TileType.Fighter1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Brittania Armor",
+                    entityType: "NPC",
+                    entityId: 21,
+                    startY: 8,
+                    startX: 6,
+                    tileValue: (int)TileType.Fighter1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
             return entities;
         }
 

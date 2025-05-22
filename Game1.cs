@@ -3353,6 +3353,7 @@ public class Game1 : Game
             else if (oldKeyboardState.IsKeyUp(Keys.L) && newKeyboardState.IsKeyDown(Keys.L))
             {
                 Console.WriteLine($"{pcOverworldLocationY} {pcOverworldLocationX}");
+
                 Console.WriteLine($"{pcTownMapLocationY} {pcTownMapLocationX}");
 
                 int mapValue = 0;
