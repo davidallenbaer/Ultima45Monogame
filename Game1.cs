@@ -3366,25 +3366,12 @@ public class Game1 : Game
             }
             else if (oldKeyboardState.IsKeyUp(Keys.K) && newKeyboardState.IsKeyDown(Keys.K))
             {
-                if (currentMap == Maps.U4MapLordBritishCastle1 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 3)
-                {
-                    currentMap = Maps.U4MapLordBritishCastle2;
-                    pcTownMapLocationY = 3;
-                    pcTownMapLocationX = 3;
-                    UpdateMainDisplayGridValues(currentMap);
-                    PlayBackgroundMusicBasedOnCurrentMap();
-                }
+                HandleClimbing();
+
             }
             else if (oldKeyboardState.IsKeyUp(Keys.D) && newKeyboardState.IsKeyDown(Keys.D))
             {
-                if (currentMap == Maps.U4MapLordBritishCastle2 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 3)
-                {
-                    currentMap = Maps.U4MapLordBritishCastle1;
-                    pcTownMapLocationY = 3;
-                    pcTownMapLocationX = 3;
-                    UpdateMainDisplayGridValues(currentMap);
-                    PlayBackgroundMusicBasedOnCurrentMap();
-                }
+                HandleDescending();
             }
             else if (oldKeyboardState.IsKeyUp(Keys.E) && newKeyboardState.IsKeyDown(Keys.E))
             {
@@ -3727,6 +3714,53 @@ public class Game1 : Game
         oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
 
         UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private void HandleClimbing()
+    {
+        if (currentMap == Maps.U4MapLordBritishCastle1 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 3)
+        {
+            currentMap = Maps.U4MapLordBritishCastle2;
+            pcTownMapLocationY = 3;
+            pcTownMapLocationX = 3;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+        }
+        if (currentMap == Maps.U4MapLordBritishCastle1 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 27)
+        {
+            currentMap = Maps.U4MapLordBritishCastle2;
+            pcTownMapLocationY = 3;
+            pcTownMapLocationX = 27;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+        }
+    }
+
+    private void HandleDescending()
+    {
+        if (currentMap == Maps.U4MapLordBritishCastle2 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 3)
+        {
+            currentMap = Maps.U4MapLordBritishCastle1;
+            pcTownMapLocationY = 3;
+            pcTownMapLocationX = 3;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+        }
+        else if (currentMap == Maps.U4MapLordBritishCastle1 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 2 && pcTownMapLocationX == 7)
+        {
+            //Just go back to the overworld for now till we implement dungeons
+            currentMap = Maps.U4MapOverworld;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+        }
+        else if (currentMap == Maps.U4MapLordBritishCastle2 && pcOverworldLocationY == 107 && pcOverworldLocationX == 86 && pcTownMapLocationY == 3 && pcTownMapLocationX == 27)
+        {
+            currentMap = Maps.U4MapLordBritishCastle1;
+            pcTownMapLocationY = 3;
+            pcTownMapLocationX = 27;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+        }
     }
 
     private Maps GetCombatMapForDebugging(int iCombatMapIndex)

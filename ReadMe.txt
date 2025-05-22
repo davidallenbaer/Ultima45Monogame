@@ -39,9 +39,9 @@ Version 3.0.0 - Shrine combat locations
 	Stretch all the maps to fit the screen
 	Town Entity, Town Entity Manager, Town Entity Factory
 	Draw Lord British Town Entity on the map
+	Prevent player from moving on top of NPCs in towns.
 
 --TODO--
-	Prevent player from moving on top of NPCs in towns.
 
 	Populate towns with NPCs Town Entity's.
 
