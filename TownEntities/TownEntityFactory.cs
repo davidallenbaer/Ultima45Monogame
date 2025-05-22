@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using InputHandlers.State;
+using System.Collections.Generic;
 using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
@@ -65,8 +66,96 @@ namespace Ultima45Monogame
 
             #endregion
 
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Guard",
+                    entityType: "NPC",
+                    entityId: 4,
+                    startY: 13,
+                    startX: 1,
+                    tileValue: (int)TileType.Guard1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Guard",
+                    entityType: "NPC",
+                    entityId: 5,
+                    startY: 17,
+                    startX: 1,
+                    tileValue: (int)TileType.Guard1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Guard",
+                    entityType: "NPC",
+                    entityId: 6,
+                    startY: 25,
+                    startX: 20,
+                    tileValue: (int)TileType.Guard1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Guard",
+                    entityType: "NPC",
+                    entityId: 7,
+                    startY: 22,
+                    startX: 20,
+                    tileValue: (int)TileType.Guard1,
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: true
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Rune of Compassion",
+                    entityType: "NPC",
+                    entityId: 8,
+                    startY: 1,
+                    startX: 25,
+                    tileValue: (int)TileType.Blank,
+                    visible: false,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 1,
+                    preventEnteringTile: false
+                    ));
+
             return entities;
         }
 
+
+
+        /*
+            Unlocked Door
+            Locked Door
+            Gold Chest
+            Ladder Up
+            Ladder Down
+            Magic Field
+            Fire Field
+            Poison Field
+            Rune Field in britain (Not Visible)
+         */
     }
 }
