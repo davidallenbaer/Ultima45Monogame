@@ -2889,9 +2889,7 @@ public class Game1 : Game
         if (inputTimer >= inputDelay)
         {
             //Handle the Keyboard input
-            if (newKeyboardState.IsKeyDown(Keys.LeftShift) && newKeyboardState.IsKeyDown(Keys.F12) ||
-                newKeyboardState.IsKeyDown(Keys.RightShift) && newKeyboardState.IsKeyDown(Keys.F12)
-                )
+            if (newKeyboardState.IsKeyDown(Keys.Q))
             {
                 SaveGame();
                 inputTimer = 0; // Reset the timer
@@ -3368,7 +3366,14 @@ public class Game1 : Game
             else if (oldKeyboardState.IsKeyUp(Keys.K) && newKeyboardState.IsKeyDown(Keys.K))
             {
                 HandleClimbing();
-
+            }
+            else if (oldKeyboardState.IsKeyUp(Keys.O) && newKeyboardState.IsKeyDown(Keys.O))
+            {
+                HandleOpeningDoor();
+            }
+            else if (oldKeyboardState.IsKeyUp(Keys.J) && newKeyboardState.IsKeyDown(Keys.J))
+            {
+                HandleJimmyLock();
             }
             else if (oldKeyboardState.IsKeyUp(Keys.D) && newKeyboardState.IsKeyDown(Keys.D))
             {
@@ -3715,6 +3720,72 @@ public class Game1 : Game
         oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
 
         UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private void HandleJimmyLock()
+    {
+        // Define the four adjacent positions (N, S, E, W)
+        int[,] directions = new int[,]
+        {
+        { -1, 0 }, // North
+        { 1, 0 },  // South
+        { 0, -1 }, // West
+        { 0, 1 }   // East
+        };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int adjY = pcTownMapLocationY + directions[i, 0];
+            int adjX = pcTownMapLocationX + directions[i, 1];
+
+            // Check bounds
+            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            {
+                TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
+                {
+                    if (entity.LockedState == LockedStatus.Unlocked)
+                    {
+                        _soundEffect_BadCommand.Play();
+                        return; // If the door is already unlocked, play bad command sound
+                    }
+                    entity.LockedState = LockedStatus.Unlocked;
+                }
+            }
+        }
+    }
+
+    private void HandleOpeningDoor()
+    {
+        // Define the four adjacent positions (N, S, E, W)
+        int[,] directions = new int[,]
+        {
+        { -1, 0 }, // North
+        { 1, 0 },  // South
+        { 0, -1 }, // West
+        { 0, 1 }   // East
+        };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int adjY = pcTownMapLocationY + directions[i, 0];
+            int adjX = pcTownMapLocationX + directions[i, 1];
+
+            // Check bounds
+            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            {
+                TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
+                {
+                    if (entity.OpenState == OpenStatus.Open || entity.LockedState == LockedStatus.Locked)
+                    {
+                        _soundEffect_BadCommand.Play();
+                        return; // If the door is already opened or still locked, play bad command sound
+                    }
+                    entity.OpenState = OpenStatus.Open;
+                }
+            }
+        }
     }
 
     private void HandleClimbing()

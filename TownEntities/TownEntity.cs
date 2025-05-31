@@ -17,14 +17,66 @@ namespace Ultima45Monogame
         public int StartY { get; set; }
         public int CurrentX { get; set; }
         public int CurrentY { get; set; }
-        public int TileValue { get; set; }
+        public int TileValue
+        {
+            get
+            {
+                if (EntityType == "Door" && OpenState == OpenStatus.Closed && LockedState == LockedStatus.Locked)
+                {
+                    return (int)TileType.LockedDoor;
+                }
+                if (EntityType == "Door" && OpenState == OpenStatus.Closed && LockedState == LockedStatus.Unlocked)
+                {
+                    return (int)TileType.UnlockedDoor;
+                }
+                if (EntityType == "Door" && OpenState == OpenStatus.Open && LockedState == LockedStatus.Unlocked)
+                {
+                    //Default tile below the door
+                    return _tileValue;
+                }
+
+                return _tileValue;
+            }
+            set
+            {
+                _tileValue = value;
+            }
+        }
+        
         public bool IsVisible { get; set; } = true;
         public int Movement { get; set; } = 0;
         public int Schedule { get; set; } = 0;
         public int DialogIndex { get; set; } = 0;
-        public bool PreventEnteringTile { get; set; }
 
-        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile)
+        public bool PreventEnteringTile
+        {
+            get
+            {
+                // If the entity is open and unlocked, do not prevent entering the tile
+                if (EntityType == "Door" && OpenState == OpenStatus.Open)
+                {
+                    return false;
+                }
+                else if (EntityType == "Door" && OpenState == OpenStatus.Closed)
+                {
+                    return true;
+                }
+                
+                // Otherwise, use the backing field value
+                return _preventEnteringTile;
+            }
+            set
+            {
+                _preventEnteringTile = value;
+            }
+        }
+
+        private int _tileValue;
+        private bool _preventEnteringTile;
+        public OpenStatus OpenState { get; set; } = OpenStatus.None;
+        public LockedStatus LockedState { get; set; } = LockedStatus.None;
+
+        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile, OpenStatus openStatus = OpenStatus.None, LockedStatus lockedStatus = LockedStatus.None)
         {
             EntityType = entityType;
             EntityName = entityName;
@@ -40,6 +92,8 @@ namespace Ultima45Monogame
             Schedule = schedule;
             DialogIndex = dialogindex;
             PreventEnteringTile = preventEnteringTile;
+            OpenState = openStatus;
+            LockedState = lockedStatus;
         }
 
         // Parameterless constructor for serialization

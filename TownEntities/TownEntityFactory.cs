@@ -336,14 +336,46 @@ namespace Ultima45Monogame
                     preventEnteringTile: true
                     ));
 
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Britain Door 1",
+                    entityType: "Door",
+                    entityId: 22,
+                    startY: 6,
+                    startX: 27,
+                    tileValue: (int)TileType.BrickFloor, //Default tile to show when door is open
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 0,
+                    preventEnteringTile: false,
+                    openStatus: OpenStatus.Closed,
+                    lockedStatus: LockedStatus.Unlocked
+                    ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Britain Door 2",
+                    entityType: "Door",
+                    entityId: 23,
+                    startY: 2,
+                    startX: 27,
+                    tileValue: (int)TileType.BrickFloor, //Default tile to show when door is open
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 0,
+                    preventEnteringTile: false,
+                    openStatus: OpenStatus.Closed,
+                    lockedStatus: LockedStatus.Unlocked
+                    ));
+
             return entities;
         }
 
 
 
         /*
-            Unlocked Door
-            Locked Door
             Gold Chest
             Ladder Up
             Ladder Down

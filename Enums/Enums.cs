@@ -10,6 +10,20 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum OpenStatus
+        {
+            None = 0,
+            Open = 1,
+            Closed = 2,
+        }
+
+        public enum LockedStatus
+        {
+            None = 0,
+            Locked = 1,
+            Unlocked = 2,
+        }
+
         public enum PlayerStatus
         {
             None = 0,

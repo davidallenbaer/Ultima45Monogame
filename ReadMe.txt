@@ -17,6 +17,8 @@ D - Descend Stairs
 H - Hole Up & Camp
 G - Get Gold Chest
 V - View (Peer at Gem)
+J - Jimmy lock
+O - Open door
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -40,9 +42,10 @@ Version 3.0.0 - Shrine combat locations
 	Town Entity, Town Entity Manager, Town Entity Factory
 	Draw Lord British Town Entity on the map
 	Prevent player from moving on top of NPCs in towns.
+	Implement working doors in towns - Open door, Jimmy locked door.
 
---TODO--
-
+--TODO--	
+	
 	Populate towns with NPCs Town Entity's.
 
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
