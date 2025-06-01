@@ -2395,120 +2395,140 @@ public class Game1 : Game
                 pcOverworldLocationY = 107;
                 pcOverworldLocationX = 86;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Lord British Castle", 2);
                 break;
             case 2:
                 //Maps.U4MapBritain
                 pcOverworldLocationY = 106;
                 pcOverworldLocationX = 82;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Britain", 2);
                 break;
             case 3:
                 //Maps.U4MapPaws
                 pcOverworldLocationY = 145;
                 pcOverworldLocationX = 98;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Paws", 2);
                 break;
             case 4:
                 //Maps.U4MapTrinsic
                 pcOverworldLocationY = 184;
                 pcOverworldLocationX = 106;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Trinsic", 2);
                 break;
             case 5:
                 //Maps.U4MapCove
                 pcOverworldLocationY = 90;
                 pcOverworldLocationX = 136;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Cove", 2);
                 break;
             case 6:
                 //Maps.U4MapEmpathAbbey
                 pcOverworldLocationY = 50;
                 pcOverworldLocationX = 28;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Empath Abbey", 2);
                 break;
             case 7:
                 //Maps.U4MapJhelom
                 pcOverworldLocationY = 222;
                 pcOverworldLocationX = 36;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Jhelom", 2);
                 break;
             case 8:
                 //Maps.U4MapLycaeum
                 pcOverworldLocationY = 107;
                 pcOverworldLocationX = 218;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Lycaeum", 2);
                 break;
             case 9:
                 //Maps.U4MapYew
                 pcOverworldLocationY = 43;
                 pcOverworldLocationX = 58;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Yew", 2);
                 break;
             case 10:
                 //Vesper
                 pcOverworldLocationY = 59;
                 pcOverworldLocationX = 201;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Vesper", 2);
                 break;
             case 11:
                 //Minoc
                 pcOverworldLocationY = 20;
                 pcOverworldLocationX = 159;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Minoc", 2);
                 break;
             case 12:
                 //Moonglow
                 pcOverworldLocationY = 135;
                 pcOverworldLocationX = 232;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Moonglow", 2);
                 break;
             case 13:
                 //Magincia
                 pcOverworldLocationY = 169;
                 pcOverworldLocationX = 187;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Magincia", 2);
                 break;
             case 14:
                 //BuccaneersDen
                 pcOverworldLocationY = 158;
                 pcOverworldLocationX = 136;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Buccaneers Den", 2);
                 break;
             case 15:
                 //SerpentIsle
                 pcOverworldLocationY = 241;
                 pcOverworldLocationX = 146;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Serpent Isle", 2);
                 break;
             case 16:
                 //SkaraBrae
                 pcOverworldLocationY = 128;
                 pcOverworldLocationX = 22;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Skara Brae", 2);
                 break;
             case 17:
                 //Balloon Location
                 pcOverworldLocationY = 242;
                 pcOverworldLocationX = 233;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Balloon Location", 2);
                 break;
             case 18:
                 //Skull Location
                 pcOverworldLocationY = 245;
                 pcOverworldLocationX = 197;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Skull of Mondain", 2);
                 break;
             case 19:
                 //Wheel Location
                 pcOverworldLocationY = 215;
                 pcOverworldLocationX = 96;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Wheel of the HMS Cape", 2);
                 break;
             case 20:
                 //Bell Location
                 pcOverworldLocationY = 173;
                 pcOverworldLocationX = 45;
                 UpdateMainDisplayGridValues(currentMap);
+                ShowBottomMessage("Bell of Courage", 2);
                 break;
             default:
                 break;
@@ -2909,6 +2929,7 @@ public class Game1 : Game
             if (newKeyboardState.IsKeyDown(Keys.Q))
             {
                 SaveGame();
+                ShowBottomMessage("Game Saved!", 2);
                 inputTimer = 0; // Reset the timer
                 return;
             }
@@ -2916,6 +2937,7 @@ public class Game1 : Game
             if (newKeyboardState.IsKeyDown(Keys.F12))
             {
                 LoadGame();
+                ShowBottomMessage("Game Loaded!", 2);
                 UpdateMainDisplayGridValues(currentMap);
                 PlayBackgroundMusicBasedOnCurrentMap();
                 inputTimer = 0; // Reset the timer
@@ -2927,6 +2949,16 @@ public class Game1 : Game
                 if (newKeyboardState.IsKeyDown(Keys.F1))
                 {
                     bDetectCollision = !bDetectCollision;
+
+                    if (bDetectCollision)
+                    {
+                        ShowBottomMessage("Collision Detection On!", 2);
+                    }
+                    else
+                    {
+                        ShowBottomMessage("Collision Detection Off!", 2);
+                    }
+
                     inputTimer = 0; // Reset the timer
                     return;
                 }
@@ -3031,8 +3063,10 @@ public class Game1 : Game
                     }
 
                     currentMap = GetCombatMapForDebugging(iCombatMapIndex);
+                    
                     UpdateMainDisplayGridValues(currentMap);
                     PlayBackgroundMusicBasedOnCurrentMap();
+                    ShowBottomMessage(GetCombatMapNameForDebugging(iCombatMapIndex));
                     inputTimer = 0; // Reset the timer
                     return;
                 }
@@ -3050,6 +3084,7 @@ public class Game1 : Game
                     currentMap = GetCombatMapForDebugging(iCombatMapIndex);
                     UpdateMainDisplayGridValues(currentMap);
                     PlayBackgroundMusicBasedOnCurrentMap();
+                    ShowBottomMessage(GetCombatMapNameForDebugging(iCombatMapIndex));
                     inputTimer = 0; // Reset the timer
                     return;
                 }
@@ -3442,6 +3477,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 86)
                     {
@@ -3451,6 +3487,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 15;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 145 && pcOverworldLocationX == 98)
                     {
@@ -3460,6 +3497,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 184 && pcOverworldLocationX == 106)
                     {
@@ -3469,6 +3507,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 90 && pcOverworldLocationX == 136)
                     {
@@ -3478,6 +3517,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 50 && pcOverworldLocationX == 28)
                     {
@@ -3487,6 +3527,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 15;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 222 && pcOverworldLocationX == 36)
                     {
@@ -3496,6 +3537,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 218)
                     {
@@ -3505,6 +3547,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 15;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 43 && pcOverworldLocationX == 58)
                     {
@@ -3514,6 +3557,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 59 && pcOverworldLocationX == 201)
                     {
@@ -3523,6 +3567,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 20 && pcOverworldLocationX == 159)
                     {
@@ -3532,6 +3577,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 135 && pcOverworldLocationX == 232)
                     {
@@ -3541,6 +3587,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 169 && pcOverworldLocationX == 187)
                     {
@@ -3550,6 +3597,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 158 && pcOverworldLocationX == 136)
                     {
@@ -3559,6 +3607,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 241 && pcOverworldLocationX == 146)
                     {
@@ -3568,6 +3617,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 15;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                     else if (pcOverworldLocationY == 128 && pcOverworldLocationX == 22)
                     {
@@ -3577,6 +3627,7 @@ public class Game1 : Game
                         pcTownMapLocationX = 0;
                         UpdateMainDisplayGridValues(currentMap);
                         PlayBackgroundMusicBasedOnCurrentMap();
+                        ShowBottomMessage(GetTownNameForDebugging(currentMap));
                     }
                 }
                 else
@@ -3737,6 +3788,47 @@ public class Game1 : Game
         oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
 
         UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private string GetTownNameForDebugging(Maps map)
+    {
+        switch(map)
+            {
+            case Maps.U4MapBritain:
+                return "Britain";
+            case Maps.U4MapLordBritishCastle1:
+                return "Lord British's Castle";
+            case Maps.U4MapPaws:
+                return "Paws";
+            case Maps.U4MapTrinsic:
+                return "Trinsic";
+            case Maps.U4MapCove:
+                return "Cove";
+            case Maps.U4MapEmpathAbbey:
+                return "Empath Abbey";
+            case Maps.U4MapJhelom:
+                return "Jhelom";
+            case Maps.U4MapLycaeum:
+                return "Lycaeum";
+            case Maps.U4MapYew:
+                return "Yew";
+            case Maps.U4MapVesper:
+                return "Vesper";
+            case Maps.U4MapMinoc:
+                return "Minoc";
+            case Maps.U4MapMoonglow:
+                return "Moonglow";
+            case Maps.U4MapMagincia:
+                return "Magincia";
+            case Maps.U4MapBuccaneersDen:
+                return "Buccaneer's Den";
+            case Maps.U4MapSerpentIsle:
+                return "Serpent Isle";
+            case Maps.U4MapSkaraBrae:
+                return "Skara Brae";
+            default:
+                return "";
+        }
     }
 
     private void HandleSearching()
@@ -3933,6 +4025,65 @@ public class Game1 : Game
                 return Maps.U4CombatMapBRICK;
             default:
                 return Maps.U4MapOverworld;
+        }
+    }
+
+    private string GetCombatMapNameForDebugging(int iCombatMapIndex)
+    {
+        switch (iCombatMapIndex)
+        {
+            case 1:
+                //Include this to make sure the player can always return to the overworld
+                //when debugging
+                return "Overworld";
+            case 2:
+                return "Combat Map BRIDGE";
+            case 3:
+                return "Combat Map BRUSH";
+            case 4:
+                return "Combat Map CAMP";
+            case 5:
+                return "Combat Map DNG0";
+            case 6:
+                return "Combat Map DNG1";
+            case 7:
+                return "Combat Map DNG2";
+            case 8:
+                return "Combat Map DNG3";
+            case 9:
+                return "Combat Map DNG4";
+            case 10:
+                return "Combat Map DNG5";
+            case 11:
+                return "Combat Map DNG6";
+            case 12:
+                return "Combat Map DUNGEON";
+            case 13:
+                return "Combat Map FOREST";
+            case 14:
+                return "Combat Map GRASS";
+            case 15:
+                return "Combat Map HILL";
+            case 16:
+                return "Combat Map INN";
+            case 17:
+                return "Combat Map MARSH";
+            case 18:
+                return "Combat Map SHIPSEA";
+            case 19:
+                return "Combat Map SHIPSHIP";
+            case 20:
+                return "Combat Map SHIPSHOR";
+            case 21:
+                return "Combat Map SHORE";
+            case 22:
+                return "Combat Map SHORSHIP";
+            case 23:
+                return "Combat Map SHRINE";
+            case 24:
+                return "Combat Map BRICK";
+            default:
+                return "Overworld";
         }
     }
 
@@ -4782,6 +4933,11 @@ public class Game1 : Game
 
     public void ShowBottomMessage(string message, double durationSeconds = 2.0)
     {
+        if (string.IsNullOrEmpty(message))
+        {
+            return;
+        }
+
         _bottomMessage = message;
         _bottomMessageDuration = durationSeconds;
         _bottomMessageTimer = 0;
