@@ -169,6 +169,9 @@
     <None Update="Combat\Combat Starting Locations for Party SHRINE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Dialogs\UltimaIV_Dialogs.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Maps\U4 Combat Map BRICK.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

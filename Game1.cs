@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using Ultima45Monogame.Combat;
+using Ultima45Monogame.Dialogs;
 using Ultima45Monogame.Player;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -49,6 +50,7 @@ public class Game1 : Game
     private CombatTracker combatTracker = new CombatTracker();
     private bool bDrawMainDisplayStretched = true;
 
+    private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
@@ -459,6 +461,11 @@ public class Game1 : Game
 
     #region Load Content
 
+    public void LoadUltima4DialogData()
+    {
+        dialogEntityManager.LoadDialogTreeFromJson("Dialogs/UltimaIV_Dialogs.json");
+    }
+    
     public void LoadUltima4TileSet()
     {
         spriteDeepWater = Content.Load<Texture2D>("TileSets\\Ultima4\\U4 Row 000 Tile 000 - Deep Water");
@@ -1055,6 +1062,7 @@ public class Game1 : Game
         LoadUltima4CombatMaps();
         LoadUltima4CombatMapMonsterLocations();
         LoadUltima4CombatMapPartyLocations();
+        LoadUltima4DialogData();
     }
 
     private void LoadUltima4CombatMapMonsterLocations()

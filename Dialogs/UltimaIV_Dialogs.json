@@ -1,0 +1,64 @@
+﻿{
+  "Id": "NPC1",
+  "StartNodeId": "greeting",
+  "Nodes": [
+    {
+      "Id": "greeting",
+      "Speaker": "Guard",
+      "Text": "Halt! Who goes there?",
+      "Options": [
+        {
+          "Text": "I am a traveler.",
+          "NextNodeId": "traveler"
+        },
+        {
+          "Text": "None of your business.",
+          "NextNodeId": "rude"
+        }
+      ]
+    },
+    {
+      "Id": "traveler",
+      "Speaker": "Guard",
+      "Text": "Welcome, traveler. What brings you to our town?",
+      "Options": [
+        {
+          "Text": "Just passing through.",
+          "NextNodeId": "end"
+        },
+        {
+          "Text": "Looking for adventure.",
+          "NextNodeId": "adventure"
+        }
+      ]
+    },
+    {
+      "Id": "rude",
+      "Speaker": "Guard",
+      "Text": "Watch your tongue, stranger. Move along.",
+      "Options": [
+        {
+          "Text": "Leave.",
+          "NextNodeId": "end"
+        }
+      ]
+    },
+    {
+      "Id": "adventure",
+      "Speaker": "Guard",
+      "Text": "You might find what you seek at the tavern.",
+      "Options": [
+        {
+          "Text": "Thank you.",
+          "NextNodeId": "end"
+        }
+      ]
+    },
+    {
+      "Id": "end",
+      "Speaker": "Guard",
+      "Text": "Safe travels.",
+      "Options": []
+    }
+  ]
+}
