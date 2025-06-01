@@ -66,6 +66,8 @@ namespace Ultima45Monogame
 
             #endregion
 
+            #region U4MapBritain
+
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
                     entityName: "Guard",
@@ -369,6 +371,25 @@ namespace Ultima45Monogame
                     openStatus: OpenStatus.Closed,
                     lockedStatus: LockedStatus.Unlocked
                     ));
+
+            entities.Add(new TownEntity(
+                    townMap: Maps.U4MapBritain,
+                    entityName: "Rune of Compassion",
+                    entityType: "Rune",
+                    entityId: 24,
+                    startY: 1,
+                    startX: 25,
+                    tileValue: (int)TileType.BrickFloor, //Default tile to show (invisible) so same as brick floor
+                    visible: true,
+                    movement: 0,
+                    schedule: 0,
+                    dialogindex: 0,
+                    preventEnteringTile: false,
+                    openStatus: OpenStatus.None,
+                    lockedStatus: LockedStatus.None
+                    ));
+
+            #endregion
 
             return entities;
         }

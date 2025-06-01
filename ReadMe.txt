@@ -2,7 +2,7 @@
 ESC - Exit game
 F1 Toggle 
 P - Pause game
-Shift-F12 - Save Game
+Q - Save Game
 F12 - Load Game
 F2 - Teleport to Town Prev
 F3 - Teleport to Town Next
@@ -19,6 +19,7 @@ G - Get Gold Chest
 V - View (Peer at Gem)
 J - Jimmy lock
 O - Open door
+S - Search
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -43,6 +44,7 @@ Version 3.0.0 - Shrine combat locations
 	Draw Lord British Town Entity on the map
 	Prevent player from moving on top of NPCs in towns.
 	Implement working doors in towns - Open door, Jimmy locked door.
+	Implement Search in towns - Search for hidden items.
 
 --TODO--	
 	

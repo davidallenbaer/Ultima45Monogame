@@ -18,6 +18,7 @@ using Ultima45Monogame.Player;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Ultima45Monogame.RPGEnums;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Ultima45Monogame;
 
@@ -37,6 +38,10 @@ public class Game1 : Game
         Paused,
         GameOver
     }
+
+    private string? _bottomMessage = null;
+    private double _bottomMessageTimer = 0;
+    private double _bottomMessageDuration = 0;
 
     private int selectedMenuIndex = 0;
     private string[] pauseMenuOptions = { "Resume", "Exit to Main Menu", "Exit to Windows" };
@@ -413,6 +418,7 @@ public class Game1 : Game
     private double inputDelay;
     private SoundEffect _soundEffect_Walk;
     private SoundEffect _soundEffect_BadCommand;
+    public Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
 
     #endregion
 
@@ -2643,6 +2649,8 @@ public class Game1 : Game
                 break;
         }
 
+        DrawBottomMessage();
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
@@ -2776,6 +2784,8 @@ public class Game1 : Game
                 break;
         }
 
+        UpdateBottomMessage(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -2889,6 +2899,13 @@ public class Game1 : Game
         if (inputTimer >= inputDelay)
         {
             //Handle the Keyboard input
+            if (newKeyboardState.IsKeyDown(Keys.S))
+            {
+                HandleSearching();
+                inputTimer = 0; // Reset the timer
+                return;
+            }
+
             if (newKeyboardState.IsKeyDown(Keys.Q))
             {
                 SaveGame();
@@ -3722,6 +3739,31 @@ public class Game1 : Game
         UpdateMainDisplayGridValues(currentMap);
     }
 
+    private void HandleSearching()
+    {
+        if (currentMap == Maps.U4MapBritain)
+        {
+            TownEntity entity = townEntityManager.GetEntityAt(Maps.U4MapBritain, pcTownMapLocationY, pcTownMapLocationX);
+            // Check if the player is in Britain and at the right location to search
+            if (entity != null)
+            {
+                if (entity.EntityName == "Rune of Compassion")
+                {
+                    if (gameSaveVariables.RuneCompassion != 1)
+                    {
+                        ShowBottomMessage("Rune of Compassion found!",2);
+                        //TODO _soundEffect_SearchCommandSuccess.Play();
+                        gameSaveVariables.RuneCompassion = 1; // Set the rune of compassion as found
+                        return;
+                    }
+                }
+            }
+        }
+
+        ShowBottomMessage("Nothing Here!", 2);
+        _soundEffect_BadCommand.Play();
+    }
+
     private void HandleJimmyLock()
     {
         // Define the four adjacent positions (N, S, E, W)
@@ -3901,7 +3943,6 @@ public class Game1 : Game
         string overworldEntityPath = "SaveSlot1\\OverworldEntities.xml";
         if (System.IO.File.Exists(saveGamePath) && System.IO.File.Exists(playerDataPath))
         {
-            Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
             gameSaveVariables = Utilities.DeserializeSaveGameVariables(saveGamePath);
             currentMap = gameSaveVariables.CurrentMap;
             pcOverworldLocationX = gameSaveVariables.pcOverworldLocationX;
@@ -3920,8 +3961,7 @@ public class Game1 : Game
     }
 
     private void SaveGame()
-    {
-        Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
+    {        
         gameSaveVariables.CurrentMap = currentMap;
         gameSaveVariables.pcOverworldLocationX = pcOverworldLocationX;
         gameSaveVariables.pcOverworldLocationY = pcOverworldLocationY;
@@ -4737,4 +4777,75 @@ public class Game1 : Game
     }
 
     #endregion
+
+    #region Show Messages
+
+    public void ShowBottomMessage(string message, double durationSeconds = 2.0)
+    {
+        _bottomMessage = message;
+        _bottomMessageDuration = durationSeconds;
+        _bottomMessageTimer = 0;
+    }
+
+    private void UpdateBottomMessage(GameTime gameTime)
+    {
+        if (_bottomMessage != null)
+        {
+            _bottomMessageTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_bottomMessageTimer >= _bottomMessageDuration)
+            {
+                _bottomMessage = null;
+                _bottomMessageTimer = 0;
+            }
+        }
+    }
+
+    private void DrawBottomMessage()
+    {
+        if (!string.IsNullOrEmpty(_bottomMessage))
+        {
+            var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+            int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            float textScale = 1.0f;
+            Vector2 textSize = font.MeasureString(_bottomMessage) * textScale;
+
+            // Calculate position for centered text at the bottom
+            Vector2 position = new Vector2(
+                (screenWidth - textSize.X) / 2,
+                screenHeight - textSize.Y - 10 // 10px from bottom
+            );
+
+            // Padding for the background rectangle
+            int padding = 16;
+            Rectangle backgroundRect = new Microsoft.Xna.Framework.Rectangle(
+                (int)position.X - padding / 2,
+                (int)position.Y - padding / 2,
+                (int)textSize.X + padding,
+                (int)textSize.Y + padding
+            );
+
+            // Draw solid black background rectangle
+            Texture2D rectTexture = Get1x1WhiteTexture();
+            _spriteBatch.Draw(rectTexture, backgroundRect, Microsoft.Xna.Framework.Color.Black);
+
+            // Draw the message text
+            _spriteBatch.DrawString(font, _bottomMessage, position, Microsoft.Xna.Framework.Color.Yellow, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+        }
+    }
+
+    // Helper method to get a 1x1 white texture for drawing rectangles
+    private Texture2D? _whiteTexture;
+    private Texture2D Get1x1WhiteTexture()
+    {
+        if (_whiteTexture == null)
+        {
+            _whiteTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _whiteTexture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
+        }
+        return _whiteTexture;
+    }
+
+    #endregion
+
 }
