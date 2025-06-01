@@ -1,64 +1,151 @@
-﻿{
-  "Id": "NPC1",
-  "StartNodeId": "greeting",
-  "Nodes": [
-    {
-      "Id": "greeting",
-      "Speaker": "Guard",
-      "Text": "Halt! Who goes there?",
-      "Options": [
-        {
-          "Text": "I am a traveler.",
-          "NextNodeId": "traveler"
-        },
-        {
-          "Text": "None of your business.",
-          "NextNodeId": "rude"
-        }
-      ]
-    },
-    {
-      "Id": "traveler",
-      "Speaker": "Guard",
-      "Text": "Welcome, traveler. What brings you to our town?",
-      "Options": [
-        {
-          "Text": "Just passing through.",
-          "NextNodeId": "end"
-        },
-        {
-          "Text": "Looking for adventure.",
-          "NextNodeId": "adventure"
-        }
-      ]
-    },
-    {
-      "Id": "rude",
-      "Speaker": "Guard",
-      "Text": "Watch your tongue, stranger. Move along.",
-      "Options": [
-        {
-          "Text": "Leave.",
-          "NextNodeId": "end"
-        }
-      ]
-    },
-    {
-      "Id": "adventure",
-      "Speaker": "Guard",
-      "Text": "You might find what you seek at the tavern.",
-      "Options": [
-        {
-          "Text": "Thank you.",
-          "NextNodeId": "end"
-        }
-      ]
-    },
-    {
-      "Id": "end",
-      "Speaker": "Guard",
-      "Text": "Safe travels.",
-      "Options": []
-    }
-  ]
-}
+﻿[
+  {
+    "Id": "Guard1",
+    "DialogIndex": "1",
+    "StartNodeId": "greeting",
+    "Nodes": [
+      {
+        "Id": "greeting",
+        "Speaker": "Guard",
+        "Text": "Halt! Who goes there?",
+        "Options": [
+          {
+            "Text": "I am a traveler.",
+            "NextNodeId": "traveler"
+          },
+          {
+            "Text": "None of your business.",
+            "NextNodeId": "rude"
+          }
+        ]
+      },
+      {
+        "Id": "traveler",
+        "Speaker": "Guard",
+        "Text": "Welcome, traveler. What brings you to our town?",
+        "Options": [
+          {
+            "Text": "Just passing through.",
+            "NextNodeId": "end"
+          },
+          {
+            "Text": "Looking for adventure.",
+            "NextNodeId": "adventure"
+          }
+        ]
+      },
+      {
+        "Id": "rude",
+        "Speaker": "Guard",
+        "Text": "Watch your tongue, stranger. Move along.",
+        "Options": [
+          {
+            "Text": "Leave.",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "adventure",
+        "Speaker": "Guard",
+        "Text": "You might find what you seek at the tavern.",
+        "Options": [
+          {
+            "Text": "Thank you.",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "end",
+        "Speaker": "Guard",
+        "Text": "Safe travels.",
+        "Options": []
+      }
+    ]
+  },
+  {
+    "Id": "Merchant1",
+    "DialogIndex": "2",
+    "StartNodeId": "hello",
+    "Nodes": [
+      {
+        "Id": "hello",
+        "Speaker": "Shopkeeper",
+        "Text": "Welcome to my shop! How can I help you?",
+        "Options": [
+          {
+            "Text": "Show me your wares.",
+            "NextNodeId": "wares"
+          },
+          {
+            "Text": "Just looking.",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "wares",
+        "Speaker": "Shopkeeper",
+        "Text": "Here are the finest goods in Britannia.",
+        "Options": [
+          {
+            "Text": "Thank you.",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "end",
+        "Speaker": "Shopkeeper",
+        "Text": "Come again anytime.",
+        "Options": []
+      }
+    ]
+  },
+  {
+    "Id": "Child1",
+    "DialogIndex": "3",
+    "StartNodeId": "start",
+    "Nodes": [
+      {
+        "Id": "start",
+        "Speaker": "Child",
+        "Text": "Have you seen my dog?",
+        "Options": [
+          {
+            "Text": "No, sorry.",
+            "NextNodeId": "sad"
+          },
+          {
+            "Text": "Yes, near the fountain.",
+            "NextNodeId": "happy"
+          }
+        ]
+      },
+      {
+        "Id": "sad",
+        "Speaker": "Child",
+        "Text": "Oh... I hope he's okay.",
+        "Options": [
+          {
+            "Text": "I'll help you look.",
+            "NextNodeId": "thanks"
+          }
+        ]
+      },
+      {
+        "Id": "happy",
+        "Speaker": "Child",
+        "Text": "Thank you! I'll go look there.",
+        "Options": []
+      },
+      {
+        "Id": "thanks",
+        "Speaker": "Child",
+        "Text": "Thank you for your kindness!",
+        "Options": []
+      }
+    ]
+  }
+]

@@ -10,16 +10,16 @@ namespace Ultima45Monogame.Dialogs
         Usage:
 
         var manager = new DialogEntityManager();
-        manager.LoadDialogTreeFromJson("Dialogs/NPC1.json");
-
-        var tree = manager.GetDialogTree("NPC1");
-        var startNode = manager.GetStartNode("NPC1");
+        manager.LoadAllDialogTreesFromJson("Dialogs/UltimaIV_Dialogs.json");
+        var tree = manager.GetDialogTreeByIndex("2"); // DialogIndex as string
+        var startNode = tree?.GetNodeById(tree.StartNodeId);
      */
 
     // Represents the entire dialog tree for an NPC or entity
     public class DialogTree
     {
         public string Id { get; set; } // Unique identifier for the dialog tree (e.g., NPC name)
+        public string DialogIndex { get; set; } // Index to differentiate dialog sets
         public string StartNodeId { get; set; } // The starting node of the dialog
         public List<DialogNode> Nodes { get; set; } = new List<DialogNode>();
 
@@ -32,10 +32,13 @@ namespace Ultima45Monogame.Dialogs
 
     public class DialogEntityManager
     {
-        private readonly Dictionary<string, DialogTree> _dialogTrees = new();
+        // Keyed by DialogIndex for fast lookup
+        private readonly Dictionary<string, DialogTree> _dialogTreesByIndex = new();
+        // Optionally, also keyed by Id (NPC name) if needed
+        private readonly Dictionary<string, DialogTree> _dialogTreesById = new();
 
-        // Load a dialog tree from a JSON file and add it to the manager
-        public void LoadDialogTreeFromJson(string filePath)
+        // Load all dialog trees from a JSON file containing an array of dialog trees
+        public void LoadAllDialogTreesFromJson(string filePath)
         {
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"Dialog JSON file not found: {filePath}");
@@ -45,26 +48,35 @@ namespace Ultima45Monogame.Dialogs
             {
                 PropertyNameCaseInsensitive = true
             };
-            var dialogTree = JsonSerializer.Deserialize<DialogTree>(json, options);
+            var dialogTrees = JsonSerializer.Deserialize<List<DialogTree>>(json, options);
 
-            if (dialogTree == null || string.IsNullOrEmpty(dialogTree.Id))
-                throw new InvalidOperationException("Invalid dialog tree JSON.");
+            if (dialogTrees == null)
+                throw new InvalidOperationException("Invalid dialog trees JSON.");
 
-            _dialogTrees[dialogTree.Id] = dialogTree;
+            _dialogTreesByIndex.Clear();
+            _dialogTreesById.Clear();
+
+            foreach (var tree in dialogTrees)
+            {
+                if (!string.IsNullOrEmpty(tree.DialogIndex))
+                    _dialogTreesByIndex[tree.DialogIndex] = tree;
+                if (!string.IsNullOrEmpty(tree.Id))
+                    _dialogTreesById[tree.Id] = tree;
+            }
         }
 
-        // Get a dialog tree by its ID
-        public DialogTree? GetDialogTree(string id)
+        // Get a dialog tree by its DialogIndex
+        public DialogTree? GetDialogTreeByIndex(string dialogIndex)
         {
-            _dialogTrees.TryGetValue(id, out var tree);
+            _dialogTreesByIndex.TryGetValue(dialogIndex, out var tree);
             return tree;
         }
 
-        // Optionally, get the starting node for a dialog tree
-        public DialogNode? GetStartNode(string dialogTreeId)
+        // Optionally, get a dialog tree by its Id (NPC name)
+        public DialogTree? GetDialogTreeById(string id)
         {
-            var tree = GetDialogTree(dialogTreeId);
-            return tree?.GetNodeById(tree.StartNodeId);
+            _dialogTreesById.TryGetValue(id, out var tree);
+            return tree;
         }
     }
 }

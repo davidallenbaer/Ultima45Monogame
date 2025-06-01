@@ -37,7 +37,8 @@ public class Game1 : Game
         PlayingCamp,
         PeerAtGem,
         Paused,
-        GameOver
+        GameOver,
+        TalkingDialog
     }
 
     private string? _bottomMessage = null;
@@ -62,6 +63,8 @@ public class Game1 : Game
     private KeyboardState newKeyboardState;
     private GamePadState gamePad1State;
     private GameStates _currentState;
+    private int _currentDialogIndex = 0;
+    private TownEntity _currentDialogEntity = null;
     private Vehicle _currentVehicle = Vehicle.None;
     private MoveDirection _currentHeading = MoveDirection.None;
 
@@ -463,7 +466,7 @@ public class Game1 : Game
 
     public void LoadUltima4DialogData()
     {
-        dialogEntityManager.LoadDialogTreeFromJson("Dialogs/UltimaIV_Dialogs.json");
+        dialogEntityManager.LoadAllDialogTreesFromJson("Dialogs/UltimaIV_Dialogs.json");
     }
     
     public void LoadUltima4TileSet()
@@ -2675,6 +2678,10 @@ public class Game1 : Game
             case GameStates.GameOver:
                 DrawGameOver();
                 break;
+            
+            case GameStates.TalkingDialog:
+                DrawTalkingDialog();
+                break;
         }
 
         DrawBottomMessage();
@@ -2682,6 +2689,11 @@ public class Game1 : Game
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private void DrawTalkingDialog()
+    {
+        throw new NotImplementedException();
     }
 
     private void DrawPeerAtGem()
@@ -2810,11 +2822,34 @@ public class Game1 : Game
             case GameStates.GameOver:
                 UpdateGameOver(gameTime);
                 break;
+            
+            case GameStates.TalkingDialog:
+                UpdateTalkingDialog(gameTime);
+                break;
         }
 
         UpdateBottomMessage(gameTime);
 
         base.Update(gameTime);
+    }
+
+    private void UpdateTalkingDialog(GameTime gameTime)
+    {
+        //_currentState = GameStates.TalkingDialog;
+        //_currentDialogIndex = entity.DialogIndex;
+        //_currentDialogEntity = entity;
+
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            //var tree = dialogEntityManager.GetDialogTree(_currentDialogIndex);
+            //var startNode = dialogEntityManager.GetStartNode(_currentDialogIndex);
+        }
+
+        throw new NotImplementedException();
     }
 
     private void UpdatePeerAtGem(GameTime gameTime)
@@ -3834,7 +3869,8 @@ public class Game1 : Game
                 if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
                 {
                     //Found someone to talk to
-                    break;                }
+                    break;
+                }
             }
         }
 
@@ -3843,15 +3879,14 @@ public class Game1 : Game
         if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
         {
             //Initiate dialog with the entity
-
-            //TODO
-            int x = -1;
-            //_currentState = GameStates.TalkingToEntity;
-            //_currentDialogIndex = entity.DialogIndex;
-            //_currentDialogEntity = entity;
+            _currentState = GameStates.TalkingDialog;
+            _currentDialogIndex = entity.DialogIndex;
+            _currentDialogEntity = entity;
         }
         else
         {
+            _currentDialogIndex = 0;
+            _currentDialogEntity = null;
             ShowBottomMessage("No one to talk to here!", 2);
             _soundEffect_BadCommand.Play();
             return; // If there is no one to talk to, play bad command sound

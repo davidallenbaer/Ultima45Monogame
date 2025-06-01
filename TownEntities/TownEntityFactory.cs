@@ -26,7 +26,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                 ));
 
@@ -41,7 +41,7 @@ namespace Ultima45Monogame
                 visible: true,
                 movement: 0,
                 schedule: 0,
-                dialogindex: 1,
+                dialogindex: 0,
                 preventEnteringTile: true
             ));
 
@@ -60,7 +60,7 @@ namespace Ultima45Monogame
                 visible: true,
                 movement: 0,
                 schedule: 0,
-                dialogindex: 1,
+                dialogindex: 0,
                 preventEnteringTile: true
             ));
 
@@ -154,7 +154,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -169,7 +169,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -184,7 +184,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -199,7 +199,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -214,7 +214,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -229,7 +229,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -244,7 +244,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -259,7 +259,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -274,7 +274,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -289,7 +289,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -304,7 +304,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -319,7 +319,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
@@ -334,7 +334,7 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: true
                     ));
 
