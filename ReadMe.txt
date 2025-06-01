@@ -20,6 +20,7 @@ V - View (Peer at Gem)
 J - Jimmy lock
 O - Open door
 S - Search
+T - Talk to NPC
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -29,7 +30,7 @@ You can also enter and exit vehicles (Balloon, Horse, Ship).
 Music should play appropriately based on the map you are on.
 The game is in a very early stage of development and is not yet playable.
 
-Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
+Version 2.0.0 - COMPLETE - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Leave Gold Chest on overworld map after combat,
 	Full Monster catalog with TileTypes,
 	Getting chest on overworld map increases party gold
@@ -37,7 +38,7 @@ Version 2.0.0 - NES Random Attacks, Hole Up & Camp and Camp Combat Map,
 	Place up to 16 Monsters on Combat Map using CombatTracker
 	Place up to 8 Players on Combat Map using CombatTracker
 
-Version 3.0.0 - Shrine combat locations
+Version 3.0.0 - COMPLETE - Shrine combat locations
 	Peer at Gem on Overworld map and in Towns
 	Stretch all the maps to fit the screen
 	Town Entity, Town Entity Manager, Town Entity Factory
@@ -45,6 +46,12 @@ Version 3.0.0 - Shrine combat locations
 	Prevent player from moving on top of NPCs in towns.
 	Implement working doors in towns - Open door, Jimmy locked door.
 	Implement Search in towns - Search for hidden items.
+	Display message at bottom of screen
+	Play music after pausing
+
+Version 3.0.0 - TODO - 
+	Implement dialog/talking with NPCs.
+	Implement a journal based on dialog responses.
 
 --TODO--	
 	
@@ -58,12 +65,9 @@ Version 3.0.0 - Towns\Shops\Dialog
 
 	Populate towns with shops.
 
-	Implement dialog/talking with NPCs.
-
 Version 4.0.0 - Menu System
 	Implement a quest system.
 	Implement a spell system.
-	Implement a journal.
 	Implement a menu to equip and unequip items.
 	Implement a spell book with a spell system.
 

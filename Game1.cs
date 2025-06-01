@@ -2893,6 +2893,7 @@ public class Game1 : Game
             {
                 bGamePaused = false;
                 _currentState = GameStates.Playing;
+                PlayBackgroundMusicBasedOnCurrentMap();
             }
             else if (pauseMenuOptions[selectedMenuIndex] == "Exit to Main Menu")
             {
@@ -2922,6 +2923,13 @@ public class Game1 : Game
             if (newKeyboardState.IsKeyDown(Keys.S))
             {
                 HandleSearching();
+                inputTimer = 0; // Reset the timer
+                return;
+            }
+
+            if (newKeyboardState.IsKeyDown(Keys.T))
+            {
+                HandleTalkDialog();
                 inputTimer = 0; // Reset the timer
                 return;
             }
@@ -3788,6 +3796,59 @@ public class Game1 : Game
         oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
 
         UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private void HandleTalkDialog()
+    {
+        // Define the four adjacent positions (N, S, E, W)
+        int[,] directions = new int[,]
+        {
+        { -1, 0 }, // North
+        { 1, 0 },  // South
+        { 0, -1 }, // West
+        { 0, 1 }   // East
+        };
+
+        TownEntity? entity = null;
+        int adjY = -1;
+        int adjX = -1;
+
+        for (int i = 0; i < 4; i++)
+        {
+            adjY = pcTownMapLocationY + directions[i, 0];
+            adjX = pcTownMapLocationX + directions[i, 1];
+
+            // Check bounds
+            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            {
+                entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+
+                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
+                {
+                    //Found someone to talk to
+                    break;                }
+            }
+        }
+
+        entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+
+        if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
+        {
+            //Initiate dialog with the entity
+
+            //TODO
+            int x = -1;
+            //_currentState = GameStates.TalkingToEntity;
+            //_currentDialogIndex = entity.DialogIndex;
+            //_currentDialogEntity = entity;
+        }
+        else
+        {
+            ShowBottomMessage("No one to talk to here!", 2);
+            _soundEffect_BadCommand.Play();
+            return; // If there is no one to talk to, play bad command sound
+        }
+
     }
 
     private string GetTownNameForDebugging(Maps map)

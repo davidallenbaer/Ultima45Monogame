@@ -70,7 +70,7 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Guard",
+                    entityName: "Guard 1",
                     entityType: "NPC",
                     entityId: 4,
                     startY: 13,
@@ -85,7 +85,7 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Guard",
+                    entityName: "Guard 2",
                     entityType: "NPC",
                     entityId: 5,
                     startY: 17,
@@ -100,7 +100,7 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Guard",
+                    entityName: "Guard 3",
                     entityType: "NPC",
                     entityId: 6,
                     startY: 25,
@@ -115,7 +115,7 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Guard",
+                    entityName: "Guard 4",
                     entityType: "NPC",
                     entityId: 7,
                     startY: 22,
@@ -139,7 +139,7 @@ namespace Ultima45Monogame
                     visible: false,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 1,
+                    dialogindex: 0,
                     preventEnteringTile: false
                     ));
 
