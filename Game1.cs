@@ -2691,11 +2691,6 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    private void DrawTalkingDialog()
-    {
-        throw new NotImplementedException();
-    }
-
     private void DrawPeerAtGem()
     {
         // Draw the peer at gem screen
@@ -2831,25 +2826,6 @@ public class Game1 : Game
         UpdateBottomMessage(gameTime);
 
         base.Update(gameTime);
-    }
-
-    private void UpdateTalkingDialog(GameTime gameTime)
-    {
-        //_currentState = GameStates.TalkingDialog;
-        //_currentDialogIndex = entity.DialogIndex;
-        //_currentDialogEntity = entity;
-
-        // Update the input timer
-        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
-
-        // Only process input if the required time has passed
-        if (inputTimer >= inputDelay)
-        {
-            //var tree = dialogEntityManager.GetDialogTree(_currentDialogIndex);
-            //var startNode = dialogEntityManager.GetStartNode(_currentDialogIndex);
-        }
-
-        throw new NotImplementedException();
     }
 
     private void UpdatePeerAtGem(GameTime gameTime)
@@ -3882,6 +3858,8 @@ public class Game1 : Game
             _currentState = GameStates.TalkingDialog;
             _currentDialogIndex = entity.DialogIndex;
             _currentDialogEntity = entity;
+            StartDialog(_currentDialogIndex.ToString());
+            return;
         }
         else
         {
@@ -5104,6 +5082,135 @@ public class Game1 : Game
             _whiteTexture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
         }
         return _whiteTexture;
+    }
+
+    #endregion
+
+    #region Dialog Processing
+
+    private DialogTree? _activeDialogTree;
+    private DialogNode? _activeDialogNode;
+    private int _selectedDialogOptionIndex = 0;
+    private double _dialogEndTimer = 0;
+    private bool _dialogEnding = false;
+
+    private void UpdateTalkingDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_activeDialogTree == null || _activeDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_dialogEnding)
+        {
+            _dialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_dialogEndTimer >= 2.0)
+            {
+                _activeDialogTree = null;
+                _activeDialogNode = null;
+                _selectedDialogOptionIndex = 0;
+                _dialogEnding = false;
+                _dialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_activeDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selectedDialogOptionIndex = (_selectedDialogOptionIndex - 1 + _activeDialogNode.Options.Count) % _activeDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selectedDialogOptionIndex = (_selectedDialogOptionIndex + 1) % _activeDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _activeDialogNode.Options[_selectedDialogOptionIndex];
+                    var nextNode = _activeDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _activeDialogNode = nextNode;
+                        _selectedDialogOptionIndex = 0;
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _dialogEnding = true;
+                _dialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawTalkingDialog()
+    {
+        if (_activeDialogTree == null || _activeDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _activeDialogNode.Speaker;
+        string text = _activeDialogNode.Text;
+        Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Cyan);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Yellow);
+
+        // Draw options
+        int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _activeDialogNode.Options.Count; i++)
+        {
+            var option = _activeDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selectedDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
+    }
+
+    // Call this method to start a dialog by DialogIndex (as string)
+    private void StartDialog(string dialogIndex)
+    {
+        _activeDialogTree = dialogEntityManager.GetDialogTreeByIndex(dialogIndex);
+        if (_activeDialogTree != null)
+        {
+            _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+            _selectedDialogOptionIndex = 0;
+            _currentState = GameStates.TalkingDialog;
+        }
     }
 
     #endregion
