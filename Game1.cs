@@ -5188,8 +5188,8 @@ public class Game1 : Game
         Vector2 speakerSize = font.MeasureString(speaker);
         Vector2 textSize = font.MeasureString(text);
 
-        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Cyan);
-        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Yellow);
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
 
         // Draw options
         int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;

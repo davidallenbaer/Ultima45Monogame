@@ -49,29 +49,28 @@ Version 3.0.0 - COMPLETE - Shrine combat locations
 	Display message at bottom of screen
 	Play music after pausing
 
-Version 3.0.0 - TODO - 
+Version 4.0.0 - COMPLETE
 	Implement dialog/talking with NPCs.
-	Implement a journal based on dialog responses.
 
 --TODO--	
-	
-	Populate towns with NPCs Town Entity's.
-
-	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
-	
-Version 3.0.0 - Towns\Shops\Dialog
-
-	Randomly move NPCs around the town map.
+	Populate Britain with NPCs Town Entity's.
 
 	Populate towns with shops.
 
-Version 4.0.0 - Menu System
+	Implement a journal based on dialog responses.
+
+Version 5.0.0 - Towns\Shops\Dialog
+
+	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
+	
+Version 6.0.0 - Menu System
+	Implement a journal system.
 	Implement a quest system.
 	Implement a spell system.
 	Implement a menu to equip and unequip items.
 	Implement a spell book with a spell system.
 
-Version 5.0.0 - Implement dungeons
+Version 7.0.0 - Implement dungeons
 	Dungeons should be a separate map that you can enter from the overworld map.
 	A dungeon level will be similar to a tile based town map (Not first person view like in the original game).
 	Saving in dungeons should be possible.
@@ -83,6 +82,8 @@ Future - Combat mode Setting #2 - Implement random monsters visibly on the map (
 Future - Implement turn based combat
 
 Future - Implement auto combat option.
+
+Future - Randomly move NPCs around the town map.
 
 --Extra Ideas--
 Ability to purchase shops for income.
