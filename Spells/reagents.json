@@ -1,0 +1,36 @@
+﻿{
+  "reagents": [
+    {
+      "name": "Black Pearl",
+      "description": "Used in offensive spells, especially those involving missiles or energy projectiles."
+    },
+    {
+      "name": "Blood Moss",
+      "description": "Associated with movement, teleportation, and travel magic."
+    },
+    {
+      "name": "Garlic",
+      "description": "Commonly used in protection spells and spells targeting undead."
+    },
+    {
+      "name": "Ginseng",
+      "description": "Primarily used for healing and restorative magic."
+    },
+    {
+      "name": "Mandrake Root",
+      "description": "Rare and powerful; used in advanced or high-level spells."
+    },
+    {
+      "name": "Nightshade",
+      "description": "Used in illusion, invisibility, confusion, and death magic."
+    },
+    {
+      "name": "Spider Silk",
+      "description": "Used in spells involving binding, protection, or speed enhancement."
+    },
+    {
+      "name": "Sulfurous Ash",
+      "description": "A basic magical component; fuels many elemental and utility spells."
+    }
+  ]
+}

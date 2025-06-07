@@ -22,6 +22,10 @@ O - Open door
 S - Search
 T - Talk to NPC
 
+W - Wear Armor
+R - Ready Weapon
+C - Cast Spell
+
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
 Walking on the overworld map will wrap around when you reach the edge of the map.
@@ -57,7 +61,11 @@ Version 4.0.0 - COMPLETE
 
 	Populate towns with shops.
 
-	Implement a journal based on dialog responses.
+	W - Wear Armor
+	
+	R - Ready Weapon
+	
+	C - Cast Spell
 
 Version 5.0.0 - Towns\Shops\Dialog
 

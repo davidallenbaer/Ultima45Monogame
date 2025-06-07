@@ -1,0 +1,160 @@
+{
+  "spells": [
+    {
+      "spell": "A",
+      "name": "Awaken",
+      "effect": "Wakes a sleeping party member",
+      "reagents": [ "Ginseng", "Garlic" ]
+    },
+    {
+      "spell": "B",
+      "name": "Blink",
+      "effect": "Teleports the party a short distance on the map",
+      "reagents": [ "Sulfurous Ash", "Blood Moss" ]
+    },
+    {
+      "spell": "C",
+      "name": "Cure",
+      "effect": "Cures poison",
+      "reagents": [ "Ginseng", "Garlic" ]
+    },
+    {
+      "spell": "D",
+      "name": "Dispel",
+      "effect": "Dispels enemy summoned creatures",
+      "reagents": [ "Garlic", "Sulfurous Ash" ]
+    },
+    {
+      "spell": "E",
+      "name": "Energy",
+      "effect": "Creates a barrier (energy field)",
+      "reagents": [ "Sulfurous Ash", "Spider Silk" ]
+    },
+    {
+      "spell": "F",
+      "name": "Fireball",
+      "effect": "Attacks one enemy with fire",
+      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+    },
+    {
+      "spell": "G",
+      "name": "Gate Travel",
+      "effect": "Teleports the party to a moongate location",
+      "reagents": [ "Mandrake Root", "Black Pearl" ]
+    },
+    {
+      "spell": "H",
+      "name": "Heal",
+      "effect": "Restores some HP to one character",
+      "reagents": [ "Ginseng" ]
+    },
+    {
+      "spell": "I",
+      "name": "Iceball",
+      "effect": "Attacks one enemy with ice",
+      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+    },
+    {
+      "spell": "J",
+      "name": "Jinx",
+      "effect": "Confuses enemies (low success rate)",
+      "reagents": [ "Nightshade" ]
+    },
+    {
+      "spell": "K",
+      "name": "Kill",
+      "effect": "Attempts to instantly kill an enemy",
+      "reagents": [ "Nightshade", "Mandrake Root" ]
+    },
+    {
+      "spell": "L",
+      "name": "Light",
+      "effect": "Lights up dungeon or dark areas",
+      "reagents": [ "Sulfurous Ash" ]
+    },
+    {
+      "spell": "M",
+      "name": "Magic Missile",
+      "effect": "Basic magical attack",
+      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+    },
+    {
+      "spell": "N",
+      "name": "Negate",
+      "effect": "Cancels enemy spell effects",
+      "reagents": [ "Garlic", "Sulfurous Ash" ]
+    },
+    {
+      "spell": "O",
+      "name": "Open",
+      "effect": "Unlocks chests (may fail on trapped ones)",
+      "reagents": [ "Sulfurous Ash" ]
+    },
+    {
+      "spell": "P",
+      "name": "Protect",
+      "effect": "Increases party’s defense temporarily",
+      "reagents": [ "Garlic", "Spider Silk" ]
+    },
+    {
+      "spell": "Q",
+      "name": "Quickness",
+      "effect": "Speeds up party in combat",
+      "reagents": [ "Blood Moss", "Spider Silk" ]
+    },
+    {
+      "spell": "R",
+      "name": "Resurrection",
+      "effect": "Revives a dead character",
+      "reagents": [ "Ginseng", "Garlic", "Mandrake Root" ]
+    },
+    {
+      "spell": "S",
+      "name": "Sleep",
+      "effect": "Attempts to put enemies to sleep",
+      "reagents": [ "Ginseng", "Spider Silk" ]
+    },
+    {
+      "spell": "T",
+      "name": "Tremor",
+      "effect": "Damages all enemies (earthquake)",
+      "reagents": [ "Sulfurous Ash", "Blood Moss", "Mandrake Root" ]
+    },
+    {
+      "spell": "U",
+      "name": "Undead",
+      "effect": "Damages undead creatures",
+      "reagents": [ "Garlic", "Sulfurous Ash" ]
+    },
+    {
+      "spell": "V",
+      "name": "View",
+      "effect": "Displays a bird’s-eye view of the overworld",
+      "reagents": [ "Nightshade", "Blood Moss" ]
+    },
+    {
+      "spell": "W",
+      "name": "Wind",
+      "effect": "Changes the direction of the wind (for sailing)",
+      "reagents": [ "Blood Moss" ]
+    },
+    {
+      "spell": "X",
+      "name": "X-it",
+      "effect": "Exits dungeons, shrines, or combat",
+      "reagents": [ "Mandrake Root", "Blood Moss" ]
+    },
+    {
+      "spell": "Y",
+      "name": "Y-up",
+      "effect": "Elevates party one level in dungeon",
+      "reagents": [ "Blood Moss", "Mandrake Root" ]
+    },
+    {
+      "spell": "Z",
+      "name": "Z-down",
+      "effect": "Lowers party one level in dungeon",
+      "reagents": [ "Nightshade", "Mandrake Root" ]
+    }
+  ]
+}
