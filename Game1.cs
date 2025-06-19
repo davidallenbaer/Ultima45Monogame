@@ -35,6 +35,10 @@ public class Game1 : Game
     private string _openPromptMessage = "Open - Press Direction";
     private MoveDirection _pendingOpenDirection = MoveDirection.None;
 
+    private bool _awaitingJimmyLockDirection = false;
+    private string _jimmylockPromptMessage = "Jimmy Lock - Press Direction";
+    private MoveDirection _pendingJimmyLockDirection = MoveDirection.None;
+
     private double mapCampDisplayTimer = 0;
 
     public enum GameStates
@@ -3033,6 +3037,48 @@ public class Game1 : Game
                 return; // <--- EARLY RETURN: block all other input while awaiting direction
             }
 
+            if (_awaitingJimmyLockDirection)
+            {
+                if (newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _pendingJimmyLockDirection = MoveDirection.North;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _pendingJimmyLockDirection = MoveDirection.South;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Left))
+                {
+                    _pendingJimmyLockDirection = MoveDirection.West;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Right))
+                {
+                    _pendingJimmyLockDirection = MoveDirection.East;
+                }
+
+                if (_pendingJimmyLockDirection != MoveDirection.None)
+                {
+                    var prevState = _currentState;
+                    bool doorJimmyLockSuccess = HandleJimmyLock(_pendingJimmyLockDirection);
+                    _awaitingJimmyLockDirection = false;
+                    _pendingJimmyLockDirection = MoveDirection.None;
+
+                    // Only clear the message if a door was actually jimmy'd
+                    if (doorJimmyLockSuccess)
+                    {
+                        ShowBottomMessage(null);
+                    }
+                    // Otherwise, let the "No door to jimmy here!" message show for its duration
+
+                    inputTimer = 0;
+
+                }
+
+                oldKeyboardState = newKeyboardState;
+                UpdateMainDisplayGridValues(currentMap);
+                return; // <--- EARLY RETURN: block all other input while awaiting direction
+            }
+
             if (newKeyboardState.IsKeyDown(Keys.T) && oldKeyboardState.IsKeyUp(Keys.T))
             {
                 _awaitingTalkDirection = true;
@@ -3049,6 +3095,13 @@ public class Game1 : Game
                 return;
             }
 
+            if (newKeyboardState.IsKeyDown(Keys.J) && oldKeyboardState.IsKeyUp(Keys.J))
+            {
+                _awaitingJimmyLockDirection = true;
+                ShowBottomMessage(_jimmylockPromptMessage, -1); // Show "Jimmy Lock" indefinitely
+                inputTimer = 0; // Reset the timer
+                return;
+            }
             #endregion
 
             //Handle the Keyboard input
@@ -3552,10 +3605,6 @@ public class Game1 : Game
             {
                 HandleClimbing();
             }
-            else if (oldKeyboardState.IsKeyUp(Keys.J) && newKeyboardState.IsKeyDown(Keys.J))
-            {
-                HandleJimmyLock();
-            }
             else if (oldKeyboardState.IsKeyUp(Keys.D) && newKeyboardState.IsKeyDown(Keys.D))
             {
                 HandleDescending();
@@ -4035,37 +4084,54 @@ public class Game1 : Game
         _soundEffect_BadCommand.Play();
     }
 
-    private void HandleJimmyLock()
+    private bool HandleJimmyLock(MoveDirection direction)
     {
-        // Define the four adjacent positions (N, S, E, W)
-        int[,] directions = new int[,]
+        // Map MoveDirection to (dy, dx)
+        int dy = 0, dx = 0;
+        switch (direction)
         {
-        { -1, 0 }, // North
-        { 1, 0 },  // South
-        { 0, -1 }, // West
-        { 0, 1 }   // East
-        };
+            case MoveDirection.North:
+                dy = -1; dx = 0;
+                break;
+            case MoveDirection.South:
+                dy = 1; dx = 0;
+                break;
+            case MoveDirection.West:
+                dy = 0; dx = -1;
+                break;
+            case MoveDirection.East:
+                dy = 0; dx = 1;
+                break;
+            default:
+                ShowBottomMessage("Invalid direction!", 2);
+                _soundEffect_BadCommand.Play();
+                return false;
+        }
 
-        for (int i = 0; i < 4; i++)
+        int adjY = pcTownMapLocationY + dy;
+        int adjX = pcTownMapLocationX + dx;
+
+        // Check bounds
+        if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
         {
-            int adjY = pcTownMapLocationY + directions[i, 0];
-            int adjX = pcTownMapLocationX + directions[i, 1];
-
-            // Check bounds
-            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+            if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
             {
-                TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
-                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
+                if (entity.LockedState == LockedStatus.Unlocked)
                 {
-                    if (entity.LockedState == LockedStatus.Unlocked)
-                    {
-                        _soundEffect_BadCommand.Play();
-                        return; // If the door is already unlocked, play bad command sound
-                    }
-                    entity.LockedState = LockedStatus.Unlocked;
+                    _soundEffect_BadCommand.Play();
+                    ShowBottomMessage("Door is already unlocked!", 2);
+                    return false; // If the door is already unlocked, play bad command sound
                 }
+                entity.LockedState = LockedStatus.Unlocked;
+                return true;
             }
         }
+
+        // If no door was found or jimmy'd
+        ShowBottomMessage("No door to jimmy here!", 2);
+        _soundEffect_BadCommand.Play();
+        return false;
     }
 
     private bool HandleOpeningDoor(MoveDirection direction)
