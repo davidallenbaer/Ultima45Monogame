@@ -26,6 +26,11 @@ namespace Ultima45Monogame;
 public class Game1 : Game
 {
     #region Declarations
+
+    private bool _awaitingTalkDirection = false;
+    private string _talkPromptMessage = "Talk - Press Direction";
+    private MoveDirection _pendingTalkDirection = MoveDirection.None;
+
     private double mapCampDisplayTimer = 0;
 
     public enum GameStates
@@ -2926,7 +2931,7 @@ public class Game1 : Game
 
         oldKeyboardState = newKeyboardState;
     }
-    
+
 
     private void UpdatePlaying(GameTime gameTime)
     {
@@ -2938,17 +2943,60 @@ public class Game1 : Game
         // Only process input if the required time has passed
         if (inputTimer >= inputDelay)
         {
-            //Handle the Keyboard input
-            if (newKeyboardState.IsKeyDown(Keys.S))
+            // If awaiting direction, check for arrow key press and ignore all other input
+            if (_awaitingTalkDirection)
             {
-                HandleSearching();
+                if (newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _pendingTalkDirection = MoveDirection.North;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _pendingTalkDirection = MoveDirection.South;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Left))
+                {
+                    _pendingTalkDirection = MoveDirection.West;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Right))
+                {
+                    _pendingTalkDirection = MoveDirection.East;
+                }
+
+                if (_pendingTalkDirection != MoveDirection.None)
+                {
+                    var prevState = _currentState;
+                    HandleTalkDialog(_pendingTalkDirection);
+                    _awaitingTalkDirection = false;
+                    _pendingTalkDirection = MoveDirection.None;
+
+                    // Only clear the "Talk" message if we actually started a dialog
+                    if (_currentState == GameStates.TalkingDialog)
+                    {
+                        ShowBottomMessage(null); // Clear the "Talk" message
+                    }
+                    // Otherwise, let the "No one to talk to here!" message show for its duration
+
+                    inputTimer = 0;
+                }
+
+                oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
+                UpdateMainDisplayGridValues(currentMap);
+                return; // <--- EARLY RETURN: block all other input while awaiting direction
+            }
+
+            //Handle the Keyboard input
+            if (newKeyboardState.IsKeyDown(Keys.T) && oldKeyboardState.IsKeyUp(Keys.T))
+            {
+                _awaitingTalkDirection = true;
+                ShowBottomMessage(_talkPromptMessage, -1); // Show "Talk" indefinitely
                 inputTimer = 0; // Reset the timer
                 return;
             }
 
-            if (newKeyboardState.IsKeyDown(Keys.T))
+            if (newKeyboardState.IsKeyDown(Keys.S))
             {
-                HandleTalkDialog();
+                HandleSearching();
                 inputTimer = 0; // Reset the timer
                 return;
             }
@@ -3817,59 +3865,54 @@ public class Game1 : Game
         UpdateMainDisplayGridValues(currentMap);
     }
 
-    private void HandleTalkDialog()
+    private void HandleTalkDialog(MoveDirection direction)
     {
-        // Define the four adjacent positions (N, S, E, W)
-        int[,] directions = new int[,]
+        // Map MoveDirection to (dy, dx)
+        int dy = 0, dx = 0;
+        switch (direction)
         {
-        { -1, 0 }, // North
-        { 1, 0 },  // South
-        { 0, -1 }, // West
-        { 0, 1 }   // East
-        };
+            case MoveDirection.North:
+                dy = -1; dx = 0;
+                break;
+            case MoveDirection.South:
+                dy = 1; dx = 0;
+                break;
+            case MoveDirection.West:
+                dy = 0; dx = -1;
+                break;
+            case MoveDirection.East:
+                dy = 0; dx = 1;
+                break;
+            default:
+                ShowBottomMessage("Invalid direction!", 2);
+                _soundEffect_BadCommand.Play();
+                return;
+        }
 
-        TownEntity? entity = null;
-        int adjY = -1;
-        int adjX = -1;
+        int adjY = pcTownMapLocationY + dy;
+        int adjX = pcTownMapLocationX + dx;
 
-        for (int i = 0; i < 4; i++)
+        // Check bounds
+        if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
         {
-            adjY = pcTownMapLocationY + directions[i, 0];
-            adjX = pcTownMapLocationX + directions[i, 1];
+            TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
 
-            // Check bounds
-            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
             {
-                entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
-
-                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
-                {
-                    //Found someone to talk to
-                    break;
-                }
+                // Initiate dialog with the entity
+                _currentState = GameStates.TalkingDialog;
+                _currentDialogIndex = entity.DialogIndex;
+                _currentDialogEntity = entity;
+                StartDialog(_currentDialogIndex.ToString());
+                return;
             }
         }
 
-        entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
-
-        if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
-        {
-            //Initiate dialog with the entity
-            _currentState = GameStates.TalkingDialog;
-            _currentDialogIndex = entity.DialogIndex;
-            _currentDialogEntity = entity;
-            StartDialog(_currentDialogIndex.ToString());
-            return;
-        }
-        else
-        {
-            _currentDialogIndex = 0;
-            _currentDialogEntity = null;
-            ShowBottomMessage("No one to talk to here!", 2);
-            _soundEffect_BadCommand.Play();
-            return; // If there is no one to talk to, play bad command sound
-        }
-
+        _currentDialogIndex = 0;
+        _currentDialogEntity = null;
+        ShowBottomMessage("No one to talk to here!", 2);
+        _soundEffect_BadCommand.Play();
+        return;
     }
 
     private string GetTownNameForDebugging(Maps map)
@@ -5017,6 +5060,9 @@ public class Game1 : Game
     {
         if (string.IsNullOrEmpty(message))
         {
+            _bottomMessage = "";
+            _bottomMessageDuration = 0;
+            _bottomMessageTimer = 0;
             return;
         }
 
@@ -5029,11 +5075,15 @@ public class Game1 : Game
     {
         if (_bottomMessage != null)
         {
-            _bottomMessageTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (_bottomMessageTimer >= _bottomMessageDuration)
+            // Only increment timer and clear message if duration is not -1
+            if (_bottomMessageDuration != -1)
             {
-                _bottomMessage = null;
-                _bottomMessageTimer = 0;
+                _bottomMessageTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                if (_bottomMessageTimer >= _bottomMessageDuration)
+                {
+                    _bottomMessage = null;
+                    _bottomMessageTimer = 0;
+                }
             }
         }
     }
