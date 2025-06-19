@@ -56,9 +56,10 @@ Version 3.0.0 - COMPLETE - Shrine combat locations
 Version 4.0.0 - COMPLETE
 	Implement dialog/talking with NPCs.
 	Pressing T to talk and then pressing a direction key will walk to the NPC and start dialog.
+	Press O and then a direction key to open a door.
 
 --TODO--	
-	Press O and then a direction key to open a door.
+	
 	Press J and then a direction key to jimmy a locked door.
 
 	Populate Britain with NPCs Town Entity's.

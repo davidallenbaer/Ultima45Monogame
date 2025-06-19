@@ -31,6 +31,10 @@ public class Game1 : Game
     private string _talkPromptMessage = "Talk - Press Direction";
     private MoveDirection _pendingTalkDirection = MoveDirection.None;
 
+    private bool _awaitingOpenDirection = false;
+    private string _openPromptMessage = "Open - Press Direction";
+    private MoveDirection _pendingOpenDirection = MoveDirection.None;
+
     private double mapCampDisplayTimer = 0;
 
     public enum GameStates
@@ -2943,6 +2947,8 @@ public class Game1 : Game
         // Only process input if the required time has passed
         if (inputTimer >= inputDelay)
         {
+            #region Awaiting Direction
+
             // If awaiting direction, check for arrow key press and ignore all other input
             if (_awaitingTalkDirection)
             {
@@ -2985,7 +2991,48 @@ public class Game1 : Game
                 return; // <--- EARLY RETURN: block all other input while awaiting direction
             }
 
-            //Handle the Keyboard input
+            if (_awaitingOpenDirection)
+            {
+                if (newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _pendingOpenDirection = MoveDirection.North;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _pendingOpenDirection = MoveDirection.South;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Left))
+                {
+                    _pendingOpenDirection = MoveDirection.West;
+                }
+                else if (newKeyboardState.IsKeyDown(Keys.Right))
+                {
+                    _pendingOpenDirection = MoveDirection.East;
+                }
+
+                if (_pendingOpenDirection != MoveDirection.None)
+                {
+                    var prevState = _currentState;
+                    bool doorOpened = HandleOpeningDoor(_pendingOpenDirection);
+                    _awaitingOpenDirection = false;
+                    _pendingOpenDirection = MoveDirection.None;
+
+                    // Only clear the "Open" message if a door was actually opened
+                    if (doorOpened)
+                    {
+                        ShowBottomMessage(null);
+                    }
+                    // Otherwise, let the "No door to open here!" message show for its duration
+
+                    inputTimer = 0;
+
+                }
+
+                oldKeyboardState = newKeyboardState;
+                UpdateMainDisplayGridValues(currentMap);
+                return; // <--- EARLY RETURN: block all other input while awaiting direction
+            }
+
             if (newKeyboardState.IsKeyDown(Keys.T) && oldKeyboardState.IsKeyUp(Keys.T))
             {
                 _awaitingTalkDirection = true;
@@ -2994,6 +3041,17 @@ public class Game1 : Game
                 return;
             }
 
+            if (newKeyboardState.IsKeyDown(Keys.O) && oldKeyboardState.IsKeyUp(Keys.O))
+            {
+                _awaitingOpenDirection = true;
+                ShowBottomMessage(_openPromptMessage, -1); // Show "Open" indefinitely
+                inputTimer = 0; // Reset the timer
+                return;
+            }
+
+            #endregion
+
+            //Handle the Keyboard input
             if (newKeyboardState.IsKeyDown(Keys.S))
             {
                 HandleSearching();
@@ -3493,10 +3551,6 @@ public class Game1 : Game
             else if (oldKeyboardState.IsKeyUp(Keys.K) && newKeyboardState.IsKeyDown(Keys.K))
             {
                 HandleClimbing();
-            }
-            else if (oldKeyboardState.IsKeyUp(Keys.O) && newKeyboardState.IsKeyDown(Keys.O))
-            {
-                HandleOpeningDoor();
             }
             else if (oldKeyboardState.IsKeyUp(Keys.J) && newKeyboardState.IsKeyDown(Keys.J))
             {
@@ -4014,37 +4068,53 @@ public class Game1 : Game
         }
     }
 
-    private void HandleOpeningDoor()
+    private bool HandleOpeningDoor(MoveDirection direction)
     {
-        // Define the four adjacent positions (N, S, E, W)
-        int[,] directions = new int[,]
+        // Map MoveDirection to (dy, dx)
+        int dy = 0, dx = 0;
+        switch (direction)
         {
-        { -1, 0 }, // North
-        { 1, 0 },  // South
-        { 0, -1 }, // West
-        { 0, 1 }   // East
-        };
+            case MoveDirection.North:
+                dy = -1; dx = 0;
+                break;
+            case MoveDirection.South:
+                dy = 1; dx = 0;
+                break;
+            case MoveDirection.West:
+                dy = 0; dx = -1;
+                break;
+            case MoveDirection.East:
+                dy = 0; dx = 1;
+                break;
+            default:
+                ShowBottomMessage("Invalid direction!", 2);
+                _soundEffect_BadCommand.Play();
+                return false;
+        }
 
-        for (int i = 0; i < 4; i++)
+        int adjY = pcTownMapLocationY + dy;
+        int adjX = pcTownMapLocationX + dx;
+
+        // Check bounds
+        if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
         {
-            int adjY = pcTownMapLocationY + directions[i, 0];
-            int adjX = pcTownMapLocationX + directions[i, 1];
-
-            // Check bounds
-            if (adjX >= 0 && adjX < townGridSize && adjY >= 0 && adjY < townGridSize)
+            TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+            if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
             {
-                TownEntity? entity = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
-                if (entity != null && entity.IsVisible && entity.EntityType != null && entity.EntityType.ToLower().Contains("door"))
+                if (entity.OpenState == OpenStatus.Open || entity.LockedState == LockedStatus.Locked)
                 {
-                    if (entity.OpenState == OpenStatus.Open || entity.LockedState == LockedStatus.Locked)
-                    {
-                        _soundEffect_BadCommand.Play();
-                        return; // If the door is already opened or still locked, play bad command sound
-                    }
-                    entity.OpenState = OpenStatus.Open;
+                    _soundEffect_BadCommand.Play();
+                    return false;
                 }
+                entity.OpenState = OpenStatus.Open;
+                return true;
             }
         }
+
+        // If no door was found or opened
+        ShowBottomMessage("No door to open here!", 2);
+        _soundEffect_BadCommand.Play();
+        return false;
     }
 
     private void HandleClimbing()
