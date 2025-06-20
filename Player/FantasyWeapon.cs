@@ -46,8 +46,10 @@ namespace Ultima45Monogame
         public int RangeMax { get; set; } // in feet
         public float Weight { get; set; } // in pounds
         public bool IsMagical { get; set; }
+        public bool IsEquipped { get; set; } = false; // Indicates if the weapon is currently equipped
+        public int Cost { get; set; } = 0; // Cost in gold pieces
 
-        public FantasyWeapon(int id, string name, WeaponType type, string dmgDice, DamageType dmgType, int rangeNormal, int rangeMax, float weight, bool isMagical)
+        public FantasyWeapon(int id, string name, WeaponType type, string dmgDice, DamageType dmgType, int rangeNormal, int rangeMax, float weight, bool isMagical, bool isEquiped, int cost)
         {
             ID = id;
             Name = name;
@@ -58,6 +60,8 @@ namespace Ultima45Monogame
             RangeMax = rangeMax;
             Weight = weight;
             IsMagical = isMagical;
+            IsEquipped = isEquiped;
+            Cost = cost;
         }
     }
 }

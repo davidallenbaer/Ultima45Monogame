@@ -38,8 +38,11 @@ namespace Ultima45Monogame
         // Description of the spell's effects
         public string Description { get; set; }
 
+        // Cost in gold pieces
+        public int Cost { get; set; }
+
         // Constructor
-        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string components, string duration, string description)
+        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string components, string duration, string description, int cost)
         {
             ID = id;
             Name = name;
@@ -50,6 +53,7 @@ namespace Ultima45Monogame
             Components = components;
             Duration = duration;
             Description = description;
+            Cost = cost;
         }
 
         // Override ToString for easy display

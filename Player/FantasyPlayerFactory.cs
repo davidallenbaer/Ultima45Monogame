@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima45Monogame;
+using static Ultima45Monogame.FantasyWeapon;
 using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
@@ -8,6 +9,10 @@ namespace Ultima45Monogame
     {
         public static List<FantasyPlayer> GetAllFantasyPlayers()
         {
+            // Create a default Longsword weapon
+            var weaponNone = FantasyWeaponFactory.GetFantasyWeapon(0);
+            var armorNone = FantasyArmorFactory.GetFantasyArmor(0);
+
             return new List<FantasyPlayer>
             {
                 new FantasyPlayer
@@ -34,7 +39,9 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 1,
                     Enabled = true,
-                    PlayerTile = TileType.Avatar
+                    PlayerTile = TileType.Avatar,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
                 new FantasyPlayer
                 {
@@ -60,9 +67,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 2,
                     Enabled = true,
-                    PlayerTile = TileType.Bard1
+                    PlayerTile = TileType.Bard1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Shamino",
                     Level = 1,
@@ -86,9 +95,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 3,
                     Enabled = true,
-                    PlayerTile = TileType.Ranger1
+                    PlayerTile = TileType.Ranger1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Dupre",
                     Level = 1,
@@ -112,9 +123,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 4,
                     Enabled = true,
-                    PlayerTile = TileType.Paladin1
+                    PlayerTile = TileType.Paladin1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Jaana",
                     Level = 1,
@@ -138,9 +151,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 5,
                     Enabled = true,
-                    PlayerTile = TileType.Druid1
+                    PlayerTile = TileType.Druid1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Julia",
                     Level = 1,
@@ -164,9 +179,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 6,
                     Enabled = true,
-                    PlayerTile = TileType.Tinker1
+                    PlayerTile = TileType.Tinker1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Mariah",
                     Level = 1,
@@ -190,9 +207,11 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 7,
                     Enabled = true,
-                    PlayerTile = TileType.Mage1
+                    PlayerTile = TileType.Mage1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 },
-              new FantasyPlayer
+                new FantasyPlayer
                 {
                     Name = "Geoffrey",
                     Level = 1,
@@ -216,12 +235,10 @@ namespace Ultima45Monogame
                     Visible = true,
                     PartyPosition = 8,
                     Enabled = true,
-                    PlayerTile = TileType.Fighter1
+                    PlayerTile = TileType.Fighter1,
+                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Armor = new List<FantasyArmor> { armorNone }
                 }
-  
-                // Add more default players as needed
-
-
             };
         }
     }

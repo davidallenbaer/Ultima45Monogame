@@ -33,8 +33,14 @@ namespace Ultima45Monogame
         // Whether the armor is magical
         public bool IsMagical { get; set; }
 
+        // Indicates if the armor is currently equipped
+        public bool IsEquipped { get; set; } = false;
+
+        // Cost in gold pieces
+        public int Cost { get; set; } = 0; 
+
         // Constructor
-        public FantasyArmor(int id, string name, string type, int baseAC, int maxDexBonus, bool disadvantageOnStealth, float weight, bool isMagical)
+        public FantasyArmor(int id, string name, string type, int baseAC, int maxDexBonus, bool disadvantageOnStealth, float weight, bool isMagical, bool isEquipped, int cost)
         {
             ID = id;
             Name = name;
@@ -44,6 +50,8 @@ namespace Ultima45Monogame
             DisadvantageOnStealth = disadvantageOnStealth;
             Weight = weight;
             IsMagical = isMagical;
+            IsEquipped = isEquipped;
+            Cost = cost;
         }
 
         // Override ToString for easy display

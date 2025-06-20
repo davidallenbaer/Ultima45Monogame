@@ -19,7 +19,8 @@ namespace Ultima45Monogame
                 range: "150 feet",
                 components: "V, S, M (a tiny ball of bat guano and sulfur)",
                 duration: "Instantaneous",
-                description: "A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame."
+                description: "A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame.",
+                cost: 0
             ));
 
             // Add more spells here...

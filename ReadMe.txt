@@ -17,14 +17,14 @@ D - Descend Stairs
 H - Hole Up & Camp
 G - Get Gold Chest
 V - View (Peer at Gem)
-J - Jimmy lock
-O - Open door
+J - Jimmy lock (Plus direction key)
+O - Open door (Plus direction key)
 S - Search
-T - Talk to NPC
+T - Talk to NPC (Plus direction key)
 
-W - Wear Armor
-R - Ready Weapon
-C - Cast Spell
+W - Wear Armor (select from armor dialog)
+R - Ready Weapon (select from weapon dialog)
+C - Cast Spell (select from spell dialog, possible direction key)
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -58,6 +58,8 @@ Version 4.0.0 - COMPLETE
 	Pressing T to talk and then pressing a direction key will walk to the NPC and start dialog.
 	Press O and then a direction key to open a door.
 	Press J and then a direction key to jimmy a locked door.
+	Add more properties to weapons, armor, and equipment.
+	Add weapons and armor to players.
 
 --TODO--	
 

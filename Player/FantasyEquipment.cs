@@ -27,8 +27,11 @@ namespace Ultima45Monogame
         // Whether the item is magical
         public bool IsMagical { get; set; }
 
+        // Cost in gold pieces
+        public int Cost { get; set; } = 0; 
+
         // Constructor
-        public FantasyEquipment(int id, string name, string description, float weight, int quantity, bool isMagical)
+        public FantasyEquipment(int id, string name, string description, float weight, int quantity, bool isMagical, int cost)
         {
             ID = id;
             Name = name;
@@ -36,6 +39,7 @@ namespace Ultima45Monogame
             Weight = weight;
             Quantity = quantity;
             IsMagical = isMagical;
+            Cost = cost;
         }
 
         // Override ToString for easy display
