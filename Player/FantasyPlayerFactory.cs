@@ -9,15 +9,15 @@ namespace Ultima45Monogame
     {
         public static List<FantasyPlayer> GetAllFantasyPlayers()
         {
-            // Create a default Longsword weapon
+            List<FantasyPlayer> fantasyPlayers = new List<FantasyPlayer>();
+
             var weaponNone = FantasyWeaponFactory.GetFantasyWeapon(0);
             
             var weaponLongsword = FantasyWeaponFactory.GetFantasyWeapon(1);
-            weaponLongsword.IsEquipped = true;
 
             var armorNone = FantasyArmorFactory.GetFantasyArmor(0);
 
-            return new List<FantasyPlayer>
+            fantasyPlayers = new List<FantasyPlayer>
             {
                 new FantasyPlayer
                 {
@@ -244,6 +244,50 @@ namespace Ultima45Monogame
                     Armor = new List<FantasyArmor> { armorNone }
                 }
             };
+
+            // Ensure each player has a NONE weapon, and it is equipped by default
+            foreach (var player in fantasyPlayers)
+            {
+                if (player.Weapons == null)
+                    player.Weapons = new List<FantasyWeapon>();
+
+                var noneWeapon = player.Weapons.Find(w => w.ID == 0);
+                if (noneWeapon == null)
+                {
+                    noneWeapon = FantasyWeaponFactory.GetFantasyWeapon(0);
+                    noneWeapon.IsEquipped = true;
+                    player.Weapons.Insert(0, noneWeapon);
+                }
+                else
+                {
+                    // Set NONE to equipped, and all others to not equipped
+                    foreach (var weapon in player.Weapons)
+                        weapon.IsEquipped = (weapon.ID == 0);
+                }
+            }
+
+            // Ensure each player has a NONE armor, and it is equipped by default
+            foreach (var player in fantasyPlayers)
+            {
+                if (player.Armor == null)
+                    player.Armor = new List<FantasyArmor>();
+
+                var noneArmor = player.Armor.Find(w => w.ID == 0);
+                if (noneArmor == null)
+                {
+                    noneArmor = FantasyArmorFactory.GetFantasyArmor(0);
+                    noneArmor.IsEquipped = true;
+                    player.Armor.Insert(0, noneArmor);
+                }
+                else
+                {
+                    // Set NONE to equipped, and all others to not equipped
+                    foreach (var armor in player.Armor)
+                        armor.IsEquipped = (armor.ID == 0);
+                }
+            }
+
+            return fantasyPlayers;
         }
     }
 }
