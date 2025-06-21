@@ -54,7 +54,8 @@ public class Game1 : Game
         Paused,
         GameOver,
         TalkingDialog,
-        ReadyWeaponDialog
+        ReadyWeaponDialog,
+        WearArmorDialog,
     }
 
     private string? _bottomMessage = null;
@@ -69,6 +70,7 @@ public class Game1 : Game
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
+    private WearArmorDialogEntityManager weararmordialogEntityManager = new WearArmorDialogEntityManager();
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
@@ -2704,6 +2706,10 @@ public class Game1 : Game
             case GameStates.ReadyWeaponDialog:
                 DrawReadyWeaponDialog();
                 break;
+
+            case GameStates.WearArmorDialog:
+                DrawWearArmorDialog();
+                break;
         }
 
         DrawBottomMessage();
@@ -2847,6 +2853,11 @@ public class Game1 : Game
             case GameStates.ReadyWeaponDialog:
                 UpdateReadyWeaponDialog(gameTime);
                 break;
+
+            case GameStates.WearArmorDialog:
+                UpdateWearArmorDialog(gameTime);
+                break;
+
         }
 
         UpdateBottomMessage(gameTime);
@@ -3123,6 +3134,18 @@ public class Game1 : Game
                 if (_currentState == GameStates.ReadyWeaponDialog)
                 {
                     ShowBottomMessage(null); // Clear the "Ready Weapon" message
+                }
+
+                inputTimer = 0;
+            }
+
+            if (newKeyboardState.IsKeyDown(Keys.W) && oldKeyboardState.IsKeyUp(Keys.W))
+            {
+                HandleWearArmorDialog();
+
+                if (_currentState == GameStates.WearArmorDialog)
+                {
+                    ShowBottomMessage(null); // Clear the "Wear Armor" message
                 }
 
                 inputTimer = 0;
@@ -4057,6 +4080,25 @@ public class Game1 : Game
             _readyweapondialogEnding = false;
             _readyweaponDialogEndTimer = 0;
             _currentState = GameStates.ReadyWeaponDialog;
+        }
+    }
+
+    private void HandleWearArmorDialog()
+    {
+        // Build the dialog tree for wearing armor
+        weararmordialogEntityManager.BuildWearArmorJSON(players);
+
+        // Get the dialog tree from the manager
+        _weararmorDialogTree = weararmordialogEntityManager.GetWearArmorDialogTree();
+
+        if (_weararmorDialogTree != null)
+        {
+            // Set the current dialog node to the start node
+            _weararmorDialogNode = _weararmorDialogTree.GetNodeById(_weararmorDialogTree.StartNodeId);
+            _selectedweararmorDialogOptionIndex = 0;
+            _weararmordialogEnding = false;
+            _weararmorDialogEndTimer = 0;
+            _currentState = GameStates.WearArmorDialog;
         }
     }
 
@@ -5433,6 +5475,131 @@ public class Game1 : Game
         {
             var option = _readyweaponDialogNode.Options[i];
             Microsoft.Xna.Framework.Color color = (i == _selectedreadyweaponDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
+    }
+
+    #endregion
+
+    #region Wear Armor Dialog Processing
+
+    //Dynamically build the WearArmor dialog tree
+    //based on the FantasyPlayer's that are enabled
+    //and the armor in their inventory
+
+    private DialogTree? _weararmorDialogTree;
+    private DialogNode? _weararmorDialogNode;
+    private int _selectedweararmorDialogOptionIndex = 0;
+    private double _weararmorDialogEndTimer = 0;
+    private bool _weararmordialogEnding = false;
+
+    private void UpdateWearArmorDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_weararmorDialogTree == null || _weararmorDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_weararmordialogEnding)
+        {
+            _weararmorDialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_weararmorDialogEndTimer >= 2.0)
+            {
+                _weararmorDialogTree = null;
+                _weararmorDialogNode = null;
+                _selectedweararmorDialogOptionIndex = 0;
+                _weararmordialogEnding = false;
+                _weararmorDialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_weararmorDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selectedweararmorDialogOptionIndex = (_selectedweararmorDialogOptionIndex - 1 + _weararmorDialogNode.Options.Count) % _weararmorDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selectedweararmorDialogOptionIndex = (_selectedweararmorDialogOptionIndex + 1) % _weararmorDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _weararmorDialogNode.Options[_selectedweararmorDialogOptionIndex];
+                    var nextNode = _weararmorDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _weararmorDialogNode = nextNode;
+
+                        // Process equip logic if this is an equip node
+                        weararmordialogEntityManager.ProcessNode(players, _weararmorDialogNode);
+
+                        _selectedweararmorDialogOptionIndex = 0;
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _weararmordialogEnding = true;
+                _weararmorDialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawWearArmorDialog()
+    {
+        if (_weararmorDialogTree == null || _weararmorDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _weararmorDialogNode.Speaker;
+        string text = _weararmorDialogNode.Text;
+        Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+
+        // Draw options
+        int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _weararmorDialogNode.Options.Count; i++)
+        {
+            var option = _weararmorDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selectedweararmorDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
             _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
         }
     }

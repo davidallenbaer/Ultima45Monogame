@@ -21,9 +21,9 @@ J - Jimmy lock (Plus direction key)
 O - Open door (Plus direction key)
 S - Search
 T - Talk to NPC (Plus direction key)
-
 W - Wear Armor (select from armor dialog)
 R - Ready Weapon (select from weapon dialog)
+
 C - Cast Spell (select from spell dialog, possible direction key)
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
@@ -60,16 +60,14 @@ Version 4.0.0 - COMPLETE
 	Press J and then a direction key to jimmy a locked door.
 	Add more properties to weapons, armor, and equipment.
 	Add weapons and armor to players.
+	Pressing W to Wear Armor	
+	Pressing R to Ready a Weapon
 
 --TODO--	
 
 	Populate Britain with NPCs Town Entity's.
 
 	Populate towns with shops.
-
-	W - Wear Armor
-	
-	R - Ready Weapon
 	
 	C - Cast Spell
 
