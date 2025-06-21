@@ -7,6 +7,13 @@ namespace Ultima45Monogame
     [Serializable]
     public class FantasySpell
     {
+        public enum SpellType
+        {
+            Combat,
+            NonCombat,
+            Both
+        }
+
         FantasySpell() 
         { 
         }
@@ -41,8 +48,11 @@ namespace Ultima45Monogame
         // Cost in gold pieces
         public int Cost { get; set; }
 
+        // Type of spell: Combat, NonCombat, or Both
+        public SpellType Type { get; set; }
+
         // Constructor
-        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string components, string duration, string description, int cost)
+        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string components, string duration, string description, int cost, SpellType type = SpellType.Both)
         {
             ID = id;
             Name = name;
@@ -54,6 +64,7 @@ namespace Ultima45Monogame
             Duration = duration;
             Description = description;
             Cost = cost;
+            Type = type;
         }
 
         // Override ToString for easy display

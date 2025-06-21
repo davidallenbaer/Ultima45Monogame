@@ -11,6 +11,10 @@ namespace Ultima45Monogame
         {
             // Create a default Longsword weapon
             var weaponNone = FantasyWeaponFactory.GetFantasyWeapon(0);
+            
+            var weaponLongsword = FantasyWeaponFactory.GetFantasyWeapon(1);
+            weaponLongsword.IsEquipped = true;
+
             var armorNone = FantasyArmorFactory.GetFantasyArmor(0);
 
             return new List<FantasyPlayer>
@@ -40,7 +44,7 @@ namespace Ultima45Monogame
                     PartyPosition = 1,
                     Enabled = true,
                     PlayerTile = TileType.Avatar,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponLongsword },
                     Armor = new List<FantasyArmor> { armorNone }
                 },
                 new FantasyPlayer

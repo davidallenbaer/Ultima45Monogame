@@ -41,6 +41,8 @@ public class Game1 : Game
 
     private double mapCampDisplayTimer = 0;
 
+    List<FantasyPlayer> players = new List<FantasyPlayer>();
+
     public enum GameStates
     {
         LoadingIntro,
@@ -51,7 +53,8 @@ public class Game1 : Game
         PeerAtGem,
         Paused,
         GameOver,
-        TalkingDialog
+        TalkingDialog,
+        ReadyWeaponDialog
     }
 
     private string? _bottomMessage = null;
@@ -65,6 +68,7 @@ public class Game1 : Game
     private bool bDrawMainDisplayStretched = true;
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
+    private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
@@ -471,6 +475,7 @@ public class Game1 : Game
         overworldEntityManager.AddEntity("Ship", 107, 82, (int)TileType.ShipEast, true, MoveDirection.East);
 
         fantasyPlayerManager = new FantasyPlayerManager(FantasyPlayerFactory.GetAllFantasyPlayers());
+        players = FantasyPlayerFactory.GetAllFantasyPlayers();
 
         base.Initialize();
     }
@@ -2695,6 +2700,10 @@ public class Game1 : Game
             case GameStates.TalkingDialog:
                 DrawTalkingDialog();
                 break;
+            
+            case GameStates.ReadyWeaponDialog:
+                DrawReadyWeaponDialog();
+                break;
         }
 
         DrawBottomMessage();
@@ -2833,6 +2842,10 @@ public class Game1 : Game
             
             case GameStates.TalkingDialog:
                 UpdateTalkingDialog(gameTime);
+                break;
+
+            case GameStates.ReadyWeaponDialog:
+                UpdateReadyWeaponDialog(gameTime);
                 break;
         }
 
@@ -2975,7 +2988,6 @@ public class Game1 : Game
 
                 if (_pendingTalkDirection != MoveDirection.None)
                 {
-                    var prevState = _currentState;
                     HandleTalkDialog(_pendingTalkDirection);
                     _awaitingTalkDirection = false;
                     _pendingTalkDirection = MoveDirection.None;
@@ -3104,7 +3116,18 @@ public class Game1 : Game
             }
             #endregion
 
-            //Handle the Keyboard input
+            if (newKeyboardState.IsKeyDown(Keys.R) && oldKeyboardState.IsKeyUp(Keys.R))
+            {
+                HandleReadyWeaponDialog();
+
+                if (_currentState == GameStates.ReadyWeaponDialog)
+                {
+                    ShowBottomMessage(null); // Clear the "Ready Weapon" message
+                }
+
+                inputTimer = 0;
+            }
+
             if (newKeyboardState.IsKeyDown(Keys.S))
             {
                 HandleSearching();
@@ -4016,6 +4039,25 @@ public class Game1 : Game
         ShowBottomMessage("No one to talk to here!", 2);
         _soundEffect_BadCommand.Play();
         return;
+    }
+
+    private void HandleReadyWeaponDialog()
+    {
+        // Build the dialog tree for readying weapons
+        readyweapondialogEntityManager.BuildReadyWeaponJSON(players);
+
+        // Get the dialog tree from the manager
+        _readyweaponDialogTree = readyweapondialogEntityManager.GetReadyWeaponDialogTree();
+
+        if (_readyweaponDialogTree != null)
+        {
+            // Set the current dialog node to the start node
+            _readyweaponDialogNode = _readyweaponDialogTree.GetNodeById(_readyweaponDialogTree.StartNodeId);
+            _selectedreadyweaponDialogOptionIndex = 0;
+            _readyweapondialogEnding = false;
+            _readyweaponDialogEndTimer = 0;
+            _currentState = GameStates.ReadyWeaponDialog;
+        }
     }
 
     private string GetTownNameForDebugging(Maps map)
@@ -5268,6 +5310,131 @@ public class Game1 : Game
             _whiteTexture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
         }
         return _whiteTexture;
+    }
+
+    #endregion
+
+    #region Ready Weapon Dialog Processing
+
+    //Dynamically build the ReadyWeapon dialog tree
+    //based on the FantasyPlayer's that are enabled
+    //and the weapons in their inventory
+
+    private DialogTree? _readyweaponDialogTree;
+    private DialogNode? _readyweaponDialogNode;
+    private int _selectedreadyweaponDialogOptionIndex = 0;
+    private double _readyweaponDialogEndTimer = 0;
+    private bool _readyweapondialogEnding = false;
+
+    private void UpdateReadyWeaponDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_readyweaponDialogTree == null || _readyweaponDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_readyweapondialogEnding)
+        {
+            _readyweaponDialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_readyweaponDialogEndTimer >= 2.0)
+            {
+                _readyweaponDialogTree = null;
+                _readyweaponDialogNode = null;
+                _selectedreadyweaponDialogOptionIndex = 0;
+                _readyweapondialogEnding = false;
+                _readyweaponDialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_readyweaponDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selectedreadyweaponDialogOptionIndex = (_selectedreadyweaponDialogOptionIndex - 1 + _readyweaponDialogNode.Options.Count) % _readyweaponDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selectedreadyweaponDialogOptionIndex = (_selectedreadyweaponDialogOptionIndex + 1) % _readyweaponDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _readyweaponDialogNode.Options[_selectedreadyweaponDialogOptionIndex];
+                    var nextNode = _readyweaponDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _readyweaponDialogNode = nextNode;
+                        
+                        // Process equip logic if this is an equip node
+                        readyweapondialogEntityManager.ProcessNode(players, _readyweaponDialogNode);
+
+                        _selectedreadyweaponDialogOptionIndex = 0;
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _readyweapondialogEnding = true;
+                _readyweaponDialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawReadyWeaponDialog()
+    {
+        if (_readyweaponDialogTree == null || _readyweaponDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _readyweaponDialogNode.Speaker;
+        string text = _readyweaponDialogNode.Text;
+        Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+
+        // Draw options
+        int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _readyweaponDialogNode.Options.Count; i++)
+        {
+            var option = _readyweaponDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selectedreadyweaponDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
     }
 
     #endregion
