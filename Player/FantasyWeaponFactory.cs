@@ -16,8 +16,8 @@ namespace Ultima45Monogame
                 type: FantasyWeapon.WeaponType.Melee,
                 dmgDice: "1d4",
                 dmgType: FantasyWeapon.DamageType.Bludgeoning,
-                rangeNormal: 0,
-                rangeMax: 0,
+                rangeNormal: 1,
+                rangeMax: 1,
                 weight: 0.0f,
                 isMagical: false,
                 isEquiped: false,
@@ -26,12 +26,54 @@ namespace Ultima45Monogame
 
             weapons.Add(new FantasyWeapon(
                 id: 1,
-                name: "Longsword",
+                name: "Sword",
                 type: FantasyWeapon.WeaponType.Melee,
                 dmgDice: "1d8",
                 dmgType: FantasyWeapon.DamageType.Slashing,
                 rangeNormal: 0,
                 rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 2,
+                name: "Sling",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "1d6",
+                dmgType: FantasyWeapon.DamageType.Bludgeoning,
+                rangeNormal: 10,
+                rangeMax: 10,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 3,
+                name: "Mace",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "1d8",
+                dmgType: FantasyWeapon.DamageType.Bludgeoning,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 4,
+                name: "Dagger",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "1d4",
+                dmgType: FantasyWeapon.DamageType.Slashing,
+                rangeNormal: 1,
+                rangeMax: 1,
                 weight: 3.0f,
                 isMagical: false,
                 isEquiped: false,

@@ -11,11 +11,25 @@ namespace Ultima45Monogame
         {
             List<FantasyPlayer> fantasyPlayers = new List<FantasyPlayer>();
 
-            var weaponNone = FantasyWeaponFactory.GetFantasyWeapon(0);
-            
-            var weaponLongsword = FantasyWeaponFactory.GetFantasyWeapon(1);
+            var weaponNone = FantasyWeaponFactory.GetFantasyWeapon(0);            
+            var weaponSword = FantasyWeaponFactory.GetFantasyWeapon(1);
+            weaponSword.IsEquipped = true;
+            var weaponSling = FantasyWeaponFactory.GetFantasyWeapon(2);
+            weaponSling.IsEquipped = true;
+            var weaponMace = FantasyWeaponFactory.GetFantasyWeapon(3);
+            weaponMace.IsEquipped = true;
+            var weaponDagger = FantasyWeaponFactory.GetFantasyWeapon(4);
+            weaponDagger.IsEquipped = true;
 
-            var armorNone = FantasyArmorFactory.GetFantasyArmor(0);
+            var armorNone = FantasyArmorFactory.GetFantasyArmor(0);            
+            var armorCloth = FantasyArmorFactory.GetFantasyArmor(1);
+            armorCloth.IsEquipped = true;
+            var armorLeather = FantasyArmorFactory.GetFantasyArmor(3);
+            armorLeather.IsEquipped = true;
+            var armorChainmail = FantasyArmorFactory.GetFantasyArmor(11);
+            armorChainmail.IsEquipped = true;
+
+            // Ensure each player has a NONE weapon and a NONE armor
 
             fantasyPlayers = new List<FantasyPlayer>
             {
@@ -44,8 +58,8 @@ namespace Ultima45Monogame
                     PartyPosition = 1,
                     Enabled = true,
                     PlayerTile = TileType.Avatar,
-                    Weapons = new List<FantasyWeapon> { weaponNone, weaponLongsword },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
                 },
                 new FantasyPlayer
                 {
@@ -72,8 +86,8 @@ namespace Ultima45Monogame
                     PartyPosition = 2,
                     Enabled = true,
                     PlayerTile = TileType.Bard1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
                 },
                 new FantasyPlayer
                 {
@@ -100,8 +114,8 @@ namespace Ultima45Monogame
                     PartyPosition = 3,
                     Enabled = true,
                     PlayerTile = TileType.Ranger1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
                 },
                 new FantasyPlayer
                 {
@@ -128,8 +142,8 @@ namespace Ultima45Monogame
                     PartyPosition = 4,
                     Enabled = true,
                     PlayerTile = TileType.Paladin1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
+                    Armor = new List<FantasyArmor> { armorNone, armorChainmail }
                 },
                 new FantasyPlayer
                 {
@@ -156,8 +170,8 @@ namespace Ultima45Monogame
                     PartyPosition = 5,
                     Enabled = true,
                     PlayerTile = TileType.Druid1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
                 },
                 new FantasyPlayer
                 {
@@ -184,8 +198,8 @@ namespace Ultima45Monogame
                     PartyPosition = 6,
                     Enabled = true,
                     PlayerTile = TileType.Tinker1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
+                    Armor = new List<FantasyArmor> { armorNone, armorLeather }
                 },
                 new FantasyPlayer
                 {
@@ -212,8 +226,8 @@ namespace Ultima45Monogame
                     PartyPosition = 7,
                     Enabled = true,
                     PlayerTile = TileType.Mage1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponDagger },
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
                 },
                 new FantasyPlayer
                 {
@@ -240,53 +254,11 @@ namespace Ultima45Monogame
                     PartyPosition = 8,
                     Enabled = true,
                     PlayerTile = TileType.Fighter1,
-                    Weapons = new List<FantasyWeapon> { weaponNone },
-                    Armor = new List<FantasyArmor> { armorNone }
+                    Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
+                    Armor = new List<FantasyArmor> { armorNone, armorChainmail }
                 }
             };
-
-            // Ensure each player has a NONE weapon, and it is equipped by default
-            foreach (var player in fantasyPlayers)
-            {
-                if (player.Weapons == null)
-                    player.Weapons = new List<FantasyWeapon>();
-
-                var noneWeapon = player.Weapons.Find(w => w.ID == 0);
-                if (noneWeapon == null)
-                {
-                    noneWeapon = FantasyWeaponFactory.GetFantasyWeapon(0);
-                    noneWeapon.IsEquipped = true;
-                    player.Weapons.Insert(0, noneWeapon);
-                }
-                else
-                {
-                    // Set NONE to equipped, and all others to not equipped
-                    foreach (var weapon in player.Weapons)
-                        weapon.IsEquipped = (weapon.ID == 0);
-                }
-            }
-
-            // Ensure each player has a NONE armor, and it is equipped by default
-            foreach (var player in fantasyPlayers)
-            {
-                if (player.Armor == null)
-                    player.Armor = new List<FantasyArmor>();
-
-                var noneArmor = player.Armor.Find(w => w.ID == 0);
-                if (noneArmor == null)
-                {
-                    noneArmor = FantasyArmorFactory.GetFantasyArmor(0);
-                    noneArmor.IsEquipped = true;
-                    player.Armor.Insert(0, noneArmor);
-                }
-                else
-                {
-                    // Set NONE to equipped, and all others to not equipped
-                    foreach (var armor in player.Armor)
-                        armor.IsEquipped = (armor.ID == 0);
-                }
-            }
-
+ 
             return fantasyPlayers;
         }
     }
