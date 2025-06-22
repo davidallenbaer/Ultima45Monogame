@@ -56,6 +56,7 @@ public class Game1 : Game
         TalkingDialog,
         ReadyWeaponDialog,
         WearArmorDialog,
+        UseItemDialog,
     }
 
     private string? _bottomMessage = null;
@@ -70,6 +71,7 @@ public class Game1 : Game
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
+    private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
     private WearArmorDialogEntityManager weararmordialogEntityManager = new WearArmorDialogEntityManager();
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
@@ -2710,6 +2712,9 @@ public class Game1 : Game
             case GameStates.WearArmorDialog:
                 DrawWearArmorDialog();
                 break;
+            case GameStates.UseItemDialog:
+                DrawUseItemDialog();
+                break;
         }
 
         DrawBottomMessage();
@@ -2858,6 +2863,9 @@ public class Game1 : Game
                 UpdateWearArmorDialog(gameTime);
                 break;
 
+            case GameStates.UseItemDialog:
+                UpdateUseItemDialog(gameTime);
+                break;
         }
 
         UpdateBottomMessage(gameTime);
@@ -3146,6 +3154,18 @@ public class Game1 : Game
                 if (_currentState == GameStates.WearArmorDialog)
                 {
                     ShowBottomMessage(null); // Clear the "Wear Armor" message
+                }
+
+                inputTimer = 0;
+            }
+
+            if (newKeyboardState.IsKeyDown(Keys.U) && oldKeyboardState.IsKeyUp(Keys.U))
+            {
+                HandleUseItemDialog();
+
+                if (_currentState == GameStates.UseItemDialog)
+                {
+                    ShowBottomMessage(null); // Clear the "Use Item" message
                 }
 
                 inputTimer = 0;
@@ -4102,6 +4122,84 @@ public class Game1 : Game
         }
     }
 
+    private void UseSpecialItem(UseItemDialogEntityManager.SpecialItem item)
+    {
+        switch (item)
+        {
+            case UseItemDialogEntityManager.SpecialItem.Torch:
+                if (gameSaveVariables.Torches > 0)
+                {
+                    ShowBottomMessage("You light a torch.", 2);
+
+                    gameSaveVariables.Torches--;
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.PeerAtGem:
+                if (gameSaveVariables.Torches > 0)
+                {
+                    // Show the "Peer at Gem" map or effect
+                    ShowBottomMessage("You peer at the gem.", 2);
+
+                    peerAtGemMap = null;
+                    _currentState = GameStates.PeerAtGem;
+                    inputTimer = 0; // Reset the timer
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.Sextant:
+                if (gameSaveVariables.Sextants > 0)
+                {
+                    // Show coordinates or map location
+                    ShowBottomMessage($"You use the sextant. Y {pcOverworldLocationY}, X {pcOverworldLocationX}", 4);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.SkullOfMondain:
+                if (gameSaveVariables.Skull > 0)
+                {
+                    // Trigger Skull of Mondain effect
+                    ShowBottomMessage("You use the Skull of Mondain.", 2);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.Candle:
+                if (gameSaveVariables.Candle > 0)
+                {
+                    // Trigger Candle effect
+                    ShowBottomMessage("You use the Candle.", 2);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.Book:
+                if (gameSaveVariables.Book > 0)
+                {
+                    // Trigger Book effect
+                    ShowBottomMessage("You use the Book.", 2);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.BellOfCourage:
+                if (gameSaveVariables.Bell > 0)
+                {
+                    // Trigger Bell of Courage effect
+                    ShowBottomMessage("You ring the Bell of Courage.", 2);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.SilverHorn:
+                if (gameSaveVariables.Horn > 0)
+                {
+                    // Trigger Silver Horn effect
+                    ShowBottomMessage("You blow the Silver Horn.", 2);
+                }
+                break;
+            case UseItemDialogEntityManager.SpecialItem.WheelOfHMSCape:
+                if (gameSaveVariables.Wheel > 0)
+                {
+                    // Trigger Wheel of HMS Cape effect
+                    ShowBottomMessage("You use the Wheel of HMS Cape.", 2);
+                }
+                break;
+            default:
+                ShowBottomMessage("Nothing happens.", 2);
+                break;
+        }
+    }
+
     private string GetTownNameForDebugging(Maps map)
     {
         switch(map)
@@ -4140,6 +4238,25 @@ public class Game1 : Game
                 return "Skara Brae";
             default:
                 return "";
+        }
+    }
+
+    private void HandleUseItemDialog()
+    {
+        // Build the dialog tree for using special items
+        useitemdialogEntityManager.BuildUseItemJSON(gameSaveVariables);
+
+        // Get the dialog tree from the manager
+        _useitemDialogTree = useitemdialogEntityManager.GetUseItemDialogTree();
+
+        if (_useitemDialogTree != null)
+        {
+            // Set the current dialog node to the start node
+            _useitemDialogNode = _useitemDialogTree.GetNodeById(_useitemDialogTree.StartNodeId);
+            _selecteduseitemDialogOptionIndex = 0;
+            _useitemdialogEnding = false;
+            _useitemDialogEndTimer = 0;
+            _currentState = GameStates.UseItemDialog;
         }
     }
 
@@ -5600,6 +5717,129 @@ public class Game1 : Game
         {
             var option = _weararmorDialogNode.Options[i];
             Microsoft.Xna.Framework.Color color = (i == _selectedweararmorDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
+    }
+
+    #endregion
+
+    #region Use Item Dialog Processing
+
+    //Dynamically build the UseItem dialog tree
+
+    private DialogTree? _useitemDialogTree;
+    private DialogNode? _useitemDialogNode;
+    private int _selecteduseitemDialogOptionIndex = 0;
+    private double _useitemDialogEndTimer = 0;
+    private bool _useitemdialogEnding = false;
+
+    private void UpdateUseItemDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_useitemDialogTree == null || _useitemDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_useitemdialogEnding)
+        {
+            _useitemDialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_useitemDialogEndTimer >= 2.0)
+            {
+                _useitemDialogTree = null;
+                _useitemDialogNode = null;
+                _selecteduseitemDialogOptionIndex = 0;
+                _useitemdialogEnding = false;
+                _useitemDialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_useitemDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selecteduseitemDialogOptionIndex = (_selecteduseitemDialogOptionIndex - 1 + _useitemDialogNode.Options.Count) % _useitemDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selecteduseitemDialogOptionIndex = (_selecteduseitemDialogOptionIndex + 1) % _useitemDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _useitemDialogNode.Options[_selecteduseitemDialogOptionIndex];
+                    var nextNode = _useitemDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _useitemDialogNode = nextNode;
+
+                        // Process equip logic if this is an equip node
+                        useitemdialogEntityManager.ProcessNode(_useitemDialogNode, UseSpecialItem);
+
+                        _selecteduseitemDialogOptionIndex = 0;
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _useitemdialogEnding = true;
+                _useitemDialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawUseItemDialog()
+    {
+        if (_useitemDialogTree == null || _useitemDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _useitemDialogNode.Speaker;
+        string text = _useitemDialogNode.Text;
+        Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+
+        // Draw options
+        int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _useitemDialogNode.Options.Count; i++)
+        {
+            var option = _useitemDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selecteduseitemDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
             _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
         }
     }

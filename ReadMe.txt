@@ -23,6 +23,7 @@ S - Search
 T - Talk to NPC (Plus direction key)
 W - Wear Armor (select from armor dialog)
 R - Ready Weapon (select from weapon dialog)
+U - Use Item (select from item dialog)
 
 C - Cast Spell (select from spell dialog, possible direction key)
 
@@ -62,15 +63,15 @@ Version 4.0.0 - COMPLETE
 	Add weapons and armor to players.
 	Pressing W to Wear Armor	
 	Pressing R to Ready a Weapon
+	Pressing U to Use Item
 
 --TODO--	
-
+	C - Cast Spell
+	
 	Populate Britain with NPCs Town Entity's.
 
 	Populate towns with shops.
 	
-	C - Cast Spell
-
 Version 5.0.0 - Towns\Shops\Dialog
 
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
