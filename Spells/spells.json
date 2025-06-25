@@ -1,160 +1,238 @@
 {
   "spells": [
     {
-      "spell": "A",
-      "name": "Awaken",
-      "effect": "Wakes a sleeping party member",
-      "reagents": [ "Ginseng", "Garlic" ]
+      "spellid": "1",
+      "spellname": "Awaken",
+      "description": "Wakes a sleeping party member.",
+      "requiredreagents": [ "Ginseng", "Garlic" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChoosePlayer" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "B",
-      "name": "Blink",
-      "effect": "Teleports the party a short distance on the map",
-      "reagents": [ "Sulfurous Ash", "Blood Moss" ]
+      "spellid": "2",
+      "spellname": "Blink",
+      "description": "Teleports the party a short distance on the map.",
+      "requiredreagents": [ "Sulfurous Ash", "Blood Moss" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "C",
-      "name": "Cure",
-      "effect": "Cures poison",
-      "reagents": [ "Ginseng", "Garlic" ]
+      "spellid": "3",
+      "spellname": "Cure",
+      "description": "Cures poison for one character.",
+      "requiredreagents": [ "Ginseng", "Garlic" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChoosePlayer" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "D",
-      "name": "Dispel",
-      "effect": "Dispels enemy summoned creatures",
-      "reagents": [ "Garlic", "Sulfurous Ash" ]
+      "spellid": "4",
+      "spellname": "Dispel",
+      "description": "Dispels enemy summoned creatures, dispel field.",
+      "requiredreagents": [ "Garlic", "Sulfurous Ash" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "E",
-      "name": "Energy",
-      "effect": "Creates a barrier (energy field)",
-      "reagents": [ "Sulfurous Ash", "Spider Silk" ]
+      "spellid": "5",
+      "spellname": "Energy",
+      "description": "Creates an energy field barrier.",
+      "requiredreagents": [ "Sulfurous Ash", "Spider Silk" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "F",
-      "name": "Fireball",
-      "effect": "Attacks one enemy with fire",
-      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+      "spellid": "6",
+      "spellname": "Fireball",
+      "description": "Attacks one enemy with fire.",
+      "requiredreagents": [ "Sulfurous Ash", "Black Pearl" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "G",
-      "name": "Gate Travel",
-      "effect": "Teleports the party to a moongate location",
-      "reagents": [ "Mandrake Root", "Black Pearl" ]
+      "spellid": "7",
+      "spellname": "Gate Travel",
+      "description": "Teleports the party to a moongate location.",
+      "requiredreagents": [ "Mandrake Root", "Black Pearl" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "ChooseGate" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "H",
-      "name": "Heal",
-      "effect": "Restores some HP to one character",
-      "reagents": [ "Ginseng" ]
+      "spellid": "8",
+      "spellname": "Heal",
+      "description": "Restores some HP to one character.",
+      "requiredreagents": [ "Ginseng" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChoosePlayer" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "I",
-      "name": "Iceball",
-      "effect": "Attacks one enemy with ice",
-      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+      "spellid": "9",
+      "spellname": "Iceball",
+      "description": "Attacks one enemy with ice.",
+      "requiredreagents": [ "Sulfurous Ash", "Black Pearl" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "J",
-      "name": "Jinx",
-      "effect": "Confuses enemies (low success rate)",
-      "reagents": [ "Nightshade" ]
+      "spellid": "10",
+      "spellname": "Jinx",
+      "description": "Confuses enemies.",
+      "requiredreagents": [ "Nightshade" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "K",
-      "name": "Kill",
-      "effect": "Attempts to instantly kill an enemy",
-      "reagents": [ "Nightshade", "Mandrake Root" ]
+      "spellid": "11",
+      "spellname": "Kill",
+      "description": "Attempts to instantly kill an enemy.",
+      "requiredreagents": [ "Nightshade", "Mandrake Root" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "L",
-      "name": "Light",
-      "effect": "Lights up dungeon or dark areas",
-      "reagents": [ "Sulfurous Ash" ]
+      "spellid": "12",
+      "spellname": "Light",
+      "description": "Stuns all enemies with a flash, and lights up dark areas.",
+      "requiredreagents": [ "Sulfurous Ash" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "All", "Immediate" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "M",
-      "name": "Magic Missile",
-      "effect": "Basic magical attack",
-      "reagents": [ "Sulfurous Ash", "Black Pearl" ]
+      "spellid": "13",
+      "spellname": "Magic Missile",
+      "description": "Magic Missile attack.",
+      "requiredreagents": [ "Sulfurous Ash", "Black Pearl" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "N",
-      "name": "Negate",
-      "effect": "Cancels enemy spell effects",
-      "reagents": [ "Garlic", "Sulfurous Ash" ]
+      "spellid": "14",
+      "spellname": "Negate",
+      "description": "Cancels enemy spell effects",
+      "requiredreagents": [ "Garlic", "Sulfurous Ash" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "O",
-      "name": "Open",
-      "effect": "Unlocks chests (may fail on trapped ones)",
-      "reagents": [ "Sulfurous Ash" ]
+      "spellid": "15",
+      "spellname": "Open",
+      "description": "Unlocks chests.",
+      "requiredreagents": [ "Sulfurous Ash" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "ChooseDirection" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "P",
-      "name": "Protect",
-      "effect": "Increases party’s defense temporarily",
-      "reagents": [ "Garlic", "Spider Silk" ]
+      "spellid": "16",
+      "spellname": "Protect",
+      "description": "Increases party’s defense temporarily.",
+      "requiredreagents": [ "Garlic", "Spider Silk" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "Q",
-      "name": "Quickness",
-      "effect": "Speeds up party in combat",
-      "reagents": [ "Blood Moss", "Spider Silk" ]
+      "spellid": "17",
+      "spellname": "Quickness",
+      "description": "Speeds up party in combat.",
+      "requiredreagents": [ "Blood Moss", "Spider Silk" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "R",
-      "name": "Resurrection",
-      "effect": "Revives a dead character",
-      "reagents": [ "Ginseng", "Garlic", "Mandrake Root" ]
+      "spellid": "18",
+      "spellname": "Resurrection",
+      "description": "Revives a dead character.",
+      "requiredreagents": [ "Ginseng", "Garlic", "Mandrake Root" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "ChoosePlayer" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "S",
-      "name": "Sleep",
-      "effect": "Attempts to put enemies to sleep",
-      "reagents": [ "Ginseng", "Spider Silk" ]
+      "spellid": "19",
+      "spellname": "Sleep",
+      "description": "Attempts to put enemies to sleep.",
+      "requiredreagents": [ "Ginseng", "Spider Silk" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "T",
-      "name": "Tremor",
-      "effect": "Damages all enemies (earthquake)",
-      "reagents": [ "Sulfurous Ash", "Blood Moss", "Mandrake Root" ]
+      "spellid": "20",
+      "spellname": "Tremor",
+      "description": "Damages all enemies with an earthquake.",
+      "requiredreagents": [ "Sulfurous Ash", "Blood Moss", "Mandrake Root" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "U",
-      "name": "Undead",
-      "effect": "Damages undead creatures",
-      "reagents": [ "Garlic", "Sulfurous Ash" ]
+      "spellid": "21",
+      "spellname": "Turn Undead",
+      "description": "Damages all undead creatures.",
+      "requiredreagents": [ "Garlic", "Sulfurous Ash" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "V",
-      "name": "View",
-      "effect": "Displays a bird’s-eye view of the overworld",
-      "reagents": [ "Nightshade", "Blood Moss" ]
+      "spellid": "22",
+      "spellname": "View",
+      "description": "Displays a bird’s-eye view of the overworld.",
+      "requiredreagents": [ "Nightshade", "Blood Moss" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "None" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "W",
-      "name": "Wind",
-      "effect": "Changes the direction of the wind (for sailing)",
-      "reagents": [ "Blood Moss" ]
+      "spellid": "23",
+      "spellname": "Wind",
+      "description": "Damages all enemies with Whirlwind.",
+      "requiredreagents": [ "Blood Moss" ],
+      "spelltype": [ "Combat" ],
+      "spelltargetchoice": [ "All" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "X",
-      "name": "X-it",
-      "effect": "Exits dungeons, shrines, or combat",
-      "reagents": [ "Mandrake Root", "Blood Moss" ]
+      "spellid": "24",
+      "spellname": "Exit",
+      "description": "Exits dungeons, shrines, or combat.",
+      "requiredreagents": [ "Mandrake Root", "Blood Moss" ],
+      "spelltype": [ "Combat", "NonCombat" ],
+      "spelltargetchoice": [ "None" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "Y",
-      "name": "Y-up",
-      "effect": "Elevates party one level in dungeon",
-      "reagents": [ "Blood Moss", "Mandrake Root" ]
+      "spellid": "25",
+      "spellname": "Up Level",
+      "description": "Elevates party one level in dungeon.",
+      "requiredreagents": [ "Blood Moss", "Mandrake Root" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "None" ],
+      "spelleffecttype": [ "Immediate" ]
     },
     {
-      "spell": "Z",
-      "name": "Z-down",
-      "effect": "Lowers party one level in dungeon",
-      "reagents": [ "Nightshade", "Mandrake Root" ]
+      "spellid": "26",
+      "spellname": "Down Level",
+      "description": "Lowers party one level in dungeon.",
+      "requiredreagents": [ "Nightshade", "Mandrake Root" ],
+      "spelltype": [ "NonCombat" ],
+      "spelltargetchoice": [ "None" ],
+      "spelleffecttype": [ "Immediate" ]
     }
   ]
 }

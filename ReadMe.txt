@@ -64,9 +64,11 @@ Version 4.0.0 - COMPLETE
 	Pressing W to Wear Armor	
 	Pressing R to Ready a Weapon
 	Pressing U to Use Item
+	Proper default weapon and armor for players.
 
---TODO--	
-	C - Cast Spell
+--TODO--
+	Z - Stats (Pres Z to show player stats, right and left to next/prev player stats, inventory))
+	C - Cast Spell (Non-Combat)
 	
 	Populate Britain with NPCs Town Entity's.
 
@@ -79,9 +81,6 @@ Version 5.0.0 - Towns\Shops\Dialog
 Version 6.0.0 - Menu System
 	Implement a journal system.
 	Implement a quest system.
-	Implement a spell system.
-	Implement a menu to equip and unequip items.
-	Implement a spell book with a spell system.
 
 Version 7.0.0 - Implement dungeons
 	Dungeons should be a separate map that you can enter from the overworld map.
