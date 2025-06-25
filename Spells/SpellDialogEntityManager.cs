@@ -1,67 +1,125 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
-using Ultima45Monogame.Spells;
+using Ultima45Monogame.Player;
 
 namespace Ultima45Monogame.Spells
 {
-    /*
-        Usage:
-
-        var manager = new SpellDialogEntityManager();
-        manager.LoadAllSpellDialogTreesFromJson("Spells/UltimaIV_SpellDialogs.json");
-        var tree = manager.GetSpellDialogTreeByIndex("2"); // SpellDialogIndex as string
-        var startNode = tree?.GetNodeById(tree.StartNodeId);
-     */
-
     public class SpellDialogEntityManager
     {
-        // Keyed by SpellDialogIndex for fast lookup
-        private readonly Dictionary<string, SpellDialogTree> _spellDialogTreesByIndex = new();
-        // Optionally, also keyed by Id (NPC name) if needed
-        private readonly Dictionary<string, SpellDialogTree> _spellDialogTreesById = new();
+        private readonly Ultima4SaveGameVariables _saveGame;
+        private readonly List<FantasyPlayer> _players;
+        private readonly List<Spell> _spells;
 
-        // Load all spell dialog trees from a JSON file containing an array of dialog trees
-        public void LoadAllSpellDialogTreesFromJson(string filePath)
+        public SpellDialogTree DialogTree { get; private set; }
+
+        public SpellDialogEntityManager(Ultima4SaveGameVariables saveGame, List<FantasyPlayer> players)
         {
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException($"Dialog JSON file not found: {filePath}");
+            _saveGame = saveGame;
+            _players = players;
+            _spells = LoadSpells("Spells/spells.json");
+            DialogTree = BuildDialogTree();
+        }
 
-            var json = File.ReadAllText(filePath);
-            var options = new JsonSerializerOptions
+        private List<Spell> LoadSpells(string path)
+        {
+            var json = File.ReadAllText(path);
+            var doc = JsonDocument.Parse(json);
+            var spells = new List<Spell>();
+            foreach (var element in doc.RootElement.GetProperty("spells").EnumerateArray())
             {
-                PropertyNameCaseInsensitive = true
-            };
-            var spellDialogTrees = JsonSerializer.Deserialize<List<SpellDialogTree>>(json, options);
+                spells.Add(new Spell
+                {
+                    SpellId = element.GetProperty("spellid").GetString(),
+                    SpellName = element.GetProperty("spellname").GetString(),
+                    Description = element.GetProperty("description").GetString(),
+                    RequiredReagents = element.GetProperty("requiredreagents").EnumerateArray().Select(x => x.GetString()).ToList(),
+                    SpellTargetChoice = element.GetProperty("spelltargetchoice").EnumerateArray().Select(x => x.GetString()).ToList()
+                });
+            }
+            return spells;
+        }
 
-            if (spellDialogTrees == null)
-                throw new InvalidOperationException("Invalid dialog trees JSON.");
+        private SpellDialogTree BuildDialogTree()
+        {
+            // Step 1: List enabled players who can cast spells
+            var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
+            var root = new SpellDialogNode("Choose a spellcaster:", enabledPlayers.Select(p =>
+                new SpellDialogOption(p.Name, () => BuildSpellListNode(p))
+            ).ToList());
 
-            _spellDialogTreesByIndex.Clear();
-            _spellDialogTreesById.Clear();
+            return new SpellDialogTree(root);
+        }
 
-            foreach (var tree in spellDialogTrees)
+        private SpellDialogNode BuildSpellListNode(FantasyPlayer caster)
+        {
+            // Step 2: List spells the player can cast (has reagents)
+            var availableSpells = _spells.Where(spell => HasReagents(caster, spell.RequiredReagents)).ToList();
+            var spellOptions = availableSpells.Select(spell =>
+                new SpellDialogOption($"{spell.SpellName} - {spell.Description}", () => BuildTargetChoiceNode(caster, spell))
+            ).ToList();
+
+            if (!spellOptions.Any())
+                spellOptions.Add(new SpellDialogOption("(No available spells)", null));
+
+            return new SpellDialogNode("Choose a spell:", spellOptions);
+        }
+
+        private SpellDialogNode BuildTargetChoiceNode(FantasyPlayer caster, Spell spell)
+        {
+            // Step 3: Handle spelltargetchoice
+            if (spell.SpellTargetChoice.Contains("ChooseDirection"))
             {
-                if (!string.IsNullOrEmpty(tree.DialogIndex))
-                    _spellDialogTreesByIndex[tree.DialogIndex] = tree;
-                if (!string.IsNullOrEmpty(tree.Id))
-                    _spellDialogTreesById[tree.Id] = tree;
+                var directions = new[] { "North", "South", "East", "West" };
+                var dirOptions = directions.Select(dir =>
+                    new SpellDialogOption(dir, () => { CastSpell(caster, spell, dir); return null; })
+                ).ToList();
+                return new SpellDialogNode("Choose a direction:", dirOptions);
+            }
+            else if (spell.SpellTargetChoice.Contains("ChoosePlayer"))
+            {
+                var enabledPlayers = _players.Where(p => p.IsEnabled).ToList();
+                var playerOptions = enabledPlayers.Select(p =>
+                    new SpellDialogOption(p.Name, () => { CastSpell(caster, spell, p); return null; })
+                ).ToList();
+                return new SpellDialogNode("Choose a player:", playerOptions);
+            }
+            else // "All", "Immediate", or "None"
+            {
+                return new SpellDialogNode($"Cast {spell.SpellName}?", new List<SpellDialogOption>
+                {
+                    new SpellDialogOption("Cast", () => { CastSpell(caster, spell, null); return null; })
+                });
             }
         }
 
-        // Get a spell dialog tree by its DialogIndex
-        public SpellDialogTree? GetSpellDialogTreeByIndex(string spellDialogIndex)
+        private bool HasReagents(FantasyPlayer caster, List<string> requiredReagents)
         {
-            _spellDialogTreesByIndex.TryGetValue(spellDialogIndex, out var tree);
-            return tree;
+            // Check _saveGame for each reagent
+            foreach (var reagent in requiredReagents)
+            {
+                if (!_saveGame.HasReagent(reagent))
+                    return false;
+            }
+            return true;
         }
 
-        // Optionally, get a dialog tree by its Id (NPC name)
-        public SpellDialogTree? GetSpellDialogTreeById(string id)
+        private void CastSpell(FantasyPlayer caster, Spell spell, object target)
         {
-            _spellDialogTreesById.TryGetValue(id, out var tree);
-            return tree;
+            // Implement your spell-casting logic here
+            // Example: SpellSystem.Cast(caster, spell, target);
+        }
+
+        // Helper class for spell data
+        private class Spell
+        {
+            public string SpellId { get; set; }
+            public string SpellName { get; set; }
+            public string Description { get; set; }
+            public List<string> RequiredReagents { get; set; }
+            public List<string> SpellTargetChoice { get; set; }
         }
     }
 }

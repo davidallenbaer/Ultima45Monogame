@@ -61,14 +61,23 @@ namespace Ultima45Monogame
         public int StoneWhite { get; set; } = 0; //Associated with Spirituality
         public int StoneBlack { get; set; } = 0; //Associated with Humility
 
-        public int RuneHonesty { get; set; } = 0;
-        public int RuneCompassion { get; set; } = 0;
-        public int RuneValor { get; set; } = 0;
-        public int RuneJustice { get; set; } = 0;
-        public int RuneSacrifice { get; set; } = 0;
-        public int RuneHonor { get; set; } = 0;
-        public int RuneSpirituality { get; set; } = 0;
-        public int RuneHumility { get; set; } = 0;
+        public int RuneHonesty { get; set; } = 10;
+        public int RuneCompassion { get; set; } = 10;
+        public int RuneValor { get; set; } = 10;
+        public int RuneJustice { get; set; } = 10;
+        public int RuneSacrifice { get; set; } = 10;
+        public int RuneHonor { get; set; } = 10;
+        public int RuneSpirituality { get; set; } = 10;
+        public int RuneHumility { get; set; } = 10;
+
+        public int SpellReagent_BlackPearl { get; set; } = 0;
+        public int SpellReagent_BloodMoss { get; set; } = 0;
+        public int SpellReagent_Garlic { get; set; } = 0;
+        public int SpellReagent_Ginseng { get; set; } = 0;
+        public int SpellReagent_MandrakeRoot { get; set; } = 0;
+        public int SpellReagent_Nightshade { get; set; } = 0;
+        public int SpellReagent_SpiderSilk { get; set; } = 0;
+        public int SpellReagent_SulfurousAsh { get; set; } = 0;
 
         public int CurrentPhaseLeftMoon { get; set; } = 0;
         public int CurrentPhaseRightMoon { get; set; } = 0;
@@ -79,5 +88,30 @@ namespace Ultima45Monogame
         public DateTime? TimeOfLastNightshadeFind { get; set; } = null;
         public DateTime? TimeOfLastSuccessfulShrineMeditation { get; set; } = null;
         public DateTime? TimeOfLastVirtueRelatedConversation { get; set; } = null;
+
+        internal bool HasReagent(string reagent)
+        {
+            switch (reagent)
+            {
+                case "BlackPearl":
+                    return SpellReagent_BlackPearl > 0;
+                case "BloodMoss":
+                    return SpellReagent_BloodMoss > 0;
+                case "Garlic":
+                    return SpellReagent_Garlic > 0;
+                case "Ginseng":
+                    return SpellReagent_Ginseng > 0;
+                case "MandrakeRoot":
+                    return SpellReagent_MandrakeRoot > 0;
+                case "Nightshade":
+                    return SpellReagent_Nightshade > 0;
+                case "SpiderSilk":
+                    return SpellReagent_SpiderSilk > 0;
+                case "SulfurousAsh":
+                    return SpellReagent_SulfurousAsh > 0;
+                default:
+                    return false;
+            }
+        }
     }
 }

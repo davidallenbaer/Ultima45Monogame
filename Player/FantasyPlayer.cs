@@ -37,7 +37,8 @@ namespace Ultima45Monogame
 
         public PlayerStatus Status { get; set; } = PlayerStatus.Good; //Good, Poisoned, Sleeping, Dead
 
-        public bool Enabled { get; set; } = false;
+        public bool IsEnabled { get; set; } = false;
+        public bool CanCastSpells { get; set; } = false;
 
         public bool Visible { get; set; } = false;
 

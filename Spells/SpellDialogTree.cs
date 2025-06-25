@@ -1,21 +1,26 @@
 ﻿using System.Collections.Generic;
-using Ultima45Monogame.Spells;
 
 namespace Ultima45Monogame.Spells
 {
     public class SpellDialogTree
     {
-        private List<SpellDialogNode> nodes = new List<SpellDialogNode>();
-
-        public string Id { get; set; }
         public string DialogIndex { get; set; }
         public string StartNodeId { get; set; }
-        public List<SpellDialogNode> Nodes { get; set; } = new List<SpellDialogNode>();
+        public List<SpellDialogNode> Nodes { get; set; }
 
-        // Helper to get a node by ID
+        // Constructor that takes a root node
+        public SpellDialogTree(SpellDialogNode root)
+        {
+            Nodes = new List<SpellDialogNode> { root };
+            StartNodeId = "root";
+            DialogIndex = "0";
+        }
+
+        // Helper to get a node by ID (if you add IDs to nodes)
         public SpellDialogNode? GetNodeById(string id)
         {
-            return Nodes.Find(n => n.Id == id);
+            // For now, just return the first node (root) since only one node is used
+            return Nodes.Count > 0 ? Nodes[0] : null;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Ultima45Monogame.Dialogs
         public void BuildReadyWeaponJSON(List<FantasyPlayer> players)
         {
             // Get all enabled FantasyPlayers
-            var enabledPlayers = players.FindAll(p => p.Enabled);
+            var enabledPlayers = players.FindAll(p => p.IsEnabled);
 
             var dialogTree = new DialogTree
             {

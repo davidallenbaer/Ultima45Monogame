@@ -4,9 +4,13 @@ namespace Ultima45Monogame.Spells
 {
     public class SpellDialogNode
     {
-        public string Id { get; set; }
-        public string Speaker { get; set; }
-        public string Text { get; set; }
-        public List<SpellDialogOption> Options { get; set; } = new List<SpellDialogOption>();
+        public string Prompt { get; set; }
+        public List<SpellDialogOption> Options { get; set; }
+
+        public SpellDialogNode(string prompt, List<SpellDialogOption> options)
+        {
+            Prompt = prompt;
+            Options = options ?? new List<SpellDialogOption>();
+        }
     }
 }

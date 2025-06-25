@@ -56,7 +56,7 @@ namespace Ultima45Monogame
                     Rations = 10,
                     Visible = true,
                     PartyPosition = 1,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Avatar,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
                     Armor = new List<FantasyArmor> { armorNone, armorCloth }
@@ -84,7 +84,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 2,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Bard1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
                     Armor = new List<FantasyArmor> { armorNone, armorCloth }
@@ -112,7 +112,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 3,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Ranger1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
                     Armor = new List<FantasyArmor> { armorNone, armorCloth }
@@ -140,7 +140,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 4,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Paladin1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
                     Armor = new List<FantasyArmor> { armorNone, armorChainmail }
@@ -168,7 +168,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 5,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Druid1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
                     Armor = new List<FantasyArmor> { armorNone, armorCloth }
@@ -196,7 +196,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 6,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Tinker1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
                     Armor = new List<FantasyArmor> { armorNone, armorLeather }
@@ -224,7 +224,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 7,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Mage1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponDagger },
                     Armor = new List<FantasyArmor> { armorNone, armorCloth }
@@ -252,7 +252,7 @@ namespace Ultima45Monogame
                     Rations = 8,
                     Visible = true,
                     PartyPosition = 8,
-                    Enabled = true,
+                    IsEnabled = true,
                     PlayerTile = TileType.Fighter1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
                     Armor = new List<FantasyArmor> { armorNone, armorChainmail }

@@ -5051,7 +5051,7 @@ public class Game1 : Game
                     break;
                 }
 
-                if (player.Enabled)
+                if (player.IsEnabled)
                 {
                     CombatPartyStartingLocation loc = partyPositionManager.GetPartyPosition(currentMap, partyPosition);
 

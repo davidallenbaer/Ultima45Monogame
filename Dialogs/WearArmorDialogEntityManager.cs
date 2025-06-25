@@ -11,7 +11,7 @@ namespace Ultima45Monogame.Dialogs
         public void BuildWearArmorJSON(List<FantasyPlayer> players)
         {
             // Get all enabled FantasyPlayers
-            var enabledPlayers = players.FindAll(p => p.Enabled);
+            var enabledPlayers = players.FindAll(p => p.IsEnabled);
 
             var dialogTree = new DialogTree
             {
