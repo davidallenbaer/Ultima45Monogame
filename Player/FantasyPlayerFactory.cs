@@ -59,7 +59,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Avatar,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
-                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -87,7 +88,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Bard1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSling },
-                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -115,7 +117,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Ranger1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
-                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -143,7 +146,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Paladin1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
-                    Armor = new List<FantasyArmor> { armorNone, armorChainmail }
+                    Armor = new List<FantasyArmor> { armorNone, armorChainmail },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -171,7 +175,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Druid1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponMace },
-                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -199,7 +204,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Tinker1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
-                    Armor = new List<FantasyArmor> { armorNone, armorLeather }
+                    Armor = new List<FantasyArmor> { armorNone, armorLeather },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -227,7 +233,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Mage1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponDagger },
-                    Armor = new List<FantasyArmor> { armorNone, armorCloth }
+                    Armor = new List<FantasyArmor> { armorNone, armorCloth },
+                    CanCastSpells = true
                 },
                 new FantasyPlayer
                 {
@@ -255,7 +262,8 @@ namespace Ultima45Monogame
                     IsEnabled = true,
                     PlayerTile = TileType.Fighter1,
                     Weapons = new List<FantasyWeapon> { weaponNone, weaponSword },
-                    Armor = new List<FantasyArmor> { armorNone, armorChainmail }
+                    Armor = new List<FantasyArmor> { armorNone, armorChainmail },
+                    CanCastSpells = false
                 }
             };
  
