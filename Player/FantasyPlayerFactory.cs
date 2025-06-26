@@ -267,6 +267,14 @@ namespace Ultima45Monogame
                 }
             };
  
+            foreach(FantasyPlayer player in fantasyPlayers)
+            {
+                // Ensure each spellcaster has spells
+                if (player.CanCastSpells == true && player.Spells.Count == 0)
+                {
+                    player.Spells = FantasySpellFactory.GetAllSpells();
+                }
+            }
             return fantasyPlayers;
         }
     }
