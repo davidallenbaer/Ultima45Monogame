@@ -14,6 +14,14 @@ namespace Ultima45Monogame
             Both
         }
 
+        public enum SpellTargetChoice
+        {
+            None,
+            ChooseDirection,
+            ChoosePlayer,
+            ChooseMoonGate
+        }
+
         FantasySpell() 
         { 
         }
@@ -37,7 +45,7 @@ namespace Ultima45Monogame
         public string Range { get; set; }
 
         // Components required (e.g., "V, S, M")
-        public string Components { get; set; }
+        public string[] Components { get; set; } = Array.Empty<string>();
 
         // Duration of the spell (e.g., "Concentration, up to 1 minute")
         public string Duration { get; set; }
@@ -49,10 +57,13 @@ namespace Ultima45Monogame
         public int Cost { get; set; }
 
         // Type of spell: Combat, NonCombat, or Both
-        public SpellType Type { get; set; }
+        public SpellType Type { get; set; } = SpellType.Both;
+
+        // Target choice for the spell
+        public SpellTargetChoice TargetChoice { get; set; } = SpellTargetChoice.None;
 
         // Constructor
-        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string components, string duration, string description, int cost, SpellType type = SpellType.Both)
+        public FantasySpell(int id, string name, int level, string school, string castingTime, string range, string[] components, string duration, string description, int cost, SpellType type = SpellType.Both, SpellTargetChoice targetchoice = SpellTargetChoice.None)
         {
             ID = id;
             Name = name;
@@ -65,6 +76,7 @@ namespace Ultima45Monogame
             Description = description;
             Cost = cost;
             Type = type;
+            TargetChoice = targetchoice;
         }
 
         // Override ToString for easy display
