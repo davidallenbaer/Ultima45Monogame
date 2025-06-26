@@ -11,11 +11,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using Ultima45Monogame.Combat;
 using Ultima45Monogame.Dialogs;
 using Ultima45Monogame.Player;
+using Ultima45Monogame.Spells;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Ultima45Monogame.RPGEnums;
@@ -41,7 +43,7 @@ public class Game1 : Game
 
     private double mapCampDisplayTimer = 0;
 
-    List<FantasyPlayer> players = new List<FantasyPlayer>();
+    public static List<FantasyPlayer> players = new List<FantasyPlayer>();
 
     public enum GameStates
     {
@@ -57,6 +59,7 @@ public class Game1 : Game
         ReadyWeaponDialog,
         WearArmorDialog,
         UseItemDialog,
+        CastSpellDialog,
     }
 
     private string? _bottomMessage = null;
@@ -73,6 +76,7 @@ public class Game1 : Game
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
     private WearArmorDialogEntityManager weararmordialogEntityManager = new WearArmorDialogEntityManager();
+    private SpellDialogEntityManager castspelldialogEntityManager = new SpellDialogEntityManager(gameSaveVariables, players);
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
@@ -444,7 +448,7 @@ public class Game1 : Game
     private double inputDelay;
     private SoundEffect _soundEffect_Walk;
     private SoundEffect _soundEffect_BadCommand;
-    public Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
+    public static Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
 
     #endregion
 
@@ -2715,6 +2719,9 @@ public class Game1 : Game
             case GameStates.UseItemDialog:
                 DrawUseItemDialog();
                 break;
+            case GameStates.CastSpellDialog:
+                DrawCastSpellDialog();
+                break;
         }
 
         DrawBottomMessage();
@@ -2865,6 +2872,10 @@ public class Game1 : Game
 
             case GameStates.UseItemDialog:
                 UpdateUseItemDialog(gameTime);
+                break;
+
+            case GameStates.CastSpellDialog:
+                UpdateCastSpellDialog(gameTime);
                 break;
         }
 
@@ -3134,6 +3145,18 @@ public class Game1 : Game
                 return;
             }
             #endregion
+
+            if (newKeyboardState.IsKeyDown(Keys.C) && oldKeyboardState.IsKeyUp(Keys.C))
+            {
+                HandleCastSpellDialog();
+
+                if (_currentState == GameStates.CastSpellDialog)
+                {
+                    ShowBottomMessage(null); // Clear the "Cast Spell" message
+                }
+
+                inputTimer = 0;
+            }
 
             if (newKeyboardState.IsKeyDown(Keys.R) && oldKeyboardState.IsKeyUp(Keys.R))
             {
@@ -3654,9 +3677,29 @@ public class Game1 : Game
             }
             else if (oldKeyboardState.IsKeyUp(Keys.L) && newKeyboardState.IsKeyDown(Keys.L))
             {
-                Console.WriteLine($"{pcOverworldLocationY} {pcOverworldLocationX}");
+                if (gameSaveVariables.Sextants > 0)
+                {
+                    if (currentMap == Maps.U4MapOverworld)
+                    {
+                        // Show the current location on the overworld map
+                        ShowBottomMessage($"Using sextant... Current Location: {pcOverworldLocationY}, {pcOverworldLocationX}", 4);
+                        Console.WriteLine($"{pcOverworldLocationY} {pcOverworldLocationX}");
+                    }
+                    else
+                    {
+                        // Show the current location on the town map
+                        ShowBottomMessage($"Using sextant... Current Location: {pcTownMapLocationY}, {pcTownMapLocationX}", 4);
+                        Console.WriteLine($"{pcTownMapLocationY} {pcTownMapLocationX}");
+                    }
 
-                Console.WriteLine($"{pcTownMapLocationY} {pcTownMapLocationX}");
+                }
+                else
+                {
+                    ShowBottomMessage("You need a sextant to determine your location!", 2);
+                    _soundEffect_BadCommand.Play();
+                    inputTimer = 0; // Reset the timer
+                    return;
+                }
 
                 int mapValue = 0;
 
@@ -4032,6 +4075,41 @@ public class Game1 : Game
         oldKeyboardState = newKeyboardState;  // set the new state as the old state for next time
 
         UpdateMainDisplayGridValues(currentMap);
+    }
+
+    private void HandleCastSpellDialog()
+    {
+        var spellcasterPlayers = players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
+
+        if (spellcasterPlayers.Count == 0)
+        {
+            ShowBottomMessage("No spellcasters available!", 2);
+            _soundEffect_BadCommand.Play();
+            return;
+        }
+
+        if (!gameSaveVariables.HasReagents())
+        {
+            ShowBottomMessage("No reagents!", 2);
+            _soundEffect_BadCommand.Play();
+            return;
+        }
+
+        // Build the dialog tree for casting spells
+        castspelldialogEntityManager = new SpellDialogEntityManager(gameSaveVariables, players);
+
+        // Get the dialog tree from the manager
+        _castspellDialogTree = castspelldialogEntityManager.SpellDialogTree;
+
+        if (_castspellDialogTree != null)
+        {
+            // Set the current dialog node to the start node
+            _castspellDialogNode = _castspellDialogTree.GetNodeById(_castspellDialogTree.StartNodeId);
+            _selectedcastspellDialogOptionIndex = 0;
+            _castspelldialogEnding = false;
+            _castspellDialogEndTimer = 0;
+            _currentState = GameStates.CastSpellDialog;
+        }
     }
 
     private void HandleTalkDialog(MoveDirection direction)
@@ -5840,6 +5918,135 @@ public class Game1 : Game
         {
             var option = _useitemDialogNode.Options[i];
             Microsoft.Xna.Framework.Color color = (i == _selecteduseitemDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
+    }
+
+    #endregion
+
+    #region Cast Spell Dialog Processing
+
+    //Dynamically build the CastSpell dialog tree
+    //based on the FantasyPlayer's that are enabled
+    //and the reagents in their inventory
+
+    private SpellDialogTree? _castspellDialogTree;
+    private SpellDialogNode? _castspellDialogNode;
+    private int _selectedcastspellDialogOptionIndex = 0;
+    private double _castspellDialogEndTimer = 0;
+    private bool _castspelldialogEnding = false;
+
+    private void UpdateCastSpellDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_castspellDialogTree == null || _castspellDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_castspelldialogEnding)
+        {
+            _castspellDialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_castspellDialogEndTimer >= 2.0)
+            {
+                _castspellDialogTree = null;
+                _castspellDialogNode = null;
+                _selectedcastspellDialogOptionIndex = 0;
+                _castspelldialogEnding = false;
+                _castspellDialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_castspellDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selectedcastspellDialogOptionIndex = (_selectedcastspellDialogOptionIndex - 1 + _castspellDialogNode.Options.Count) % _castspellDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selectedcastspellDialogOptionIndex = (_selectedcastspellDialogOptionIndex + 1) % _castspellDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _castspellDialogNode.Options[_selectedcastspellDialogOptionIndex];
+                    var nextNode = _castspellDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _castspellDialogNode = nextNode;
+
+                        // Process cast spell logic if this is an castspell node
+
+                        //TODO
+                        //castspelldialogEntityManager.CastSpell(players, _castspellDialogNode);
+
+                        _selectedcastspellDialogOptionIndex = 0;
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _castspelldialogEnding = true;
+                _castspellDialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawCastSpellDialog()
+    {
+        if (_castspellDialogTree == null || _castspellDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _castspellDialogNode.Prompt;
+        string text = _castspellDialogNode.Prompt;
+        //Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        //_spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        //_spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + 8), Microsoft.Xna.Framework.Color.Green);
+
+        // Draw options
+        //int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        int optionY = dialogY + 16 + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _castspellDialogNode.Options.Count; i++)
+        {
+            var option = _castspellDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selectedcastspellDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
             _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
         }
     }

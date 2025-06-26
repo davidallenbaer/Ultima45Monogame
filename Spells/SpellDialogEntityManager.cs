@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Ultima45Monogame.Dialogs;
 using Ultima45Monogame.Player;
 
 namespace Ultima45Monogame.Spells
@@ -13,14 +14,14 @@ namespace Ultima45Monogame.Spells
         private readonly List<FantasyPlayer> _players;
         private readonly List<Spell> _spells;
 
-        public SpellDialogTree DialogTree { get; private set; }
+        public SpellDialogTree SpellDialogTree { get; private set; }
 
         public SpellDialogEntityManager(Ultima4SaveGameVariables saveGame, List<FantasyPlayer> players)
         {
             _saveGame = saveGame;
             _players = players;
             _spells = LoadSpells("Spells/spells.json");
-            DialogTree = BuildDialogTree();
+            SpellDialogTree = BuildDialogTree();
         }
 
         private List<Spell> LoadSpells(string path)
@@ -106,14 +107,15 @@ namespace Ultima45Monogame.Spells
             return true;
         }
 
-        private void CastSpell(FantasyPlayer caster, Spell spell, object target)
+        public void CastSpell(FantasyPlayer caster, Spell spell, object target)
         {
+            //TODO
             // Implement your spell-casting logic here
             // Example: SpellSystem.Cast(caster, spell, target);
         }
 
         // Helper class for spell data
-        private class Spell
+        public class Spell
         {
             public string SpellId { get; set; }
             public string SpellName { get; set; }
