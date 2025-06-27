@@ -1,17 +1,21 @@
 ﻿using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Ultima45Monogame.Spells
 {
     public class SpellDialogOption
     {
         public string Text { get; }
+        public Func<SpellDialogNode> Action { get; set; }
         public Func<SpellDialogNode?>? OnSelected { get; }
+        
         public string? NextNodeId { get; set; }
 
-        public SpellDialogOption(string text, Func<SpellDialogNode?>? onSelected)
+        public SpellDialogOption(string text, Func<SpellDialogNode> action = null, string nextNodeId = null)
         {
             Text = text;
-            OnSelected = onSelected;
+            Action = action;
+            NextNodeId = nextNodeId;
         }
     }
 }

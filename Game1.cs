@@ -76,7 +76,7 @@ public class Game1 : Game
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
     private WearArmorDialogEntityManager weararmordialogEntityManager = new WearArmorDialogEntityManager();
-    private SpellDialogEntityManager castspelldialogEntityManager = new SpellDialogEntityManager(gameSaveVariables, players);
+    private SpellDialogEntityManager castspelldialogEntityManager = new SpellDialogEntityManager();
     private OverworldEntityManager overworldEntityManager = new OverworldEntityManager();
     private MonsterPositionManager monsterPositionManager = new MonsterPositionManager();
     private PartyPositionManager partyPositionManager = new PartyPositionManager();
@@ -5982,19 +5982,35 @@ public class Game1 : Game
                 else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
                 {
                     var selectedOption = _castspellDialogNode.Options[_selectedcastspellDialogOptionIndex];
-                    var nextNode = _castspellDialogTree.GetNodeById(selectedOption.NextNodeId);
+
+                    // Call the Action delegate to get the next node
+                    SpellDialogNode nextNode = selectedOption.Action?.Invoke();
+
+                    // If Action returned a node, use it
                     if (nextNode != null)
                     {
                         _castspellDialogNode = nextNode;
-
-                        // Process cast spell logic if this is an castspell node
-
-                        //TODO
-                        //castspelldialogEntityManager.CastSpell(players, _castspellDialogNode);
-
-                        _selectedcastspellDialogOptionIndex = 0;
-                        inputTimer = 0;
                     }
+                    else
+                    {
+                        // If no delegate, try looking up by ID (for static nodes if applicable)
+                        nextNode = _castspellDialogTree.GetNodeById(selectedOption.NextNodeId);
+                        if (nextNode != null)
+                        {
+                            _castspellDialogNode = nextNode;
+                        }
+                        else
+                        {
+                            //TODO
+                            //castspelldialogEntityManager.CastSpell(players, _castspellDialogNode);
+
+                            _castspelldialogEnding = true;
+                            _castspellDialogEndTimer = 0;
+                        }
+                    }
+
+                    _selectedcastspellDialogOptionIndex = 0;
+                    inputTimer = 0;
                 }
             }
             else
@@ -6030,19 +6046,20 @@ public class Game1 : Game
         Texture2D rectTexture = Get1x1WhiteTexture();
         _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
 
-        // Draw speaker and text
-        string speaker = _castspellDialogNode.Prompt;
+        // Draw title and text
+        string title = _castspellDialogNode.Title;
         string text = _castspellDialogNode.Prompt;
-        //Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 titleSize = font.MeasureString(title);
         Vector2 textSize = font.MeasureString(text);
 
-        //_spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
-        //_spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
-        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + 8), Microsoft.Xna.Framework.Color.Green);
+        //_spriteBatch.DrawString(font, title, new Vector2(dialogX + 20, dialogY + 16 + titleSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+        //_spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + textSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+
+        _spriteBatch.DrawString(font, title, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + titleSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
 
         // Draw options
-        //int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
-        int optionY = dialogY + 16 + 8 + (int)textSize.Y + 24;
+        int optionY = dialogY + 16 + (int)titleSize.Y + 8 + (int)textSize.Y + 24;
         for (int i = 0; i < _castspellDialogNode.Options.Count; i++)
         {
             var option = _castspellDialogNode.Options[i];
