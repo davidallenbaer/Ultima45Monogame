@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using Ultima45Monogame.Dialogs;
+﻿using System.Collections.Generic;
 
 namespace Ultima45Monogame.Dialogs
 {

@@ -24,7 +24,6 @@ T - Talk to NPC (Plus direction key)
 W - Wear Armor (select from armor dialog)
 R - Ready Weapon (select from weapon dialog)
 U - Use Item (select from item dialog)
-
 C - Cast Spell (select from spell dialog, possible direction key)
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
@@ -64,11 +63,14 @@ Version 4.0.0 - COMPLETE
 	Pressing W to Wear Armor	
 	Pressing R to Ready a Weapon
 	Pressing U to Use Item
-	Proper default weapon and armor for players.
+	Proper default weapon and armor for players
+	Pressing C to Cast Spell (Non-Combat)
+	Add Cancel option to the spell dialogs.
 
 --TODO--
-	Z - Stats (Pres Z to show player stats, right and left to next/prev player stats, inventory))
-	C - Cast Spell (Non-Combat)
+	Cast Spell Actions (Non-Combat) for each spell.
+	
+	Z - Stats (Pres Z to show player stats, right and left to next/prev player stats, inventory))	
 	
 	Populate Britain with NPCs Town Entity's.
 

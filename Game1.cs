@@ -5983,7 +5983,16 @@ public class Game1 : Game
                 {
                     var selectedOption = _castspellDialogNode.Options[_selectedcastspellDialogOptionIndex];
                     Console.WriteLine($"selectedOption = {selectedOption.Text}");
-                    
+
+                    if (selectedOption != null && selectedOption.Text.ToUpper() == "CANCEL")
+                    {
+                        _castspelldialogEnding = true;
+                        _castspellDialogEndTimer = 0;
+                        _selectedcastspellDialogOptionIndex = 0;
+                        inputTimer = 0;
+                        return;
+                    }
+
                     // Call the Action delegate to get the next node
                     SpellDialogNode nextNode = selectedOption.Action?.Invoke();
 

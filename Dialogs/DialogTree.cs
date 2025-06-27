@@ -1,6 +1,5 @@
 ﻿// Represents the entire dialog tree for an NPC or entity
 using System.Collections.Generic;
-using Ultima45Monogame.Dialogs;
 
 namespace Ultima45Monogame.Dialogs
 {
