@@ -109,21 +109,21 @@ namespace Ultima45Monogame
         {
             switch (reagent)
             {
-                case "BlackPearl":
+                case "Black Pearl":
                     return SpellReagent_BlackPearl > 0;
-                case "BloodMoss":
+                case "Blood Moss":
                     return SpellReagent_BloodMoss > 0;
                 case "Garlic":
                     return SpellReagent_Garlic > 0;
                 case "Ginseng":
                     return SpellReagent_Ginseng > 0;
-                case "MandrakeRoot":
+                case "Mandrake Root":
                     return SpellReagent_MandrakeRoot > 0;
                 case "Nightshade":
                     return SpellReagent_Nightshade > 0;
-                case "SpiderSilk":
+                case "Spider Silk":
                     return SpellReagent_SpiderSilk > 0;
-                case "SulfurousAsh":
+                case "Sulfurous Ash":
                     return SpellReagent_SulfurousAsh > 0;
                 default:
                     return false;

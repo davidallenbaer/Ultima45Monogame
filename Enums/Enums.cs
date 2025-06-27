@@ -10,6 +10,12 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum CastSpellMode
+        {
+            Combat,
+            NonCombat
+        }
+
         public enum OpenStatus
         {
             None = 0,

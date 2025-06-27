@@ -4096,7 +4096,7 @@ public class Game1 : Game
         }
 
         // Build the dialog tree for casting spells
-        castspelldialogEntityManager = new SpellDialogEntityManager(gameSaveVariables, players);
+        castspelldialogEntityManager = new SpellDialogEntityManager(gameSaveVariables, players, CastSpellMode.NonCombat);
 
         // Get the dialog tree from the manager
         _castspellDialogTree = castspelldialogEntityManager.SpellDialogTree;
@@ -5982,7 +5982,8 @@ public class Game1 : Game
                 else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
                 {
                     var selectedOption = _castspellDialogNode.Options[_selectedcastspellDialogOptionIndex];
-
+                    Console.WriteLine($"selectedOption = {selectedOption.Text}");
+                    
                     // Call the Action delegate to get the next node
                     SpellDialogNode nextNode = selectedOption.Action?.Invoke();
 
@@ -5993,19 +5994,79 @@ public class Game1 : Game
                     }
                     else
                     {
-                        // If no delegate, try looking up by ID (for static nodes if applicable)
-                        nextNode = _castspellDialogTree.GetNodeById(selectedOption.NextNodeId);
-                        if (nextNode != null)
+                        FantasyPlayer targetPlayer = null;
+                        string targetDirection = "";
+                        string castSpellMsg = "";
+
+                        if (castspelldialogEntityManager.SelectedCaster != null &&
+                            castspelldialogEntityManager.SelectedSpell != null &&
+                            castspelldialogEntityManager.SelectedTarget != null)
                         {
-                            _castspellDialogNode = nextNode;
+                            targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
+                            targetDirection = castspelldialogEntityManager.SelectedTarget as string;
+                            
+                            if (targetDirection != "North" &&
+                                targetDirection != "South" &&
+                                targetDirection != "East" &&
+                                targetDirection != "West")
+                            {
+                                targetDirection = ""; // Not a Direction, so reset to empty string
+                            }
+
+                            if (targetPlayer != null)
+                            {
+                                // If the target is a player, cast the spell on them
+                                castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} on {targetPlayer.Name}";
+                            }
+                            else
+                            {
+                                // If the target is not a player, just cast the spell
+                                if (!string.IsNullOrEmpty(targetDirection))
+                                {
+                                    castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} to the {targetDirection}";
+                                }
+                                else
+                                {
+                                    castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name}";
+                                }
+                            }
+
+                            ShowBottomMessage(castSpellMsg, 4.0);
+
+                            //TODO: Cast Spell Here
+
+                            castspelldialogEntityManager.SelectedCaster = null;
+                            castspelldialogEntityManager.SelectedSpell = null;
+                            castspelldialogEntityManager.SelectedTarget = null;
+                            _castspelldialogEnding = true;
+                            _castspellDialogEndTimer = 0;
+                        }
+                        if (castspelldialogEntityManager.SelectedCaster != null &&
+                            castspelldialogEntityManager.SelectedSpell != null &&
+                            castspelldialogEntityManager.SelectedTarget == null)
+                        {
+
+                            castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name}";
+
+                            ShowBottomMessage(castSpellMsg, 4.0);
+
+                            //TODO: Cast Spell Here
+
+                            castspelldialogEntityManager.SelectedCaster = null;
+                            castspelldialogEntityManager.SelectedSpell = null;
+                            castspelldialogEntityManager.SelectedTarget = null;
+                            _castspelldialogEnding = true;
+                            _castspellDialogEndTimer = 0;
                         }
                         else
                         {
-                            //TODO
-                            //castspelldialogEntityManager.CastSpell(players, _castspellDialogNode);
+                            // If no delegate, try looking up by ID (for static nodes if applicable)
+                            nextNode = _castspellDialogTree.GetNodeById(selectedOption.NextNodeId);
 
-                            _castspelldialogEnding = true;
-                            _castspellDialogEndTimer = 0;
+                            if (nextNode != null)
+                            {
+                                _castspellDialogNode = nextNode;
+                            }
                         }
                     }
 
@@ -6051,9 +6112,6 @@ public class Game1 : Game
         string text = _castspellDialogNode.Prompt;
         Vector2 titleSize = font.MeasureString(title);
         Vector2 textSize = font.MeasureString(text);
-
-        //_spriteBatch.DrawString(font, title, new Vector2(dialogX + 20, dialogY + 16 + titleSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
-        //_spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + textSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
 
         _spriteBatch.DrawString(font, title, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
         _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + titleSize.Y + 8), Microsoft.Xna.Framework.Color.Green);

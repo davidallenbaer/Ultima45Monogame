@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Ultima45Monogame.Player;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame.Spells
 {
@@ -11,17 +12,23 @@ namespace Ultima45Monogame.Spells
     {
         private readonly Ultima4SaveGameVariables _saveGame;
         private readonly List<FantasyPlayer> _players;
+        private readonly CastSpellMode _castspellmode;
 
+        public FantasyPlayer SelectedCaster = null;
+        public FantasySpell SelectedSpell = null;
+        public object SelectedTarget = null; // Could be a direction, player, or null for immediate spells
+        
         public SpellDialogTree SpellDialogTree { get; private set; }
 
         public SpellDialogEntityManager()
         { 
         }
 
-        public SpellDialogEntityManager(Ultima4SaveGameVariables saveGame, List<FantasyPlayer> players)
+        public SpellDialogEntityManager(Ultima4SaveGameVariables saveGame, List<FantasyPlayer> players, CastSpellMode castspellmode)
         {
             _saveGame = saveGame;
             _players = players;
+            _castspellmode = castspellmode;
             SpellDialogTree = BuildDialogTree();
         }
 
@@ -31,7 +38,7 @@ namespace Ultima45Monogame.Spells
             var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
             
             var root = new SpellDialogNode("==Cast Spell==", "Choose a spellcaster:", enabledPlayers.Select(p =>
-            new SpellDialogOption(p.Name, () => BuildSpellListNode(p))
+                new SpellDialogOption(p.Name, () => BuildSpellListNode(p))
             ).ToList());
 
             return new SpellDialogTree(root);
@@ -39,8 +46,21 @@ namespace Ultima45Monogame.Spells
 
         private SpellDialogNode BuildSpellListNode(FantasyPlayer caster)
         {
-            // Step 2: List spells the player can cast (has reagents)
-            var availableSpells = caster.Spells.Where(spell => HasReagents(caster, spell.Components)).ToList();
+            IEnumerable<FantasySpell> availableSpells = new List<FantasySpell>();
+
+            IEnumerable<FantasySpell> spells = caster.Spells.Where(spell => HasReagents(caster, spell.Components)).ToList();
+
+            if (_castspellmode == CastSpellMode.Combat)
+            {
+                // Filter spells for combat mode
+                availableSpells = spells.Where(spell => spell.Type == FantasySpell.SpellType.Combat || spell.Type == FantasySpell.SpellType.Both);
+            }
+            else if (_castspellmode == CastSpellMode.NonCombat)
+            {
+                // Filter spells for non-combat mode
+                availableSpells = spells.Where(spell => spell.Type == FantasySpell.SpellType.NonCombat || spell.Type == FantasySpell.SpellType.Both);
+            }
+
             var spellOptions = availableSpells.Select(spell =>
                 new SpellDialogOption($"{spell.Name} - {spell.Description}", () => BuildTargetChoiceNode(caster, spell))
             ).ToList();
@@ -58,7 +78,7 @@ namespace Ultima45Monogame.Spells
             {
                 var directions = new[] { "North", "South", "East", "West" };
                 var dirOptions = directions.Select(dir =>
-                    new SpellDialogOption(dir, () => { CastSpell(caster, spell, dir); return null; })
+                    new SpellDialogOption(dir, () => { SelectSpell(caster, spell, dir); return null; })
                 ).ToList();
                 return new SpellDialogNode("==Cast Spell==", "Choose a direction:", dirOptions);
             }
@@ -66,7 +86,7 @@ namespace Ultima45Monogame.Spells
             {
                 var enabledPlayers = _players.Where(p => p.IsEnabled).ToList();
                 var playerOptions = enabledPlayers.Select(p =>
-                    new SpellDialogOption(p.Name, () => { CastSpell(caster, spell, p); return null; })
+                    new SpellDialogOption(p.Name, () => { SelectSpell(caster, spell, p); return null; })
                 ).ToList();
                 return new SpellDialogNode("==Cast Spell==", "Choose a player:", playerOptions);
             }
@@ -74,7 +94,7 @@ namespace Ultima45Monogame.Spells
             {
                 return new SpellDialogNode("==Cast Spell==", $"Cast {spell.Name}?", new List<SpellDialogOption>
                 {
-                    new SpellDialogOption("Cast", () => { CastSpell(caster, spell, null); return null; })
+                    new SpellDialogOption("Cast", () => { SelectSpell(caster, spell, null); return null; })
                 });
             }
         }
@@ -85,16 +105,18 @@ namespace Ultima45Monogame.Spells
             foreach (var reagent in requiredReagents)
             {
                 if (!_saveGame.HasReagent(reagent))
+                {
                     return false;
+                }
             }
             return true;
         }
 
-        public void CastSpell(FantasyPlayer caster, FantasySpell spell, object target)
+        private void SelectSpell(FantasyPlayer caster, FantasySpell spell, object target)
         {
-            //TODO
-            // Implement your spell-casting logic here
-            // Example: SpellSystem.Cast(caster, spell, target);
+            SelectedCaster = caster;
+            SelectedSpell = spell;
+            SelectedTarget = target;
         }
 
     }

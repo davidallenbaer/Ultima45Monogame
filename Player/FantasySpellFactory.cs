@@ -244,7 +244,7 @@ namespace Ultima45Monogame
                 range: "150 feet",
                 components: ["Garlic", "Spider Silk"],
                 duration: "Instantaneous",
-                description: "Increases party’s defense temporarily.",
+                description: "Increases partys defense temporarily.",
                 cost: 0,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
@@ -334,7 +334,7 @@ namespace Ultima45Monogame
                 range: "150 feet",
                 components: ["Nightshade", "Blood Moss"],
                 duration: "Instantaneous",
-                description: "Displays a bird’s-eye view of the overworld.",
+                description: "Displays a birds-eye view of the overworld.",
                 cost: 0,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
