@@ -6042,7 +6042,10 @@ public class Game1 : Game
 
                             ShowBottomMessage(castSpellMsg, 4.0);
 
-                            //TODO: Cast Spell Here
+                            CastSpell(castspelldialogEntityManager.SelectedCaster,
+                                castspelldialogEntityManager.SelectedSpell,
+                                castspelldialogEntityManager.SelectedTarget
+                                );
 
                             castspelldialogEntityManager.SelectedCaster = null;
                             castspelldialogEntityManager.SelectedSpell = null;
@@ -6094,6 +6097,11 @@ public class Game1 : Game
 
             oldKeyboardState = newKeyboardState;
         }
+    }
+
+    private void CastSpell(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
+    {
+
     }
 
     private void DrawCastSpellDialog()

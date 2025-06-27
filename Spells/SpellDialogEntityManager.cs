@@ -33,19 +33,6 @@ namespace Ultima45Monogame.Spells
             SpellDialogTree = BuildDialogTree();
         }
 
-        //private SpellDialogTree BuildDialogTree()
-        //{
-        //    // Step 1: List enabled players who can cast spells
-        //    var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
-
-            
-        //    var root = new SpellDialogNode("==Cast Spell==", "Choose a spellcaster:", enabledPlayers.Select(p =>
-        //        new SpellDialogOption(p.Name, () => BuildSpellListNode(p))
-        //    ).ToList());
-
-        //    return new SpellDialogTree(root);
-        //}
-
         private SpellDialogTree BuildDialogTree()
         {
             var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
@@ -54,39 +41,13 @@ namespace Ultima45Monogame.Spells
                 new SpellDialogOption(p.Name, () => BuildSpellListNode(p))
             ).ToList();
 
-            AddCancelOption(rootOptions); // ← Add this line
+            AddCancelOption(rootOptions);
 
             var root = new SpellDialogNode("==Cast Spell==", "Choose a spellcaster:", rootOptions);
 
             return new SpellDialogTree(root);
         }
 
-        //private SpellDialogNode BuildSpellListNode(FantasyPlayer caster)
-        //{
-        //    IEnumerable<FantasySpell> availableSpells = new List<FantasySpell>();
-
-        //    IEnumerable<FantasySpell> spells = caster.Spells.Where(spell => HasReagents(caster, spell.Components)).ToList();
-
-        //    if (_castspellmode == CastSpellMode.Combat)
-        //    {
-        //        // Filter spells for combat mode
-        //        availableSpells = spells.Where(spell => spell.Type == FantasySpell.SpellType.Combat || spell.Type == FantasySpell.SpellType.Both);
-        //    }
-        //    else if (_castspellmode == CastSpellMode.NonCombat)
-        //    {
-        //        // Filter spells for non-combat mode
-        //        availableSpells = spells.Where(spell => spell.Type == FantasySpell.SpellType.NonCombat || spell.Type == FantasySpell.SpellType.Both);
-        //    }
-
-        //    var spellOptions = availableSpells.Select(spell =>
-        //        new SpellDialogOption($"{spell.Name} - {spell.Description}", () => BuildTargetChoiceNode(caster, spell))
-        //    ).ToList();
-
-        //    if (!spellOptions.Any())
-        //        spellOptions.Add(new SpellDialogOption("(No available spells)", null));
-
-        //    return new SpellDialogNode("==Cast Spell==", "Choose a spell:", spellOptions);
-        //}
 
         private SpellDialogNode BuildSpellListNode(FantasyPlayer caster)
         {
@@ -103,45 +64,16 @@ namespace Ultima45Monogame.Spells
             }
 
             var spellOptions = availableSpells.Select(spell =>
-                new SpellDialogOption($"{spell.Name} - {spell.Description}", () => BuildTargetChoiceNode(caster, spell))
+                new SpellDialogOption($"{spell.Name} - {spell.Description}" , () => BuildTargetChoiceNode(caster, spell))
             ).ToList();
 
             if (!spellOptions.Any())
                 spellOptions.Add(new SpellDialogOption("(No available spells)", null));
 
-            AddCancelOption(spellOptions); // ← Add this line
+            AddCancelOption(spellOptions);
 
             return new SpellDialogNode("==Cast Spell==", "Choose a spell:", spellOptions);
         }
-
-        //private SpellDialogNode BuildTargetChoiceNode(FantasyPlayer caster, FantasySpell spell)
-        //{
-        //    // Step 3: Handle spelltargetchoice
-        //    if (spell.TargetChoice == FantasySpell.SpellTargetChoice.ChooseDirection)
-        //    {
-        //        var directions = new[] { "North", "South", "East", "West" };
-        //        var dirOptions = directions.Select(dir =>
-        //            new SpellDialogOption(dir, () => { SelectSpell(caster, spell, dir); return null; })
-        //        ).ToList();
-        //        return new SpellDialogNode("==Cast Spell==", "Choose a direction:", dirOptions);
-        //    }
-        //    else if (spell.TargetChoice == FantasySpell.SpellTargetChoice.ChoosePlayer)
-        //    {
-        //        var enabledPlayers = _players.Where(p => p.IsEnabled).ToList();
-        //        var playerOptions = enabledPlayers.Select(p =>
-        //            new SpellDialogOption(p.Name, () => { SelectSpell(caster, spell, p); return null; })
-        //        ).ToList();
-        //        return new SpellDialogNode("==Cast Spell==", "Choose a player:", playerOptions);
-        //    }
-        //    else // "All", "Immediate", or "None"
-        //    {
-        //        return new SpellDialogNode("==Cast Spell==", $"Cast {spell.Name}?", new List<SpellDialogOption>
-        //        {
-        //            new SpellDialogOption(" ", () => { SelectSpell(caster, spell, null); return null; })
-        //            //new SpellDialogOption("Cast", () => { SelectSpell(caster, spell, null); return null; })
-        //        });
-        //    }
-        //}
 
         private SpellDialogNode BuildTargetChoiceNode(FantasyPlayer caster, FantasySpell spell)
         {
@@ -152,7 +84,7 @@ namespace Ultima45Monogame.Spells
                     new SpellDialogOption(dir, () => { SelectSpell(caster, spell, dir); return null; })
                 ).ToList();
 
-                AddCancelOption(dirOptions); // ← Add this line
+                AddCancelOption(dirOptions);
 
                 return new SpellDialogNode("==Cast Spell==", "Choose a direction:", dirOptions);
             }
@@ -163,7 +95,7 @@ namespace Ultima45Monogame.Spells
                     new SpellDialogOption(p.Name, () => { SelectSpell(caster, spell, p); return null; })
                 ).ToList();
 
-                AddCancelOption(playerOptions); // ← Add this line
+                AddCancelOption(playerOptions);
 
                 return new SpellDialogNode("==Cast Spell==", "Choose a player:", playerOptions);
             }
@@ -174,7 +106,7 @@ namespace Ultima45Monogame.Spells
             new SpellDialogOption(" ", () => { SelectSpell(caster, spell, null); return null; })
         };
 
-                AddCancelOption(finalOptions); // ← Add this line
+                AddCancelOption(finalOptions);
 
                 return new SpellDialogNode("==Cast Spell==", $"Cast {spell.Name}?", finalOptions);
             }
