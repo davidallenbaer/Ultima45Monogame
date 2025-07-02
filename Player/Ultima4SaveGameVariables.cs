@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 using static Ultima45Monogame.Game1;
 using static Ultima45Monogame.RPGEnums;
 
@@ -88,6 +90,9 @@ namespace Ultima45Monogame
         public DateTime? TimeOfLastNightshadeFind { get; set; } = null;
         public DateTime? TimeOfLastSuccessfulShrineMeditation { get; set; } = null;
         public DateTime? TimeOfLastVirtueRelatedConversation { get; set; } = null;
+
+        public List<FantasyWeapon> WeaponInventory { get; set; } = new List<FantasyWeapon>();
+        public List<FantasyArmor> ArmorInventory { get; set; } = new List<FantasyArmor>();
 
         public bool HasReagents()
         {

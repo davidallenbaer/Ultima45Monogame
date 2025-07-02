@@ -3,23 +3,16 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using MonoGame.Extended.ECS;
-using MonoGame.Extended.Screens;
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 using Ultima45Monogame.Combat;
 using Ultima45Monogame.Dialogs;
 using Ultima45Monogame.Player;
 using Ultima45Monogame.Spells;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Ultima45Monogame.FantasySpell;
 using static Ultima45Monogame.RPGEnums;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -60,6 +53,7 @@ public class Game1 : Game
         WearArmorDialog,
         UseItemDialog,
         CastSpellDialog,
+        StatsDialog,
     }
 
     private string? _bottomMessage = null;
@@ -74,6 +68,7 @@ public class Game1 : Game
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
+    private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
     private WearArmorDialogEntityManager weararmordialogEntityManager = new WearArmorDialogEntityManager();
     private SpellDialogEntityManager castspelldialogEntityManager = new SpellDialogEntityManager();
@@ -2716,11 +2711,17 @@ public class Game1 : Game
             case GameStates.WearArmorDialog:
                 DrawWearArmorDialog();
                 break;
+
             case GameStates.UseItemDialog:
                 DrawUseItemDialog();
                 break;
+
             case GameStates.CastSpellDialog:
                 DrawCastSpellDialog();
+                break;
+
+            case GameStates.StatsDialog:
+                DrawStatsDialog();
                 break;
         }
 
@@ -2876,6 +2877,10 @@ public class Game1 : Game
 
             case GameStates.CastSpellDialog:
                 UpdateCastSpellDialog(gameTime);
+                break;
+
+            case GameStates.StatsDialog:
+                UpdateStatsDialog(gameTime);
                 break;
         }
 
@@ -3165,6 +3170,18 @@ public class Game1 : Game
                 if (_currentState == GameStates.ReadyWeaponDialog)
                 {
                     ShowBottomMessage(null); // Clear the "Ready Weapon" message
+                }
+
+                inputTimer = 0;
+            }
+
+            if (newKeyboardState.IsKeyDown(Keys.Z) && oldKeyboardState.IsKeyUp(Keys.Z))
+            {
+                HandleStatsDialog();
+
+                if (_currentState == GameStates.StatsDialog)
+                {
+                    ShowBottomMessage(null); // Clear the "Stats" message
                 }
 
                 inputTimer = 0;
@@ -4178,6 +4195,25 @@ public class Game1 : Game
             _readyweapondialogEnding = false;
             _readyweaponDialogEndTimer = 0;
             _currentState = GameStates.ReadyWeaponDialog;
+        }
+    }
+
+    private void HandleStatsDialog()
+    {
+        // Build the dialog tree for showing stats
+        statsdialogEntityManager.BuildStatsDialogJSON(players, gameSaveVariables.WeaponInventory, gameSaveVariables.ArmorInventory);
+
+        // Get the dialog tree from the manager
+        _statsDialogTree = statsdialogEntityManager.GetStatsDialogTree();
+
+        if (_statsDialogTree != null)
+        {
+            // Set the current dialog node to the start node
+            _statsDialogNode = _statsDialogTree.GetNodeById(_statsDialogTree.StartNodeId);
+            _selectedstatsDialogOptionIndex = 0;
+            _statsDialogEnding = false;
+            _statsDialogEndTimer = 0;
+            _currentState = GameStates.StatsDialog;
         }
     }
 
@@ -5676,6 +5712,128 @@ public class Game1 : Game
 
     #endregion
 
+    #region Show Stats Dialog Processing
+
+    //Dynamically build the ShowStats dialog tree
+    //based on the FantasyPlayer's that are enabled
+
+    private DialogTree? _statsDialogTree;
+    private DialogNode? _statsDialogNode;
+    private int _selectedstatsDialogOptionIndex = 0;
+    private double _statsDialogEndTimer = 0;
+    private bool _statsDialogEnding = false;
+
+    private void UpdateStatsDialog(GameTime gameTime)
+    {
+        // Update the input timer
+        inputTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_statsDialogTree == null || _statsDialogNode == null)
+            return;
+
+        // If dialog is ending, wait 2 seconds before returning to Playing state
+        if (_statsDialogEnding)
+        {
+            _statsDialogEndTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_statsDialogEndTimer >= 2.0)
+            {
+                _statsDialogTree = null;
+                _statsDialogNode = null;
+                _selectedstatsDialogOptionIndex = 0;
+                _statsDialogEnding = false;
+                _statsDialogEndTimer = 0;
+                _currentState = GameStates.Playing;
+            }
+            return;
+        }
+
+        // Only process input if the required time has passed
+        if (inputTimer >= inputDelay)
+        {
+            newKeyboardState = Keyboard.GetState();
+
+            // Navigate options
+            if (_statsDialogNode.Options.Count > 0)
+            {
+                if (oldKeyboardState.IsKeyUp(Keys.Up) && newKeyboardState.IsKeyDown(Keys.Up))
+                {
+                    _selectedstatsDialogOptionIndex = (_selectedstatsDialogOptionIndex - 1 + _statsDialogNode.Options.Count) % _statsDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                else if (oldKeyboardState.IsKeyUp(Keys.Down) && newKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    _selectedstatsDialogOptionIndex = (_selectedstatsDialogOptionIndex + 1) % _statsDialogNode.Options.Count;
+                    inputTimer = 0;
+                }
+                // Select option
+                else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
+                {
+                    var selectedOption = _statsDialogNode.Options[_selectedstatsDialogOptionIndex];
+                    var nextNode = _statsDialogTree.GetNodeById(selectedOption.NextNodeId);
+                    if (nextNode != null)
+                    {
+                        _statsDialogNode = nextNode;
+
+                        string dialogtext = _statsDialogNode.Text;
+
+                        inputTimer = 0;
+                    }
+                }
+            }
+            else
+            {
+                // No options left, start dialog ending timer
+                _statsDialogEnding = true;
+                _statsDialogEndTimer = 0;
+
+                inputTimer = 0;
+            }
+
+            oldKeyboardState = newKeyboardState;
+        }
+    }
+
+    private void DrawStatsDialog()
+    {
+        if (_statsDialogTree == null || _statsDialogNode == null)
+            return;
+
+        var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
+        int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+        int screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        // Draw dialog background
+        int dialogWidth = screenWidth - 80;
+        int dialogHeight = 180;
+        int dialogX = 40;
+        int dialogY = 40;
+
+        Rectangle dialogRect = new Rectangle(dialogX, dialogY, dialogWidth, dialogHeight);
+
+        Texture2D rectTexture = Get1x1WhiteTexture();
+        _spriteBatch.Draw(rectTexture, dialogRect, Microsoft.Xna.Framework.Color.Black * 0.85f);
+
+        // Draw speaker and text
+        string speaker = _statsDialogNode.Speaker;
+        string text = _statsDialogNode.Text;
+        Vector2 speakerSize = font.MeasureString(speaker);
+        Vector2 textSize = font.MeasureString(text);
+
+        _spriteBatch.DrawString(font, speaker, new Vector2(dialogX + 20, dialogY + 16), Microsoft.Xna.Framework.Color.Blue);
+        _spriteBatch.DrawString(font, text, new Vector2(dialogX + 20, dialogY + 16 + speakerSize.Y + 8), Microsoft.Xna.Framework.Color.Green);
+
+        // Draw options
+        int optionY = dialogY + 16 + (int)speakerSize.Y + 8 + (int)textSize.Y + 24;
+        for (int i = 0; i < _statsDialogNode.Options.Count; i++)
+        {
+            var option = _statsDialogNode.Options[i];
+            Microsoft.Xna.Framework.Color color = (i == _selectedstatsDialogOptionIndex) ? Microsoft.Xna.Framework.Color.Yellow : Microsoft.Xna.Framework.Color.White;
+            _spriteBatch.DrawString(font, option.Text, new Vector2(dialogX + 40, optionY + i * 32), color);
+        }
+    }
+
+    #endregion
+
     #region Wear Armor Dialog Processing
 
     //Dynamically build the WearArmor dialog tree
@@ -6101,13 +6259,33 @@ public class Game1 : Game
 
     private void CastSpell(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
     {
+        //TODO
+        string casterName = selectedCaster.Name;
+        string spellName = selectedSpell.Name;
+        if (selectedSpell.TargetChoice == SpellTargetChoice.ChoosePlayer)
+        {
+            FantasyPlayer target = selectedTarget as FantasyPlayer;
+        }
+        else if (selectedSpell.TargetChoice == SpellTargetChoice.ChooseDirection)
+        {
+            string direction = selectedTarget as string;
+        }
+        else if (selectedSpell.TargetChoice == SpellTargetChoice.ChooseMoonGate)
+        {
 
+        }
+        else if (selectedSpell.TargetChoice == SpellTargetChoice.None)
+        {
+
+        }
     }
 
     private void DrawCastSpellDialog()
     {
         if (_castspellDialogTree == null || _castspellDialogNode == null)
+        {
             return;
+        }
 
         var font = Content.Load<SpriteFont>("Fonts/CabinCondensed-Bold");
         int screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
