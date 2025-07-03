@@ -480,7 +480,16 @@ public class Game1 : Game
         fantasyPlayerManager = new FantasyPlayerManager(FantasyPlayerFactory.GetAllFantasyPlayers());
         players = FantasyPlayerFactory.GetAllFantasyPlayers();
 
+        LoadDebugItems();
+
         base.Initialize();
+    }
+
+    private void LoadDebugItems()
+    {
+        //Add Extra Weapons and Armor to Inventory so they show up in the stats dialog
+        gameSaveVariables.WeaponInventory.Add(FantasyWeaponFactory.GetFantasyWeapon(2));
+        gameSaveVariables.ArmorInventory.Add(FantasyArmorFactory.GetFantasyArmor(2));
     }
 
     #region Load Content
@@ -4201,7 +4210,10 @@ public class Game1 : Game
     private void HandleStatsDialog()
     {
         // Build the dialog tree for showing stats
-        statsdialogEntityManager.BuildStatsDialogJSON(players, gameSaveVariables.WeaponInventory, gameSaveVariables.ArmorInventory);
+        statsdialogEntityManager.BuildStatsDialogJSON(players, 
+            gameSaveVariables.WeaponInventory, 
+            gameSaveVariables.ArmorInventory,
+            gameSaveVariables);
 
         // Get the dialog tree from the manager
         _statsDialogTree = statsdialogEntityManager.GetStatsDialogTree();
