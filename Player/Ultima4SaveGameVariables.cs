@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using static Ultima45Monogame.Game1;
@@ -47,6 +48,7 @@ namespace Ultima45Monogame
         public int KeyPartC { get; set; } = 0;
         public int KeyPartL { get; set; } = 0;
         public int KeyPartT { get; set; } = 0;
+        public int KeyOfInfinity { get; set; } = 0;
         public int Horn { get; set; } = 1;
         public int Wheel { get; set; } = 1;
         public bool SkullDestroyed { get; set; } = false;

@@ -488,8 +488,8 @@ public class Game1 : Game
     private void LoadDebugItems()
     {
         //Add Extra Weapons and Armor to Inventory so they show up in the stats dialog
-        gameSaveVariables.WeaponInventory.Add(FantasyWeaponFactory.GetFantasyWeapon(2));
-        gameSaveVariables.ArmorInventory.Add(FantasyArmorFactory.GetFantasyArmor(2));
+        //gameSaveVariables.WeaponInventory.Add(FantasyWeaponFactory.GetFantasyWeapon(2));
+        //gameSaveVariables.ArmorInventory.Add(FantasyArmorFactory.GetFantasyArmor(2));
     }
 
     #region Load Content

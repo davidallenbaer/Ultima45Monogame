@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Ultima45Monogame.Player;
 
@@ -11,6 +12,16 @@ namespace Ultima45Monogame.Dialogs
 
         public void BuildStatsDialogJSON(List<FantasyPlayer> players, List<FantasyWeapon> weaponinventory, List<FantasyArmor> armorinventory, Ultima4SaveGameVariables gameSaveVariables)
         {
+            if (weaponinventory.Count == 0)
+            {
+                weaponinventory.Add(FantasyWeaponFactory.GetFantasyWeapon(0));
+            }
+
+            if (armorinventory.Count == 0)
+            {
+                armorinventory.Add(FantasyArmorFactory.GetFantasyArmor(0));
+            }
+
             var enabledPlayers = players.FindAll(p => p.IsEnabled);
             var dialogTree = new DialogTree
             {
@@ -179,12 +190,23 @@ namespace Ultima45Monogame.Dialogs
 
         private string GetArmorInventoryStatsText(List<FantasyArmor> armorinventory, FantasyArmor armor)
         {
+            if (armor.Name == "None")
+            {
+                return "None\n";
+            }
+
             int count = armorinventory.Count(a => a.Name == armor.Name);
+
             return $"{count} {armor.Name}\n";
         }
 
         private string GetWeaponInventoryStatsText(List<FantasyWeapon> weaponinventory, FantasyWeapon weapon)
         {
+            if (weapon.Name == "None")
+            {
+                return "None\n";
+            }
+
             int count = weaponinventory.Count(a => a.Name == weapon.Name);
             return $"{count} {weapon.Name}\n";
         }
@@ -253,6 +275,96 @@ namespace Ultima45Monogame.Dialogs
                 $"Weapon: {weaponText}\n" +
                 $"Armor: {armorText}\n" +
                 $"XP: {player.XP}\n";
+
+            return stats;
+        }
+
+        private string GetEquipmentText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string stats =
+                $"Torches: {gameSaveVariables.Torches}\n" +
+                $"Gems: {gameSaveVariables.Gems}\n" +
+                $"Keys: {gameSaveVariables.Keys}\n" +
+                $"Sextants: {gameSaveVariables.Sextants}\n" +
+                $"Food: {gameSaveVariables.Food}\n";
+
+            return stats;
+        }
+
+        private string GetItemsText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string stats =
+                $"Torches: {gameSaveVariables.Torches}\n" +
+                $"Gems: {gameSaveVariables.Gems}\n" +
+                $"Keys: {gameSaveVariables.Keys}\n" +
+                $"Sextants: {gameSaveVariables.Sextants}\n" +
+                $"Food: {gameSaveVariables.Food}\n";
+
+            return stats;
+        }
+
+        private string GetSpecialItemsText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string skullText = gameSaveVariables.SkullDestroyed
+                ? $"Skull: {gameSaveVariables.Skull} (Destroyed)\n"
+                : $"Skull: {gameSaveVariables.Skull}\n";
+
+            string stats =
+                $"Candle: {gameSaveVariables.Candle}\n" +
+                $"Book: {gameSaveVariables.Book}\n" +
+                $"Bell: {gameSaveVariables.Bell}\n" +
+                $"Horn: {gameSaveVariables.Horn}\n" +
+                $"Wheel: {gameSaveVariables.Wheel}\n" +
+                skullText +
+                $"Key of Courage: {gameSaveVariables.KeyPartC}\n" +
+                $"Key of Love: {gameSaveVariables.KeyPartL}\n" +
+                $"Key of Truth: {gameSaveVariables.KeyPartT}\n" +
+                $"Key of Infinity: {gameSaveVariables.KeyOfInfinity}\n";
+
+            return stats;
+        }
+
+        private string GetRunesText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string stats =
+                $"Rune of Honesty: {gameSaveVariables.RuneHonesty}\n" +
+                $"Rune of Compassion: {gameSaveVariables.RuneCompassion}\n" +
+                $"Rune of Valor: {gameSaveVariables.RuneValor}\n" +
+                $"Rune of Justice: {gameSaveVariables.RuneJustice}\n" +
+                $"Rune of Sacrifice: {gameSaveVariables.RuneSacrifice}\n" +
+                $"Rune of Honor: {gameSaveVariables.RuneHonor}\n" +
+                $"Rune of Spirituality: {gameSaveVariables.RuneSpirituality}\n" +
+                $"Rune of Humility: {gameSaveVariables.RuneHumility}\n";
+
+            return stats;
+        }
+
+        private string GetStonesText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string stats =
+                $"Blue Stone (Honesty): {gameSaveVariables.StoneBlue}\n" +
+                $"Yellow Stone (Compassion): {gameSaveVariables.StoneYellow}\n" +
+                $"Red Stone (Valor): {gameSaveVariables.StoneRed}\n" +
+                $"Green Stone (Justice): {gameSaveVariables.StoneGreen}\n" +
+                $"Orange Stone (Sacrifice): {gameSaveVariables.StoneOrange}\n" +
+                $"Purple Stone (Honor): {gameSaveVariables.StonePurple}\n" +
+                $"White Stone (Spirituality): {gameSaveVariables.StoneWhite}\n" +
+                $"Black Stone (Humility): {gameSaveVariables.StoneBlack}\n";
+
+            return stats;
+        }
+
+        private string GetReagentsText(Ultima4SaveGameVariables gameSaveVariables)
+        {
+            string stats =
+                $"Black Pearl: {gameSaveVariables.SpellReagent_BlackPearl}\n" +
+                $"Blood Moss: {gameSaveVariables.SpellReagent_BloodMoss}\n" +
+                $"Garlic: {gameSaveVariables.SpellReagent_Garlic}\n" +
+                $"Ginseng: {gameSaveVariables.SpellReagent_Ginseng}\n" +
+                $"Mandrake Root: {gameSaveVariables.SpellReagent_MandrakeRoot}\n" +
+                $"Nightshade: {gameSaveVariables.SpellReagent_Nightshade}\n" +
+                $"Spider Silk: {gameSaveVariables.SpellReagent_SpiderSilk}\n" +
+                $"Sulfurous Ash: {gameSaveVariables.SpellReagent_SulfurousAsh}\n";
 
             return stats;
         }

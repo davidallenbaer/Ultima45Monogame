@@ -66,12 +66,11 @@ Version 4.0.0 - COMPLETE
 	Proper default weapon and armor for players
 	Pressing C to Cast Spell (Non-Combat)
 	Add Cancel option to the spell dialogs.
+	Pressing Z to show player stats, weapons inventory, armor inventory
 
 --TODO--
 	Cast Spell Actions (Non-Combat) for each spell.
-	
-	Z - Stats (Pres Z to show player stats, right and left to next/prev player stats, inventory))	
-	
+		
 	Populate Britain with NPCs Town Entity's.
 
 	Populate towns with shops.
