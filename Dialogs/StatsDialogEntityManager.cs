@@ -69,10 +69,9 @@ namespace Ultima45Monogame.Dialogs
 
                 if (i == 0)
                 {
-                    // Wrap to the last available node in reverse order: armor > weapon > player
                     string previousId;
                     if (armorinventory.Count > 0)
-                        previousId = $"armor_{armorinventory.Count - 1}";
+                        previousId = $"equipment"; //Last Page
                     else if (weaponinventory.Count > 0)
                         previousId = $"weapon_{weaponinventory.Count - 1}";
                     else if (enabledPlayers.Count > 1)
@@ -168,6 +167,46 @@ namespace Ultima45Monogame.Dialogs
                         }
                     }
                 });
+            }
+
+            // === EQUIPMENT NODE ===
+            if (armorinventory.Count > 0)
+            {
+                dialogTree.Nodes.Add(new DialogNode
+                {
+                    Id = "equipment",
+                    Speaker = "==Equipment==",
+                    Text = GetEquipmentText(gameSaveVariables),
+                    Options = new List<DialogOption>
+                    {
+                        new DialogOption
+                        {
+                            Text = "NEXT",
+                            NextNodeId = enabledPlayers.Count > 0 ? "player_0" : "end"
+                        },
+                        new DialogOption
+                        {
+                            Text = "PREVIOUS",
+                            NextNodeId = $"armor_{armorinventory.Count - 1}"
+                        },
+                        new DialogOption
+                        {
+                            Text = "EXIT",
+                            NextNodeId = "end"
+                        }
+                    }
+                });
+
+                // Modify the last armor node to point to the equipment node instead of looping to player_0
+                var lastArmorNode = dialogTree.GetNodeById($"armor_{armorinventory.Count - 1}");
+                if (lastArmorNode != null)
+                {
+                    var nextOption = lastArmorNode.Options.Find(o => o.Text == "NEXT");
+                    if (nextOption != null)
+                    {
+                        nextOption.NextNodeId = "equipment";
+                    }
+                }
             }
 
             // === END NODE ===
@@ -280,18 +319,6 @@ namespace Ultima45Monogame.Dialogs
         }
 
         private string GetEquipmentText(Ultima4SaveGameVariables gameSaveVariables)
-        {
-            string stats =
-                $"Torches: {gameSaveVariables.Torches}\n" +
-                $"Gems: {gameSaveVariables.Gems}\n" +
-                $"Keys: {gameSaveVariables.Keys}\n" +
-                $"Sextants: {gameSaveVariables.Sextants}\n" +
-                $"Food: {gameSaveVariables.Food}\n";
-
-            return stats;
-        }
-
-        private string GetItemsText(Ultima4SaveGameVariables gameSaveVariables)
         {
             string stats =
                 $"Torches: {gameSaveVariables.Torches}\n" +
