@@ -368,7 +368,8 @@ namespace Ultima45Monogame.Dialogs
                 $"Gems: {gameSaveVariables.Gems}\n" +
                 $"Keys: {gameSaveVariables.Keys}\n" +
                 $"Sextants: {gameSaveVariables.Sextants}\n" +
-                $"Food: {gameSaveVariables.Food}\n";
+                $"Food: {gameSaveVariables.Food}\n" +
+                $"Gold: {gameSaveVariables.GP}\n";
 
             return stats;
         }
