@@ -23,6 +23,7 @@ namespace Ultima45Monogame.Dialogs
             }
 
             var enabledPlayers = players.FindAll(p => p.IsEnabled);
+
             var dialogTree = new DialogTree
             {
                 Id = "StatsDialog",
@@ -42,57 +43,17 @@ namespace Ultima45Monogame.Dialogs
                     Options = new List<DialogOption>()
                 };
 
-                if (i < enabledPlayers.Count - 1)
+                node.Options.Add(new DialogOption
                 {
-                    node.Options.Add(new DialogOption
-                    {
-                        Text = "NEXT",
-                        NextNodeId = $"player_{i + 1}"
-                    });
-                }
-                else
-                {
-                    string nextId;
-                    if (weaponinventory.Count > 0)
-                        nextId = "weapon_0";
-                    else if (armorinventory.Count > 0)
-                        nextId = "armor_0";
-                    else
-                        nextId = "player_0"; // loop back if nothing else
+                    Text = "NEXT",
+                    NextNodeId = i < enabledPlayers.Count - 1 ? $"player_{i + 1}" : "weapon_0"
+                });
 
-                    node.Options.Add(new DialogOption
-                    {
-                        Text = "NEXT",
-                        NextNodeId = nextId
-                    });
-                }
-
-                if (i == 0)
+                node.Options.Add(new DialogOption
                 {
-                    string previousId;
-                    if (armorinventory.Count > 0)
-                        previousId = $"equipment"; //Last Page
-                    else if (weaponinventory.Count > 0)
-                        previousId = $"weapon_{weaponinventory.Count - 1}";
-                    else if (enabledPlayers.Count > 1)
-                        previousId = $"player_{enabledPlayers.Count - 1}";
-                    else
-                        previousId = "end";
-
-                    node.Options.Add(new DialogOption
-                    {
-                        Text = "PREVIOUS",
-                        NextNodeId = previousId
-                    });
-                }
-                else
-                {
-                    node.Options.Add(new DialogOption
-                    {
-                        Text = "PREVIOUS",
-                        NextNodeId = $"player_{i - 1}"
-                    });
-                }
+                    Text = "PREVIOUS",
+                    NextNodeId = i == 0 ? "reagents" : $"player_{i - 1}"
+                });
 
                 node.Options.Add(new DialogOption
                 {
@@ -112,25 +73,23 @@ namespace Ultima45Monogame.Dialogs
                     Speaker = "==Weapon Inventory==",
                     Text = GetWeaponInventoryStatsText(weaponinventory, weaponinventory[i]),
                     Options = new List<DialogOption>
-            {
-                new DialogOption
-                {
-                    Text = "NEXT",
-                    NextNodeId = i < weaponinventory.Count - 1
-                        ? $"weapon_{i + 1}"
-                        : (armorinventory.Count > 0 ? "armor_0" : "end") // link to armor_0
-                },
-                new DialogOption
-                {
-                    Text = "PREVIOUS",
-                    NextNodeId = i > 0 ? $"weapon_{i - 1}" : (enabledPlayers.Count > 0 ? $"player_{enabledPlayers.Count - 1}" : "end")
-                },
-                new DialogOption
-                {
-                    Text = "EXIT",
-                    NextNodeId = "end"
-                }
-            }
+                    {
+                        new DialogOption
+                        {
+                            Text = "NEXT",
+                            NextNodeId = i < weaponinventory.Count - 1 ? $"weapon_{i + 1}" : "armor_0"
+                        },
+                        new DialogOption
+                        {
+                            Text = "PREVIOUS",
+                            NextNodeId = i > 0 ? $"weapon_{i - 1}" : $"player_{enabledPlayers.Count - 1}"
+                        },
+                        new DialogOption
+                        {
+                            Text = "EXIT",
+                            NextNodeId = "end"
+                        }
+                    }
                 });
             }
 
@@ -147,18 +106,12 @@ namespace Ultima45Monogame.Dialogs
                         new DialogOption
                         {
                             Text = "NEXT",
-                            NextNodeId = i < armorinventory.Count - 1 ? $"armor_{i + 1}" : "player_0" // Loop back to first player
+                            NextNodeId = i < armorinventory.Count - 1 ? $"armor_{i + 1}" : "equipment"
                         },
                         new DialogOption
                         {
                             Text = "PREVIOUS",
-                            NextNodeId = i > 0
-                                ? $"armor_{i - 1}"
-                                : (weaponinventory.Count > 0
-                                    ? $"weapon_{weaponinventory.Count - 1}"
-                                    : (players.Count > 0
-                                        ? $"player_{players.FindAll(p => p.IsEnabled).Count - 1}"
-                                        : "end"))
+                            NextNodeId = i > 0 ? $"armor_{i - 1}" : $"weapon_{weaponinventory.Count - 1}"
                         },
                         new DialogOption
                         {
@@ -170,44 +123,134 @@ namespace Ultima45Monogame.Dialogs
             }
 
             // === EQUIPMENT NODE ===
-            if (armorinventory.Count > 0)
+            dialogTree.Nodes.Add(new DialogNode
             {
-                dialogTree.Nodes.Add(new DialogNode
+                Id = "equipment",
+                Speaker = "==Equipment==",
+                Text = GetEquipmentText(gameSaveVariables),
+                Options = new List<DialogOption>
                 {
-                    Id = "equipment",
-                    Speaker = "==Equipment==",
-                    Text = GetEquipmentText(gameSaveVariables),
-                    Options = new List<DialogOption>
+                    new DialogOption
                     {
-                        new DialogOption
-                        {
-                            Text = "NEXT",
-                            NextNodeId = enabledPlayers.Count > 0 ? "player_0" : "end"
-                        },
-                        new DialogOption
-                        {
-                            Text = "PREVIOUS",
-                            NextNodeId = $"armor_{armorinventory.Count - 1}"
-                        },
-                        new DialogOption
-                        {
-                            Text = "EXIT",
-                            NextNodeId = "end"
-                        }
-                    }
-                });
-
-                // Modify the last armor node to point to the equipment node instead of looping to player_0
-                var lastArmorNode = dialogTree.GetNodeById($"armor_{armorinventory.Count - 1}");
-                if (lastArmorNode != null)
-                {
-                    var nextOption = lastArmorNode.Options.Find(o => o.Text == "NEXT");
-                    if (nextOption != null)
+                        Text = "NEXT",
+                        NextNodeId = "specialitems"
+                    },
+                    new DialogOption
                     {
-                        nextOption.NextNodeId = "equipment";
+                        Text = "PREVIOUS",
+                        NextNodeId = $"armor_{armorinventory.Count - 1}"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
                     }
                 }
-            }
+            });
+
+            // === SPECIAL ITEMS NODE ===
+            dialogTree.Nodes.Add(new DialogNode
+            {
+                Id = "specialitems",
+                Speaker = "==Special Items==",
+                Text = GetSpecialItemsText(gameSaveVariables),
+                Options = new List<DialogOption>
+                {
+                    new DialogOption
+                    {
+                        Text = "NEXT",
+                        NextNodeId = "runes"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = $"equipment"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
+                    }
+                }
+            });
+
+            // === RUNES NODE ===
+            dialogTree.Nodes.Add(new DialogNode
+            {
+                Id = "runes",
+                Speaker = "==Runes==",
+                Text = GetRunesText(gameSaveVariables),
+                Options = new List<DialogOption>
+                {
+                    new DialogOption
+                    {
+                        Text = "NEXT",
+                        NextNodeId = "stones"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = $"specialitems"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
+                    }
+                }
+            });
+
+            // === STONES NODE ===
+            dialogTree.Nodes.Add(new DialogNode
+            {
+                Id = "stones",
+                Speaker = "==Stones==",
+                Text = GetStonesText(gameSaveVariables),
+                Options = new List<DialogOption>
+                {
+                    new DialogOption
+                    {
+                        Text = "NEXT",
+                        NextNodeId = "reagents"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = $"runes"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
+                    }
+                }
+            });
+
+            // === REAGENTS NODE ===
+            dialogTree.Nodes.Add(new DialogNode
+            {
+                Id = "reagents",
+                Speaker = "==Reagents==",
+                Text = GetReagentsText(gameSaveVariables),
+                Options = new List<DialogOption>
+                {
+                    new DialogOption
+                    {
+                        Text = "NEXT",
+                        NextNodeId = enabledPlayers.Count > 0 ? "player_0" : "end"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = $"stones"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
+                    }
+                }
+            });
 
             // === END NODE ===
             dialogTree.Nodes.Add(new DialogNode
