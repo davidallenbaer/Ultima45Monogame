@@ -20,7 +20,7 @@ namespace Ultima45Monogame
                 components: ["Ginseng", "Garlic"],
                 duration: "Instantaneous",
                 description: "Wakes a sleeping party member.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChoosePlayer
             ));
@@ -35,7 +35,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Blood Moss"],
                 duration: "Instantaneous",
                 description: "Teleports the party a short distance on the map.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -50,7 +50,7 @@ namespace Ultima45Monogame
                 components: ["Ginseng", "Garlic"],
                 duration: "Instantaneous",
                 description: "Cures poison for one character.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChoosePlayer
             ));
@@ -65,7 +65,7 @@ namespace Ultima45Monogame
                 components: ["Garlic", "Sulfurous Ash"],
                 duration: "Instantaneous",
                 description: "Dispels enemy summoned creatures, dispel field.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -80,7 +80,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Spider Silk"],
                 duration: "Instantaneous",
                 description: "Creates an energy field barrier.",
-                cost: 0,
+                cost: 8,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -95,7 +95,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Black Pearl"],
                 duration: "Instantaneous",
                 description: "Attacks one enemy with fire.",
-                cost: 0,
+                cost: 6,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -110,7 +110,7 @@ namespace Ultima45Monogame
                 components: ["Mandrake Root", "Black Pearl"],
                 duration: "Instantaneous",
                 description: "Teleports the party to a moongate location.",
-                cost: 0,
+                cost: 8,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseMoonGate
             ));
@@ -125,7 +125,7 @@ namespace Ultima45Monogame
                 components: ["Ginseng"],
                 duration: "Instantaneous",
                 description: "Restores some HP to one character.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChoosePlayer
             ));
@@ -140,7 +140,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Black Pearl"],
                 duration: "Instantaneous",
                 description: "Attacks one enemy with ice.",
-                cost: 0,
+                cost: 6,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -155,7 +155,7 @@ namespace Ultima45Monogame
                 components: ["Nightshade"],
                 duration: "Instantaneous",
                 description: "Confuses enemies.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -170,7 +170,7 @@ namespace Ultima45Monogame
                 components: ["Nightshade", "Mandrake Root"],
                 duration: "Instantaneous",
                 description: "Attempts to instantly kill an enemy.",
-                cost: 0,
+                cost: 10,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -185,7 +185,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash"],
                 duration: "Instantaneous",
                 description: "Stuns all enemies with a flash, and lights up dark areas.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -200,7 +200,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Black Pearl"],
                 duration: "Instantaneous",
                 description: "Stuns all enemies with a flash, and lights up dark areas.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -215,7 +215,7 @@ namespace Ultima45Monogame
                 components: ["Garlic", "Sulfurous Ash"],
                 duration: "Instantaneous",
                 description: "Cancels enemy spell effects",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -230,7 +230,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash"],
                 duration: "Instantaneous",
                 description: "Unlocks chests.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.ChooseDirection
             ));
@@ -245,7 +245,7 @@ namespace Ultima45Monogame
                 components: ["Garlic", "Spider Silk"],
                 duration: "Instantaneous",
                 description: "Increases partys defense temporarily.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -260,7 +260,7 @@ namespace Ultima45Monogame
                 components: ["Blood Moss", "Spider Silk"],
                 duration: "Instantaneous",
                 description: "Speeds up party in combat.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -275,7 +275,7 @@ namespace Ultima45Monogame
                 components: ["Ginseng", "Garlic", "Mandrake Root"],
                 duration: "Instantaneous",
                 description: "Revives a dead character.",
-                cost: 0,
+                cost: 12,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.ChoosePlayer
             ));
@@ -290,7 +290,7 @@ namespace Ultima45Monogame
                 components: ["Ginseng", "Spider Silk"],
                 duration: "Instantaneous",
                 description: "Attempts to put enemies to sleep.",
-                cost: 0,
+                cost: 4,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -305,7 +305,7 @@ namespace Ultima45Monogame
                 components: ["Sulfurous Ash", "Blood Moss", "Mandrake Root"],
                 duration: "Instantaneous",
                 description: "Damages all enemies with an earthquake.",
-                cost: 0,
+                cost: 12,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -320,7 +320,7 @@ namespace Ultima45Monogame
                 components: ["Garlic", "Sulfurous Ash"],
                 duration: "Instantaneous",
                 description: "Damages all undead creatures.",
-                cost: 0,
+                cost: 12,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -335,7 +335,7 @@ namespace Ultima45Monogame
                 components: ["Nightshade", "Blood Moss"],
                 duration: "Instantaneous",
                 description: "Displays a birds-eye view of the overworld.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -350,7 +350,7 @@ namespace Ultima45Monogame
                 components: ["Blood Moss"],
                 duration: "Instantaneous",
                 description: "Damages all enemies with Whirlwind.",
-                cost: 0,
+                cost: 8,
                 type: FantasySpell.SpellType.Combat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -365,7 +365,7 @@ namespace Ultima45Monogame
                 components: ["Mandrake Root", "Blood Moss"],
                 duration: "Instantaneous",
                 description: "Exits dungeons, shrines, or combat.",
-                cost: 0,
+                cost: 8,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -380,7 +380,7 @@ namespace Ultima45Monogame
                 components: ["Blood Moss", "Mandrake Root"],
                 duration: "Instantaneous",
                 description: "Elevates party one level in dungeon.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
@@ -395,7 +395,7 @@ namespace Ultima45Monogame
                 components: ["Nightshade", "Mandrake Root"],
                 duration: "Instantaneous",
                 description: "Lowers party one level in dungeon.",
-                cost: 0,
+                cost: 2,
                 type: FantasySpell.SpellType.NonCombat,
                 targetchoice: FantasySpell.SpellTargetChoice.None
             ));
