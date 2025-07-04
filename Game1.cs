@@ -2576,6 +2576,54 @@ public class Game1 : Game
         }
     }
 
+    private bool TeleportBlink(MoveDirection blinkDir, int overworldlocationY, int overworldlocationX)
+    {
+        bool bBlinkSuccess = false;
+
+        Random random = new Random();
+        int numTiles = random.Next(25, 50);
+
+        int blinkY = pcOverworldLocationY;
+        int blinkX = pcOverworldLocationX;
+
+        for (int i = 0; i < 10; i++)
+        {
+
+            if (blinkDir == MoveDirection.North)
+            {
+                blinkY = (pcOverworldLocationY - numTiles + overworldGridSize) % overworldGridSize;
+            }
+            else if (blinkDir == MoveDirection.South)
+            {
+                blinkY = (pcOverworldLocationY + numTiles) % overworldGridSize;
+            }
+            else if (blinkDir == MoveDirection.West)
+            {
+                blinkX = (pcOverworldLocationX - numTiles + overworldGridSize) % overworldGridSize;
+            }
+            else if (blinkDir == MoveDirection.East)
+            {
+                blinkX = (pcOverworldLocationX + numTiles) % overworldGridSize;
+            }
+
+            //Check if the blinked location is passable terrain
+            int mapValue = 0;
+            mapValue = GetCurrentMapValue(Maps.U4MapOverworld, blinkY, blinkX, true);
+            IsPassableTerrain(mapValue);
+
+            if (IsPassableTerrain(mapValue))
+            {
+                pcOverworldLocationY = blinkY;
+                pcOverworldLocationX = blinkX;
+                bBlinkSuccess = true;
+                break;
+            }
+        }
+
+        UpdateMainDisplayGridValues(currentMap);
+        return bBlinkSuccess;
+    }
+
     bool CanEnter(Maps map, int overworldlocationY, int overworldlocationX, int townMapLocationY, int townMapLocationX)
     {
         int mapValue = 0;
@@ -6205,8 +6253,6 @@ public class Game1 : Game
                                         castspelldialogEntityManager.SelectedSpell,
                                         castspelldialogEntityManager.SelectedTarget
                                         );
-
-                                    castspelldialogEntityManager.SelectedCaster.MP = castspelldialogEntityManager.SelectedCaster.MP - castspelldialogEntityManager.SelectedSpell.Cost;
                                 }
                                 else
                                 {
@@ -6295,16 +6341,48 @@ public class Game1 : Game
 
                 if (player != null)
                 {
-                    player.Status = PlayerStatus.Good;
+                    if (player.Status == PlayerStatus.Sleeping)
+                    {
+                        player.Status = PlayerStatus.Good;
+                        selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    }
                 }
             }
-            return;
         }
 
-        //if (selectedSpell.Name == "Blink")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Blink")
+        {
+            bool blinkSuccess = false;
+            if (currentMap == Maps.U4MapOverworld)
+            {
+                if (targetDirection.ToString() == "North")
+                {
+                    blinkSuccess = TeleportBlink(MoveDirection.North,pcOverworldLocationY,pcOverworldLocationX);
+                }
+                else if (targetDirection.ToString() == "South")
+                {
+                    blinkSuccess = TeleportBlink(MoveDirection.South, pcOverworldLocationY, pcOverworldLocationX);
+                }
+                else if (targetDirection.ToString() == "East")
+                {
+                    blinkSuccess = TeleportBlink(MoveDirection.East, pcOverworldLocationY, pcOverworldLocationX);
+                }
+                else if (targetDirection.ToString() == "West")
+                {
+                    blinkSuccess = TeleportBlink(MoveDirection.West, pcOverworldLocationY, pcOverworldLocationX);
+                }
+                else
+                {
+                    // No direction specified, just blink to the current location
+                    blinkSuccess = TeleportBlink(MoveDirection.None, pcOverworldLocationY, pcOverworldLocationX);
+                }
+
+                if (blinkSuccess)
+                {
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
+            }
+        }
 
         if (selectedSpell.Name == "Cure")
         {
@@ -6314,70 +6392,96 @@ public class Game1 : Game
 
                 if (player != null)
                 {
-                    player.Status = PlayerStatus.Good;
+                    if (player.Status == PlayerStatus.Poisoned)
+                    {
+                        player.Status = PlayerStatus.Good;
+                        selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    }
                 }
             }
+        }
 
+        if (selectedSpell.Name == "Dispel")
+        {
             return;
         }
 
-        //if (selectedSpell.Name == "Dispel")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Energy")
+        {
+            return;
+        }
 
-        //if (selectedSpell.Name == "Energy")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Gate Travel")
+        {
+            return;
+        }
 
-        //if (selectedSpell.Name == "Gate Travel")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Heal")
+        {
+            if (targetPlayer != null)
+            {
+                FantasyPlayer player = players.Where(p => p.Name == targetPlayer.Name).FirstOrDefault();
 
-        //if (selectedSpell.Name == "Heal")
-        //{
-        //    return;
-        //}
+                if (player != null)
+                {
+                    Random random = new Random();
+                    int recoverHP = random.Next(50, 76);
 
-        //if (selectedSpell.Name == "Light")
-        //{
-        //    return;
-        //}
+                    if (player.HP < player.MaxHP)
+                    {
+                        if (player.HP + recoverHP > player.MaxHP)
+                        {
+                            player.HP = player.MaxHP;
+                        }
+                        else
+                        {
+                            player.HP = player.HP + recoverHP;
+                        }
 
-        //if (selectedSpell.Name == "Open")
-        //{
-        //    return;
-        //}
+                        selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    }
+                }
+            }
+        }
 
-        //if (selectedSpell.Name == "Resurrection")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Light")
+        {
+            return;
+        }
+
+        if (selectedSpell.Name == "Open")
+        {
+            return;
+        }
+
+        if (selectedSpell.Name == "Resurrection")
+        {
+            return;
+        }
 
         if (selectedSpell.Name == "View")
         {
             peerAtGemMap = null;
             _currentState = GameStates.PeerAtGem;
-            inputTimer = 0; // Reset the timer
+            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+        }
+
+        if (selectedSpell.Name == "Exit")
+        {
             return;
         }
 
-        //if (selectedSpell.Name == "Exit")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Up Level")
+        {
+            return;
+        }
 
-        //if (selectedSpell.Name == "Up Level")
-        //{
-        //    return;
-        //}
+        if (selectedSpell.Name == "Down Level")
+        {
+            return;
+        }
 
-        //if (selectedSpell.Name == "Down Level")
-        //{
-        //    return;
-        //}
+        inputTimer = 0; // Reset the timer
     }
 
     private void DrawCastSpellDialog()
