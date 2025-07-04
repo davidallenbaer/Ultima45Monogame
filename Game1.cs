@@ -6178,8 +6178,7 @@ public class Game1 : Game
                         string castSpellMsg = "";
 
                         if (castspelldialogEntityManager.SelectedCaster != null &&
-                            castspelldialogEntityManager.SelectedSpell != null &&
-                            castspelldialogEntityManager.SelectedTarget != null)
+                            castspelldialogEntityManager.SelectedSpell != null)
                         {
                             if (castspelldialogEntityManager.SelectedCaster.MP >= castspelldialogEntityManager.SelectedSpell.Cost)
                             {
@@ -6357,13 +6356,13 @@ public class Game1 : Game
         //    return;
         //}
 
-        //if (selectedSpell.Name == "View")
-        //{
-        //    peerAtGemMap = null;
-        //    _currentState = GameStates.PeerAtGem;
-        //    inputTimer = 0; // Reset the timer
-        //    return;
-        //}
+        if (selectedSpell.Name == "View")
+        {
+            peerAtGemMap = null;
+            _currentState = GameStates.PeerAtGem;
+            inputTimer = 0; // Reset the timer
+            return;
+        }
 
         //if (selectedSpell.Name == "Exit")
         //{

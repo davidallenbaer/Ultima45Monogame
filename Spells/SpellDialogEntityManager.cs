@@ -102,9 +102,9 @@ namespace Ultima45Monogame.Spells
             else
             {
                 var finalOptions = new List<SpellDialogOption>
-        {
-            new SpellDialogOption(" ", () => { SelectSpell(caster, spell, null); return null; })
-        };
+                {
+                    new SpellDialogOption($"Cast  {spell.Name}", () => { SelectSpell(caster, spell, null); return null; }),
+                };
 
                 AddCancelOption(finalOptions);
 
