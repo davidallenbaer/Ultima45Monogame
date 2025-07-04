@@ -83,6 +83,24 @@ namespace Ultima45Monogame
         public int SpellReagent_SpiderSilk { get; set; } = 10;
         public int SpellReagent_SulfurousAsh { get; set; } = 10;
 
+        public int HasDiscovered_Britain = 0;
+        public int HasDiscovered_BuccaneersDen = 0;
+        public int HasDiscovered_Cove = 0;
+        public int HasDiscovered_EmpathAbbey = 0;
+        public int HasDiscovered_Jhelom = 0;
+        public int HasDiscovered_LordBritishCastle1 = 0;
+        public int HasDiscovered_LordBritishCastle2 = 0;
+        public int HasDiscovered_Lycaeum = 0;
+        public int HasDiscovered_Magincia = 0;
+        public int HasDiscovered_Minoc = 0;
+        public int HasDiscovered_Moonglow = 0;
+        public int HasDiscovered_Paws = 0;
+        public int HasDiscovered_SerpentIsle = 0;
+        public int HasDiscovered_SkaraBrae = 0;
+        public int HasDiscovered_Trinsic = 0;
+        public int HasDiscovered_Vesper = 0;
+        public int HasDiscovered_Yew = 0;
+
         public int CurrentPhaseLeftMoon { get; set; } = 0;
         public int CurrentPhaseRightMoon { get; set; } = 0;
         public int HullIntegrityCurrentShip { get; set; } = 0;

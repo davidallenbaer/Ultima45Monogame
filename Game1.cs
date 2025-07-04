@@ -3832,6 +3832,7 @@ public class Game1 : Game
                     // Logic to enter a location (like a castle, town, etc.)
                     if (pcOverworldLocationY == 106 && pcOverworldLocationX == 82)
                     {
+                        if (gameSaveVariables.HasDiscovered_Britain == 0) gameSaveVariables.HasDiscovered_Britain = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapBritain;
                         pcTownMapLocationY = 15;
@@ -3842,6 +3843,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 86)
                     {
+                        if (gameSaveVariables.HasDiscovered_LordBritishCastle1 == 0) gameSaveVariables.HasDiscovered_LordBritishCastle1 = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapLordBritishCastle1;
                         pcTownMapLocationY = 31;
@@ -3852,6 +3854,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 145 && pcOverworldLocationX == 98)
                     {
+                        if (gameSaveVariables.HasDiscovered_Paws == 0) gameSaveVariables.HasDiscovered_Paws = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapPaws;
                         pcTownMapLocationY = 15;
@@ -3862,6 +3865,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 184 && pcOverworldLocationX == 106)
                     {
+                        if (gameSaveVariables.HasDiscovered_Trinsic == 0) gameSaveVariables.HasDiscovered_Trinsic = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapTrinsic;
                         pcTownMapLocationY = 15;
@@ -3872,6 +3876,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 90 && pcOverworldLocationX == 136)
                     {
+                        if (gameSaveVariables.HasDiscovered_Cove == 0) gameSaveVariables.HasDiscovered_Cove = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapCove;
                         pcTownMapLocationY = 15;
@@ -3882,6 +3887,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 50 && pcOverworldLocationX == 28)
                     {
+                        if (gameSaveVariables.HasDiscovered_EmpathAbbey == 0) gameSaveVariables.HasDiscovered_EmpathAbbey = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapEmpathAbbey;
                         pcTownMapLocationY = 31;
@@ -3892,6 +3898,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 222 && pcOverworldLocationX == 36)
                     {
+                        if (gameSaveVariables.HasDiscovered_Jhelom == 0) gameSaveVariables.HasDiscovered_Jhelom = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapJhelom;
                         pcTownMapLocationY = 15;
@@ -3902,6 +3909,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 107 && pcOverworldLocationX == 218)
                     {
+                        if (gameSaveVariables.HasDiscovered_Lycaeum == 0) gameSaveVariables.HasDiscovered_Lycaeum = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapLycaeum;
                         pcTownMapLocationY = 31;
@@ -3912,6 +3920,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 43 && pcOverworldLocationX == 58)
                     {
+                        if (gameSaveVariables.HasDiscovered_Yew == 0) gameSaveVariables.HasDiscovered_Yew = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapYew;
                         pcTownMapLocationY = 15;
@@ -3922,6 +3931,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 59 && pcOverworldLocationX == 201)
                     {
+                        if (gameSaveVariables.HasDiscovered_Vesper == 0) gameSaveVariables.HasDiscovered_Vesper = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapVesper;
                         pcTownMapLocationY = 15;
@@ -3932,6 +3942,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 20 && pcOverworldLocationX == 159)
                     {
+                        if (gameSaveVariables.HasDiscovered_Minoc == 0) gameSaveVariables.HasDiscovered_Minoc = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMinoc;
                         pcTownMapLocationY = 15;
@@ -3942,6 +3953,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 135 && pcOverworldLocationX == 232)
                     {
+                        if (gameSaveVariables.HasDiscovered_Moonglow == 0) gameSaveVariables.HasDiscovered_Moonglow = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMoonglow;
                         pcTownMapLocationY = 15;
@@ -3952,6 +3964,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 169 && pcOverworldLocationX == 187)
                     {
+                        if (gameSaveVariables.HasDiscovered_Magincia == 0) gameSaveVariables.HasDiscovered_Magincia = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapMagincia;
                         pcTownMapLocationY = 15;
@@ -3962,6 +3975,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 158 && pcOverworldLocationX == 136)
                     {
+                        if (gameSaveVariables.HasDiscovered_BuccaneersDen == 0) gameSaveVariables.HasDiscovered_BuccaneersDen = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapBuccaneersDen;
                         pcTownMapLocationY = 15;
@@ -3972,6 +3986,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 241 && pcOverworldLocationX == 146)
                     {
+                        if (gameSaveVariables.HasDiscovered_SerpentIsle == 0) gameSaveVariables.HasDiscovered_SerpentIsle = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapSerpentIsle;
                         pcTownMapLocationY = 31;
@@ -3982,6 +3997,7 @@ public class Game1 : Game
                     }
                     else if (pcOverworldLocationY == 128 && pcOverworldLocationX == 22)
                     {
+                        if (gameSaveVariables.HasDiscovered_SkaraBrae == 0) gameSaveVariables.HasDiscovered_SkaraBrae = 1;
                         iNESCurrentAttackTracker = 0;
                         currentMap = Maps.U4MapSkaraBrae;
                         pcTownMapLocationY = 15;
@@ -6456,7 +6472,20 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Resurrection")
         {
-            return;
+            if (targetPlayer != null)
+            {
+                FantasyPlayer player = players.Where(p => p.Name == targetPlayer.Name).FirstOrDefault();
+
+                if (player != null)
+                {
+                    if (player.Status == PlayerStatus.Dead)
+                    {
+                        player.Status = PlayerStatus.Good;
+                        player.HP = player.MaxHP;
+                        selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    }
+                }
+            }
         }
 
         if (selectedSpell.Name == "View")
