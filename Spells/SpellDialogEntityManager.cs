@@ -35,7 +35,7 @@ namespace Ultima45Monogame.Spells
 
         private SpellDialogTree BuildDialogTree()
         {
-            var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells).ToList();
+            var enabledPlayers = _players.Where(p => p.IsEnabled && p.CanCastSpells && (p.Status != PlayerStatus.Sleeping || p.Status != PlayerStatus.Dead)).ToList();
 
             var rootOptions = enabledPlayers.Select(p =>
                 new SpellDialogOption(p.Name, () => BuildSpellListNode(p))

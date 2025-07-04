@@ -25,6 +25,7 @@ W - Wear Armor (select from armor dialog)
 R - Ready Weapon (select from weapon dialog)
 U - Use Item (select from item dialog)
 C - Cast Spell (select from spell dialog, possible direction key)
+Z - Show Stats
 
 Version 1.0.0 - COMPLETE - Proof of concept prototype
 You should be able to walk around the overworld map, enter towns, and exit towns.
@@ -66,7 +67,7 @@ Version 4.0.0 - COMPLETE
 	Proper default weapon and armor for players
 	Pressing C to Cast Spell (Non-Combat)
 	Add Cancel option to the spell dialogs.
-	Pressing Z to show player stats, weapons inventory, armor inventory
+	Pressing Z to show player stats, weapons, armor, equipment, items, special items, runes, stones, and reagents.
 
 --TODO--
 	Cast Spell Actions (Non-Combat) for each spell.

@@ -6181,58 +6181,65 @@ public class Game1 : Game
                             castspelldialogEntityManager.SelectedSpell != null &&
                             castspelldialogEntityManager.SelectedTarget != null)
                         {
-                            targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
-                            targetDirection = castspelldialogEntityManager.SelectedTarget as string;
-                            
-                            if (targetDirection != "North" &&
-                                targetDirection != "South" &&
-                                targetDirection != "East" &&
-                                targetDirection != "West")
+                            if (castspelldialogEntityManager.SelectedCaster.MP >= castspelldialogEntityManager.SelectedSpell.Cost)
                             {
-                                targetDirection = ""; // Not a Direction, so reset to empty string
-                            }
 
-                            if (targetPlayer != null)
-                            {
-                                // If the target is a player, cast the spell on them
-                                castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} on {targetPlayer.Name}";
-                            }
-                            else
-                            {
-                                // If the target is not a player, just cast the spell
-                                if (!string.IsNullOrEmpty(targetDirection))
+                                targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
+                                targetDirection = castspelldialogEntityManager.SelectedTarget as string;
+                            
+                                if (targetDirection != "North" &&
+                                    targetDirection != "South" &&
+                                    targetDirection != "East" &&
+                                    targetDirection != "West")
                                 {
-                                    castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} to the {targetDirection}";
+                                    targetDirection = ""; // Not a Direction, so reset to empty string
+                                }
+
+                                if (targetPlayer != null)
+                                {
+                                    // If the target is a player, cast the spell on them
+                                    castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} on {targetPlayer.Name}";
+
+                                    ShowBottomMessage(castSpellMsg, 4.0);
+
+                                    CastSpell_NonCombat(castspelldialogEntityManager.SelectedCaster,
+                                        castspelldialogEntityManager.SelectedSpell,
+                                        castspelldialogEntityManager.SelectedTarget
+                                        );
+
+                                    castspelldialogEntityManager.SelectedCaster.MP = castspelldialogEntityManager.SelectedCaster.MP - castspelldialogEntityManager.SelectedSpell.Cost;
                                 }
                                 else
                                 {
-                                    castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name}";
+                                    // If the target is not a player, just cast the spell
+                                    if (!string.IsNullOrEmpty(targetDirection))
+                                    {
+                                        castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name} to the {targetDirection}";
+                                    }
+                                    else
+                                    {
+                                        castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name}";
+                                    }
+
+                                    ShowBottomMessage(castSpellMsg, 4.0);
+
+                                    CastSpell_NonCombat(castspelldialogEntityManager.SelectedCaster,
+                                        castspelldialogEntityManager.SelectedSpell,
+                                        castspelldialogEntityManager.SelectedTarget
+                                        );
+
+                                    castspelldialogEntityManager.SelectedCaster.MP = castspelldialogEntityManager.SelectedCaster.MP - castspelldialogEntityManager.SelectedSpell.Cost;
                                 }
                             }
+                            else
+                            {
+                                // Not enough MP to cast the spell
+                                castSpellMsg = $"Not enough MP to cast {castspelldialogEntityManager.SelectedSpell.Name}";
+                                ShowBottomMessage(castSpellMsg, 4.0);
 
-                            ShowBottomMessage(castSpellMsg, 4.0);
-
-                            CastSpell(castspelldialogEntityManager.SelectedCaster,
-                                castspelldialogEntityManager.SelectedSpell,
-                                castspelldialogEntityManager.SelectedTarget
-                                );
-
-                            castspelldialogEntityManager.SelectedCaster = null;
-                            castspelldialogEntityManager.SelectedSpell = null;
-                            castspelldialogEntityManager.SelectedTarget = null;
-                            _castspelldialogEnding = true;
-                            _castspellDialogEndTimer = 0;
-                        }
-                        if (castspelldialogEntityManager.SelectedCaster != null &&
-                            castspelldialogEntityManager.SelectedSpell != null &&
-                            castspelldialogEntityManager.SelectedTarget == null)
-                        {
-
-                            castSpellMsg = $" {castspelldialogEntityManager.SelectedCaster.Name} casts {castspelldialogEntityManager.SelectedSpell.Name}";
-
-                            ShowBottomMessage(castSpellMsg, 4.0);
-
-                            //TODO: Cast Spell Here
+                                _castspelldialogEnding = true;
+                                _castspellDialogEndTimer = 0;
+                            }
 
                             castspelldialogEntityManager.SelectedCaster = null;
                             castspelldialogEntityManager.SelectedSpell = null;
@@ -6269,27 +6276,109 @@ public class Game1 : Game
         }
     }
 
-    private void CastSpell(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
+    private void CastSpell_NonCombat(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
     {
-        //TODO
-        string casterName = selectedCaster.Name;
-        string spellName = selectedSpell.Name;
-        if (selectedSpell.TargetChoice == SpellTargetChoice.ChoosePlayer)
-        {
-            FantasyPlayer target = selectedTarget as FantasyPlayer;
-        }
-        else if (selectedSpell.TargetChoice == SpellTargetChoice.ChooseDirection)
-        {
-            string direction = selectedTarget as string;
-        }
-        else if (selectedSpell.TargetChoice == SpellTargetChoice.ChooseMoonGate)
-        {
+        if (selectedSpell.Type == SpellType.Combat) { return; }
 
-        }
-        else if (selectedSpell.TargetChoice == SpellTargetChoice.None)
-        {
+        FantasyPlayer targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
 
+        string targetDirection = "";
+        if (selectedSpell.TargetChoice == SpellTargetChoice.ChooseDirection)
+        {
+            targetDirection = selectedTarget as string;
         }
+
+        if (selectedSpell.Name == "Awaken")
+        {
+            if (targetPlayer != null)
+            {
+                FantasyPlayer player = players.Where(p => p.Name == targetPlayer.Name).FirstOrDefault();
+
+                if (player != null)
+                {
+                    player.Status = PlayerStatus.Good;
+                }
+            }
+            return;
+        }
+
+        //if (selectedSpell.Name == "Blink")
+        //{
+        //    return;
+        //}
+
+        if (selectedSpell.Name == "Cure")
+        {
+            if (targetPlayer != null)
+            {
+                FantasyPlayer player = players.Where(p => p.Name == targetPlayer.Name).FirstOrDefault();
+
+                if (player != null)
+                {
+                    player.Status = PlayerStatus.Good;
+                }
+            }
+
+            return;
+        }
+
+        //if (selectedSpell.Name == "Dispel")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Energy")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Gate Travel")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Heal")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Light")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Open")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Resurrection")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "View")
+        //{
+        //    peerAtGemMap = null;
+        //    _currentState = GameStates.PeerAtGem;
+        //    inputTimer = 0; // Reset the timer
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Exit")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Up Level")
+        //{
+        //    return;
+        //}
+
+        //if (selectedSpell.Name == "Down Level")
+        //{
+        //    return;
+        //}
     }
 
     private void DrawCastSpellDialog()
