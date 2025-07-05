@@ -364,7 +364,7 @@ namespace Ultima45Monogame
                 range: "150 feet",
                 components: ["Mandrake Root", "Blood Moss"],
                 duration: "Instantaneous",
-                description: "Exits dungeons, shrines, or combat.",
+                description: "Exits towns, dungeons, shrines, or combat.",
                 cost: 8,
                 type: FantasySpell.SpellType.Both,
                 targetchoice: FantasySpell.SpellTargetChoice.None

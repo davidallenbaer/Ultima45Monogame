@@ -55,6 +55,7 @@ namespace Ultima45Monogame
         public bool CandleUsedAtAbyssEntrance { get; set; } = false;
         public bool BookUsedAtAbyssEntrance { get; set; } = false;
         public bool BellUsedAtAbyssEntrance { get; set; } = false;
+        public int lightSpellMovesRemaining { get; set; } = 0;
 
         public int StoneBlue { get; set; } = 0; //Associated with Honesty
         public int StoneYellow { get; set; } = 0; //Associated with Compassion

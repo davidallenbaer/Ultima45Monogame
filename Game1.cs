@@ -1842,6 +1842,12 @@ public class Game1 : Game
 
     public void MovePlayer(Maps map, MoveDirection direction)
     {
+        //If the light spell is active, decrement the number of moves remaining
+        if (gameSaveVariables.lightSpellMovesRemaining >= 1)
+        {
+            gameSaveVariables.lightSpellMovesRemaining--;
+        }
+
         if (map == Maps.U4MapOverworld)
         {
             //Need to wrap around the overworld grid if the pc moves off the edge of the map
@@ -6339,6 +6345,9 @@ public class Game1 : Game
 
     private void CastSpell_NonCombat(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
     {
+        /*
+         Remaining spells to implement Dispel, Energy, Open
+        */
         if (selectedSpell.Type == SpellType.Combat) { return; }
 
         FantasyPlayer targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
@@ -6419,12 +6428,54 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Dispel")
         {
-            return;
+            if (targetDirection.ToString() == "North")
+            {
+
+            }
+            else if (targetDirection.ToString() == "South")
+            {
+
+            }
+            else if (targetDirection.ToString() == "East")
+            {
+
+            }
+            else if (targetDirection.ToString() == "West")
+            {
+
+            }
+            else
+            {
+                // No direction specified
+            }
+
+            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Energy")
         {
-            return;
+            if (targetDirection.ToString() == "North")
+            {
+
+            }
+            else if (targetDirection.ToString() == "South")
+            {
+
+            }
+            else if (targetDirection.ToString() == "East")
+            {
+
+            }
+            else if (targetDirection.ToString() == "West")
+            {
+
+            }
+            else
+            {
+                // No direction specified
+            }
+
+            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Gate Travel")
@@ -6531,12 +6582,35 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Light")
         {
-            return;
+            //The Light spell lasts 50 moves / turns.
+            gameSaveVariables.lightSpellMovesRemaining = 50;
+            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Open")
         {
-            return;
+            if (targetDirection.ToString() == "North")
+            {
+
+            }
+            else if (targetDirection.ToString() == "South")
+            {
+
+            }
+            else if (targetDirection.ToString() == "East")
+            {
+
+            }
+            else if (targetDirection.ToString() == "West")
+            {
+
+            }
+            else
+            {
+                // No direction specified
+            }
+
+            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Resurrection")
@@ -6566,20 +6640,67 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Exit")
         {
-            return;
+            if (currentMap != Maps.U4MapOverworld)
+            {
+                currentMap = Maps.U4MapOverworld;
+                UpdateMainDisplayGridValues(currentMap);
+                PlayBackgroundMusicBasedOnCurrentMap();
+                inputTimer = 0; // Reset the timer
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+            }
         }
 
         if (selectedSpell.Name == "Up Level")
         {
-            return;
+            bool bTeleportSuccess = TeleportUpLevel(currentMap);
+            if (bTeleportSuccess)
+            {
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+            }
         }
 
         if (selectedSpell.Name == "Down Level")
         {
-            return;
+            bool bTeleportSuccess = TeleportDownLevel(currentMap);
+            if (bTeleportSuccess)
+            {
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+            }
         }
 
         inputTimer = 0; // Reset the timer
+    }
+
+    private bool TeleportUpLevel(Maps map)
+    {
+        bool bTeleportSuccess = false;
+
+        if (map == Maps.U4MapLordBritishCastle1)
+        {
+            currentMap = Maps.U4MapLordBritishCastle2;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+            inputTimer = 0; // Reset the timer
+            bTeleportSuccess = true;
+        }
+
+        return bTeleportSuccess;
+    }
+
+    private bool TeleportDownLevel(Maps map)
+    {
+        bool bTeleportSuccess = false;
+
+        if (map == Maps.U4MapLordBritishCastle2)
+        {
+            currentMap = Maps.U4MapLordBritishCastle1;
+            UpdateMainDisplayGridValues(currentMap);
+            PlayBackgroundMusicBasedOnCurrentMap();
+            inputTimer = 0; // Reset the timer
+            bTeleportSuccess = true;
+        }
+
+        return bTeleportSuccess;
     }
 
     private void DrawCastSpellDialog()
