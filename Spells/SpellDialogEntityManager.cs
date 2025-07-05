@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -99,6 +100,18 @@ namespace Ultima45Monogame.Spells
 
                 return new SpellDialogNode("==Cast Spell==", "Choose a player:", playerOptions);
             }
+            else if (spell.TargetChoice == FantasySpell.SpellTargetChoice.ChooseMoonGate)
+            {
+                var moongates = GetHaveDiscovered(_saveGame);
+
+                var gateOptions = moongates.Select(gate =>
+                    new SpellDialogOption(gate, () => { SelectSpell(caster, spell, gate); return null; })
+                ).ToList();
+
+                AddCancelOption(gateOptions);
+
+                return new SpellDialogNode("==Cast Spell==", "Choose a moongate:", gateOptions);
+            }
             else
             {
                 var finalOptions = new List<SpellDialogOption>
@@ -110,6 +123,29 @@ namespace Ultima45Monogame.Spells
 
                 return new SpellDialogNode("==Cast Spell==", $"Cast {spell.Name}?", finalOptions);
             }
+        }
+
+        private static List<String>GetHaveDiscovered(Ultima4SaveGameVariables saveGame)
+        {
+            List<string> placesDiscovered = new List<string>();
+
+            if (saveGame.HasDiscovered_Britain==1) { placesDiscovered.Add("Britain"); }
+            if (saveGame.HasDiscovered_BuccaneersDen == 1) { placesDiscovered.Add("BuccaneersDen"); }
+            if (saveGame.HasDiscovered_Cove == 1) { placesDiscovered.Add("Cove"); }
+            if (saveGame.HasDiscovered_EmpathAbbey == 1) { placesDiscovered.Add("Empath Abbey"); }
+            if (saveGame.HasDiscovered_Jhelom == 1) { placesDiscovered.Add("Jhelom"); }
+            if (saveGame.HasDiscovered_Lycaeum == 1) { placesDiscovered.Add("Lycaeum"); }
+            if (saveGame.HasDiscovered_Magincia == 1) { placesDiscovered.Add("Magincia"); }
+            if (saveGame.HasDiscovered_Minoc == 1) { placesDiscovered.Add("Minoc"); }
+            if (saveGame.HasDiscovered_Moonglow == 1) { placesDiscovered.Add("Moonglow"); }
+            if (saveGame.HasDiscovered_Paws == 1) { placesDiscovered.Add("Paws"); }
+            if (saveGame.HasDiscovered_SerpentIsle == 1) { placesDiscovered.Add("Serpent Isle"); }
+            if (saveGame.HasDiscovered_SkaraBrae == 1) { placesDiscovered.Add("Skara Brae"); }
+            if (saveGame.HasDiscovered_Trinsic == 1) { placesDiscovered.Add("Trinsic"); }
+            if (saveGame.HasDiscovered_Vesper == 1) { placesDiscovered.Add("Vesper"); }
+            if (saveGame.HasDiscovered_Yew == 1) { placesDiscovered.Add("Yew"); }
+
+            return placesDiscovered;
         }
 
         private bool HasReagents(FantasyPlayer caster, string[] requiredReagents)

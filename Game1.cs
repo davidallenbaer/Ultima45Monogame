@@ -6429,7 +6429,76 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Gate Travel")
         {
-            return;
+            if (currentMap == Maps.U4MapOverworld)
+            {
+                string targetMoongate = selectedTarget as string;
+
+                if (!string.IsNullOrEmpty(targetMoongate))
+                {
+                    if (targetMoongate == "Britain")
+                    {
+                        TeleportAvatar(2);
+                    }
+                    else if (targetMoongate == "Paws")
+                    {
+                        TeleportAvatar(3);
+                    }
+                    else if (targetMoongate == "Trinsic")
+                    {
+                        TeleportAvatar(4);
+                    }
+                    else if (targetMoongate == "Cove")
+                    {
+                        TeleportAvatar(5);
+                    }
+                    else if (targetMoongate == "Empath Abbey")
+                    {
+                        TeleportAvatar(6);
+                    }
+                    else if (targetMoongate == "Jhelom")
+                    {
+                        TeleportAvatar(7);
+                    }
+                    else if (targetMoongate == "Lycaeum")
+                    {
+                        TeleportAvatar(8);
+                    }
+                    else if (targetMoongate == "Yew")
+                    {
+                        TeleportAvatar(9);
+                    }
+                    else if (targetMoongate == "Vesper")
+                    {
+                        TeleportAvatar(10);
+                    }
+                    else if (targetMoongate == "Minoc")
+                    {
+                        TeleportAvatar(11);
+                    }
+                    else if (targetMoongate == "Moonglow")
+                    {
+                        TeleportAvatar(12);
+                    }
+                    else if (targetMoongate == "Magincia")
+                    {
+                        TeleportAvatar(13);
+                    }
+                    else if (targetMoongate == "Buccaneers Den")
+                    {
+                        TeleportAvatar(14);
+                    }
+                    else if (targetMoongate == "Serpent Isle")
+                    {
+                        TeleportAvatar(15);
+                    }
+                    else if (targetMoongate == "Skara Brae")
+                    {
+                        TeleportAvatar(16);
+                    }
+
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
+            }
         }
 
         if (selectedSpell.Name == "Heal")
