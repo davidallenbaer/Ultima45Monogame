@@ -6345,9 +6345,8 @@ public class Game1 : Game
 
     private void CastSpell_NonCombat(FantasyPlayer selectedCaster, FantasySpell selectedSpell, object selectedTarget)
     {
-        /*
-         Remaining spells to implement Dispel, Energy, Open
-        */
+        /* Remaining spells to implement Dispel */
+
         if (selectedSpell.Type == SpellType.Combat) { return; }
 
         FantasyPlayer targetPlayer = castspelldialogEntityManager.SelectedTarget as FantasyPlayer;
@@ -6430,52 +6429,51 @@ public class Game1 : Game
         {
             if (targetDirection.ToString() == "North")
             {
-
+                townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY - 1, pcTownMapLocationX);
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
             }
             else if (targetDirection.ToString() == "South")
             {
-
+                townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY + 1, pcTownMapLocationX);
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
             }
             else if (targetDirection.ToString() == "East")
             {
-
+                townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY, pcTownMapLocationX + 1);
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
             }
             else if (targetDirection.ToString() == "West")
             {
-
+                townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY, pcTownMapLocationX - 1);
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
             }
-            else
-            {
-                // No direction specified
-            }
-
-            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Energy")
         {
-            if (targetDirection.ToString() == "North")
+            if (currentMap != Maps.U4MapOverworld)
             {
-
+                if (targetDirection.ToString() == "North")
+                {
+                    townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY-1, pcTownMapLocationX, (int)TileType.EnergyField,true,0,0,-1,true);
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
+                else if (targetDirection.ToString() == "South")
+                {
+                    townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY+1, pcTownMapLocationX, (int)TileType.EnergyField, true, 0, 0, -1, true);
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
+                else if (targetDirection.ToString() == "East")
+                {
+                    townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY, pcTownMapLocationX+1, (int)TileType.EnergyField, true, 0, 0, -1, true);
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
+                else if (targetDirection.ToString() == "West")
+                {
+                    townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY, pcTownMapLocationX-1, (int)TileType.EnergyField, true, 0, 0, -1, true);
+                    selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                }
             }
-            else if (targetDirection.ToString() == "South")
-            {
-
-            }
-            else if (targetDirection.ToString() == "East")
-            {
-
-            }
-            else if (targetDirection.ToString() == "West")
-            {
-
-            }
-            else
-            {
-                // No direction specified
-            }
-
-            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Gate Travel")
@@ -6589,28 +6587,29 @@ public class Game1 : Game
 
         if (selectedSpell.Name == "Open")
         {
+            bool doorOpened = false;
+
             if (targetDirection.ToString() == "North")
             {
-
+                doorOpened = HandleOpeningDoor(MoveDirection.North);
             }
             else if (targetDirection.ToString() == "South")
             {
-
+                doorOpened = HandleOpeningDoor(MoveDirection.South);
             }
             else if (targetDirection.ToString() == "East")
             {
-
+                doorOpened = HandleOpeningDoor(MoveDirection.East);
             }
             else if (targetDirection.ToString() == "West")
             {
-
+                doorOpened = HandleOpeningDoor(MoveDirection.West);
             }
-            else
+
+            if (doorOpened)
             {
-                // No direction specified
+                selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
             }
-
-            selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
         }
 
         if (selectedSpell.Name == "Resurrection")

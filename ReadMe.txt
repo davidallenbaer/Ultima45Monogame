@@ -68,9 +68,9 @@ Version 4.0.0 - COMPLETE
 	Pressing C to Cast Spell (Non-Combat)
 	Add Cancel option to the spell dialogs.
 	Pressing Z to show player stats, weapons, armor, equipment, items, special items, runes, stones, and reagents.
+	Cast Spell Actions (Non-Combat) for each spell - All Non-Combat Spells implemented.
 
 --TODO--
-	Cast Spell Actions (Non-Combat) for each spell.
 		
 	Populate Britain with NPCs Town Entity's.
 
