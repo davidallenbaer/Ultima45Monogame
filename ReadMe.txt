@@ -69,7 +69,7 @@ Version 4.0.0 - COMPLETE
 	Add Cancel option to the spell dialogs.
 	Pressing Z to show player stats, weapons, armor, equipment, items, special items, runes, stones, and reagents.
 	Cast Spell Actions (Non-Combat) for each spell - All Non-Combat Spells implemented.
-
+	Cast Spell sound effects
 --TODO--
 		
 	Populate Britain with NPCs Town Entity's.
@@ -98,6 +98,8 @@ Future - Implement turn based combat
 Future - Implement auto combat option.
 
 Future - Randomly move NPCs around the town map.
+
+Future - Working Moongates
 
 --Extra Ideas--
 Ability to purchase shops for income.

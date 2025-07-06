@@ -443,6 +443,9 @@ public class Game1 : Game
     private double inputDelay;
     private SoundEffect _soundEffect_Walk;
     private SoundEffect _soundEffect_BadCommand;
+    private SoundEffect _soundEffect_CastSpellFail;
+    private SoundEffect _soundEffect_CastSpell;
+
     public static Ultima4SaveGameVariables gameSaveVariables = new Ultima4SaveGameVariables();
 
     #endregion
@@ -1033,6 +1036,8 @@ public class Game1 : Game
     {
         _soundEffect_Walk = Content.Load<SoundEffect>("SoundEffects\\Ultima4\\SoundEffect_Walk");
         _soundEffect_BadCommand = Content.Load<SoundEffect>("SoundEffects\\Ultima4\\SoundEffect_BadCommand");
+        _soundEffect_CastSpellFail = Content.Load<SoundEffect>("SoundEffects\\Ultima4\\SoundEffect_CastSpellFail");
+        _soundEffect_CastSpell = Content.Load<SoundEffect>("SoundEffects\\Ultima4\\SoundEffect_CastSpellSuccess");
     }
 
     private int[,]? LoadMap(string sMapFileName, int iMapSize)
@@ -6369,6 +6374,7 @@ public class Game1 : Game
                     {
                         player.Status = PlayerStatus.Good;
                         selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                        _soundEffect_CastSpell.Play();
                     }
                 }
             }
@@ -6404,6 +6410,7 @@ public class Game1 : Game
                 if (blinkSuccess)
                 {
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    _soundEffect_CastSpell.Play();
                 }
             }
         }
@@ -6420,6 +6427,7 @@ public class Game1 : Game
                     {
                         player.Status = PlayerStatus.Good;
                         selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                        _soundEffect_CastSpell.Play();
                     }
                 }
             }
@@ -6431,21 +6439,25 @@ public class Game1 : Game
             {
                 townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY - 1, pcTownMapLocationX);
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
             else if (targetDirection.ToString() == "South")
             {
                 townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY + 1, pcTownMapLocationX);
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
             else if (targetDirection.ToString() == "East")
             {
                 townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY, pcTownMapLocationX + 1);
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
             else if (targetDirection.ToString() == "West")
             {
                 townEntityManager.RemoveEntityAt(currentMap, pcTownMapLocationY, pcTownMapLocationX - 1);
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
         }
 
@@ -6457,21 +6469,25 @@ public class Game1 : Game
                 {
                     townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY-1, pcTownMapLocationX, (int)TileType.EnergyField,true,0,0,-1,true);
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    _soundEffect_CastSpell.Play();
                 }
                 else if (targetDirection.ToString() == "South")
                 {
                     townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY+1, pcTownMapLocationX, (int)TileType.EnergyField, true, 0, 0, -1, true);
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    _soundEffect_CastSpell.Play();
                 }
                 else if (targetDirection.ToString() == "East")
                 {
                     townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY, pcTownMapLocationX+1, (int)TileType.EnergyField, true, 0, 0, -1, true);
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    _soundEffect_CastSpell.Play();
                 }
                 else if (targetDirection.ToString() == "West")
                 {
                     townEntityManager.AddEntity(currentMap, "EnergyField", "EnergyField", (int)TileType.EnergyField, pcTownMapLocationY, pcTownMapLocationX-1, (int)TileType.EnergyField, true, 0, 0, -1, true);
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                    _soundEffect_CastSpell.Play();
                 }
             }
         }
@@ -6487,62 +6503,77 @@ public class Game1 : Game
                     if (targetMoongate == "Britain")
                     {
                         TeleportAvatar(2);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Paws")
                     {
                         TeleportAvatar(3);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Trinsic")
                     {
                         TeleportAvatar(4);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Cove")
                     {
                         TeleportAvatar(5);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Empath Abbey")
                     {
                         TeleportAvatar(6);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Jhelom")
                     {
                         TeleportAvatar(7);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Lycaeum")
                     {
                         TeleportAvatar(8);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Yew")
                     {
                         TeleportAvatar(9);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Vesper")
                     {
                         TeleportAvatar(10);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Minoc")
                     {
                         TeleportAvatar(11);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Moonglow")
                     {
                         TeleportAvatar(12);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Magincia")
                     {
                         TeleportAvatar(13);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Buccaneers Den")
                     {
                         TeleportAvatar(14);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Serpent Isle")
                     {
                         TeleportAvatar(15);
+                        _soundEffect_CastSpell.Play();
                     }
                     else if (targetMoongate == "Skara Brae")
                     {
                         TeleportAvatar(16);
+                        _soundEffect_CastSpell.Play();
                     }
 
                     selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
@@ -6573,6 +6604,7 @@ public class Game1 : Game
                         }
 
                         selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                        _soundEffect_CastSpell.Play();
                     }
                 }
             }
@@ -6583,6 +6615,7 @@ public class Game1 : Game
             //The Light spell lasts 50 moves / turns.
             gameSaveVariables.lightSpellMovesRemaining = 50;
             selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+            _soundEffect_CastSpell.Play();
         }
 
         if (selectedSpell.Name == "Open")
@@ -6609,6 +6642,11 @@ public class Game1 : Game
             if (doorOpened)
             {
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
+            }
+            else
+            {
+                _soundEffect_CastSpellFail.Play();
             }
         }
 
@@ -6625,6 +6663,7 @@ public class Game1 : Game
                         player.Status = PlayerStatus.Good;
                         player.HP = player.MaxHP;
                         selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                        _soundEffect_CastSpell.Play();
                     }
                 }
             }
@@ -6635,6 +6674,7 @@ public class Game1 : Game
             peerAtGemMap = null;
             _currentState = GameStates.PeerAtGem;
             selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+            _soundEffect_CastSpell.Play();
         }
 
         if (selectedSpell.Name == "Exit")
@@ -6646,6 +6686,7 @@ public class Game1 : Game
                 PlayBackgroundMusicBasedOnCurrentMap();
                 inputTimer = 0; // Reset the timer
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
         }
 
@@ -6655,6 +6696,7 @@ public class Game1 : Game
             if (bTeleportSuccess)
             {
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
         }
 
@@ -6664,6 +6706,7 @@ public class Game1 : Game
             if (bTeleportSuccess)
             {
                 selectedCaster.MP = selectedCaster.MP - selectedSpell.Cost;
+                _soundEffect_CastSpell.Play();
             }
         }
 
