@@ -4247,12 +4247,56 @@ public class Game1 : Game
 
             if (entity != null && entity.IsVisible && entity.EntityType != null && entity.DialogIndex > 0)
             {
-                // Initiate dialog with the entity
+                //Talk to the person directly next to you
                 _currentState = GameStates.TalkingDialog;
                 _currentDialogIndex = entity.DialogIndex;
                 _currentDialogEntity = entity;
                 StartDialog(_currentDialogIndex.ToString());
                 return;
+            }
+            else
+            {
+                //Check if trying to talk to a shop npc over the counter (2 spaces away) 
+                int mapValue = -1; 
+
+                switch (direction)
+                {
+                    case MoveDirection.North:
+                        dy = -2; dx = 0;
+                        mapValue = GetMainDisplayMapValue(mainDisplayOneNorthOfCenter, mainDisplayCenter);
+                        break;
+                    case MoveDirection.South:
+                        dy = 2; dx = 0;
+                        mapValue = GetMainDisplayMapValue(mainDisplayOneSouthOfCenter, mainDisplayCenter);
+                        break;
+                    case MoveDirection.West:
+                        dy = 0; dx = -2;
+                        mapValue = GetMainDisplayMapValue(mainDisplayOneWestOfCenter, mainDisplayCenter);
+                        break;
+                    case MoveDirection.East:
+                        dy = 0; dx = 2;
+                        mapValue = GetMainDisplayMapValue(mainDisplayOneEastOfCenter, mainDisplayCenter);
+                        break;
+                    default:
+                        return;
+                }
+
+                adjY = pcTownMapLocationY + dy;
+                adjX = pcTownMapLocationX + dx;
+
+                if (mapValue >= 97 && mapValue <= 126)
+                {
+                    TownEntity? entity2 = townEntityManager.GetEntityAt(currentMap, adjY, adjX);
+                    if (entity2 != null && entity2.IsVisible && entity2.EntityType != null && entity2.DialogIndex > 0)
+                    {
+                        // Initiate dialog with the entity
+                        _currentState = GameStates.TalkingDialog;
+                        _currentDialogIndex = entity2.DialogIndex;
+                        _currentDialogEntity = entity2;
+                        StartDialog(_currentDialogIndex.ToString());
+                        return;
+                    }
+                }
             }
         }
 

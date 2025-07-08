@@ -65,7 +65,7 @@
     ]
   },
   {
-    "Id": "Merchant1",
+    "Id": "Britain_Weapon_Merchant",
     "DialogIndex": "2",
     "StartNodeId": "hello",
     "Nodes": [
@@ -75,22 +75,56 @@
         "Text": "Welcome to my shop! How can I help you?",
         "Options": [
           {
-            "Text": "Show me your wares.",
-            "NextNodeId": "wares"
+            "Text": "BUY",
+            "NextNodeId": "buyweapons"
           },
           {
-            "Text": "Just looking.",
+            "Text": "SELL",
+            "NextNodeId": "sellweapons"
+          },
+          {
+            "Text": "CANCEL",
             "NextNodeId": "end"
           }
         ]
       },
       {
-        "Id": "wares",
+        "Id": "buyweapons",
         "Speaker": "Shopkeeper",
-        "Text": "Here are the finest goods in Britannia.",
+        "Text": "Here are the finest weapons in Britannia.",
         "Options": [
           {
-            "Text": "Thank you.",
+            "Text": "Buy Sword (100gp)",
+            "NextNodeId": "sword"
+          },
+          {
+            "Text": "Buy Sling (50gp)",
+            "NextNodeId": "sling"
+          },
+          {
+            "Text": "CANCEL",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "sword",
+        "Speaker": "Shopkeeper",
+        "Text": "A fine choice! One Sword coming up.",
+        "Options": [
+          {
+            "Text": "Thanks.",
+            "NextNodeId": "end"
+          }
+        ]
+      },
+      {
+        "Id": "sling",
+        "Speaker": "Shopkeeper",
+        "Text": "A trusty Sling! That'll serve you well.",
+        "Options": [
+          {
+            "Text": "Thanks.",
             "NextNodeId": "end"
           }
         ]
@@ -102,7 +136,8 @@
         "Options": []
       }
     ]
-  },
+  }
+  ,
   {
     "Id": "Child1",
     "DialogIndex": "3",

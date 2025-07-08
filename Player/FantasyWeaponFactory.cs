@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MonoGame.Extended;
+using MonoGame.Extended.ECS;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace Ultima45Monogame
 {
@@ -26,10 +29,10 @@ namespace Ultima45Monogame
 
             weapons.Add(new FantasyWeapon(
                 id: 1,
-                name: "Sword",
-                type: FantasyWeapon.WeaponType.Melee,
-                dmgDice: "1d8",
-                dmgType: FantasyWeapon.DamageType.Slashing,
+                name: "Flaming Oil",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "8d8",
+                dmgType: FantasyWeapon.DamageType.Fire,
                 rangeNormal: 0,
                 rangeMax: 0,
                 weight: 3.0f,
@@ -40,12 +43,12 @@ namespace Ultima45Monogame
 
             weapons.Add(new FantasyWeapon(
                 id: 2,
-                name: "Sling",
+                name: "Dagger",
                 type: FantasyWeapon.WeaponType.Ranged,
-                dmgDice: "1d6",
-                dmgType: FantasyWeapon.DamageType.Bludgeoning,
-                rangeNormal: 10,
-                rangeMax: 10,
+                dmgDice: "4d6",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
                 weight: 3.0f,
                 isMagical: false,
                 isEquiped: false,
@@ -54,9 +57,109 @@ namespace Ultima45Monogame
 
             weapons.Add(new FantasyWeapon(
                 id: 3,
-                name: "Mace",
+                name: "Sling",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "4d8",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 4,
+                name: "Bow",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "4d10",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 5,
+                name: "Crossbow",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "7d8",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 6,
+                name: "Magic Bow",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "8d10",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 7,
+                name: "Magic Axe",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "8d12",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 8,
+                name: "Magic Axe",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "8d12",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 9,
+                name: "Magic Wand",
+                type: FantasyWeapon.WeaponType.Ranged,
+                dmgDice: "8d20",
+                dmgType: FantasyWeapon.DamageType.Piercing,
+                rangeNormal: 0,
+                rangeMax: 0,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            #region Melee Weapons
+
+            weapons.Add(new FantasyWeapon(
+                id: 11,
+                name: "Staff",
                 type: FantasyWeapon.WeaponType.Melee,
-                dmgDice: "1d8",
+                dmgDice: "2d8",
                 dmgType: FantasyWeapon.DamageType.Bludgeoning,
                 rangeNormal: 1,
                 rangeMax: 1,
@@ -67,10 +170,24 @@ namespace Ultima45Monogame
             ));
 
             weapons.Add(new FantasyWeapon(
-                id: 4,
-                name: "Dagger",
+                id: 12,
+                name: "Mace",
                 type: FantasyWeapon.WeaponType.Melee,
-                dmgDice: "1d4",
+                dmgDice: "5d8",
+                dmgType: FantasyWeapon.DamageType.Bludgeoning,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 13,
+                name: "Axe",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "6d8",
                 dmgType: FantasyWeapon.DamageType.Slashing,
                 rangeNormal: 1,
                 rangeMax: 1,
@@ -80,7 +197,63 @@ namespace Ultima45Monogame
                 cost: 0
             ));
 
-            // Add more weapons here...
+            weapons.Add(new FantasyWeapon(
+                id: 14,
+                name: "Sword",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "8d8",
+                dmgType: FantasyWeapon.DamageType.Slashing,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 15,
+                name: "Halberd",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "12d8",
+                dmgType: FantasyWeapon.DamageType.Slashing,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 16,
+                name: "Magic Sword",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "16d8",
+                dmgType: FantasyWeapon.DamageType.Slashing,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            weapons.Add(new FantasyWeapon(
+                id: 17,
+                name: "Magic Sword",
+                type: FantasyWeapon.WeaponType.Melee,
+                dmgDice: "32d8",
+                dmgType: FantasyWeapon.DamageType.Slashing,
+                rangeNormal: 1,
+                rangeMax: 1,
+                weight: 3.0f,
+                isMagical: false,
+                isEquiped: false,
+                cost: 0
+            ));
+
+            #endregion
 
             return weapons;
         }
