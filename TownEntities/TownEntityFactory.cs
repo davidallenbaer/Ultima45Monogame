@@ -312,14 +312,14 @@ namespace Ultima45Monogame
                     townMap: Maps.U4MapBritain,
                     entityName: "Brittania Weapons",
                     entityType: "NPC",
-                    entityId: 20,
+                    entityId: 1001,
                     startY: 2,
                     startX: 5,
                     tileValue: (int)TileType.Fighter1,
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 2,
+                    dialogindex: 1001,
                     preventEnteringTile: true
                     ));
 
@@ -327,14 +327,14 @@ namespace Ultima45Monogame
                     townMap: Maps.U4MapBritain,
                     entityName: "Brittania Armor",
                     entityType: "NPC",
-                    entityId: 21,
+                    entityId: 1002,
                     startY: 8,
                     startX: 6,
                     tileValue: (int)TileType.Fighter1,
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 0,
+                    dialogindex: 1002,
                     preventEnteringTile: true
                     ));
 

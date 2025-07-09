@@ -3,6 +3,7 @@ using MonoGame.Extended.ECS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
 {
@@ -241,7 +242,7 @@ namespace Ultima45Monogame
 
             weapons.Add(new FantasyWeapon(
                 id: 17,
-                name: "Magic Sword",
+                name: "Mystic Sword",
                 type: FantasyWeapon.WeaponType.Melee,
                 dmgDice: "32d8",
                 dmgType: FantasyWeapon.DamageType.Slashing,
@@ -267,5 +268,36 @@ namespace Ultima45Monogame
             }
             return null;
         }
+
+        internal static FantasyWeapon GetFantasyWeapon(string weaponName)
+        {
+            foreach (var weapon in GetAllWeapons())
+            {
+                if (weapon.Name == weaponName)
+                    return weapon;
+            }
+            return null;
+        }
+
+        internal static List<FantasyWeapon> GetFantasyWeaponsByTownMerchant(Maps map, int townEntityIndex)
+        {
+            List<FantasyWeapon> merchantWeapons = new List<FantasyWeapon>();
+
+            if (map == Maps.U4MapNone)
+            {
+                return null;
+            }
+            else if (map == Maps.U4MapBritain && townEntityIndex == 1001)
+            {
+                //Britain Merchant Weapons
+                merchantWeapons.Add(GetFantasyWeapon("Staff"));
+                merchantWeapons.Add(GetFantasyWeapon("Dagger"));
+                merchantWeapons.Add(GetFantasyWeapon("Sling"));
+                merchantWeapons.Add(GetFantasyWeapon("Sword"));
+            }
+
+            return merchantWeapons;
+        }
+
     }
 }
