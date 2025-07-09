@@ -80,8 +80,9 @@ namespace Ultima45Monogame
         public OpenStatus OpenState { get; set; } = OpenStatus.None;
         public LockedStatus LockedState { get; set; } = LockedStatus.None;
         public bool IsMerchant { get; set; } = false;
+        public TownEntityMerchantType MerchantType { get; set; } = TownEntityMerchantType.None;
 
-        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile, OpenStatus openStatus = OpenStatus.None, LockedStatus lockedStatus = LockedStatus.None, bool isMerchant = false)
+        public TownEntity(Maps townMap, string entityName, string entityType, int entityId, int startY, int startX, int tileValue, bool visible, int movement, int schedule, int dialogindex, bool preventEnteringTile, OpenStatus openStatus = OpenStatus.None, LockedStatus lockedStatus = LockedStatus.None, bool isMerchant = false, TownEntityMerchantType merchantType = TownEntityMerchantType.None)
         {
             EntityType = entityType;
             EntityName = entityName;
@@ -100,6 +101,8 @@ namespace Ultima45Monogame
             OpenState = openStatus;
             LockedState = lockedStatus;
             IsMerchant = isMerchant;
+            this.MerchantType = MerchantType;
+            MerchantType = merchantType;
         }
 
         // Parameterless constructor for serialization

@@ -45,12 +45,12 @@ namespace Ultima45Monogame.Dialogs
                     {
                         new DialogOption
                         {
-                            Text = "Back to Shop",
+                            Text = "BACK TO SHOP",
                             NextNodeId = "start"
                         },
                         new DialogOption
                         {
-                            Text = "Leave",
+                            Text = "LEAVE",
                             NextNodeId = "end"
                         }
                     }

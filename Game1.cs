@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using MonoGame.Extended.ECS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -67,6 +68,7 @@ public class Game1 : Game
     private bool bDrawMainDisplayStretched = true;
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
+    private PurchaseWeaponDialogEntityManager purchaseWeapondialogEntityManager = new PurchaseWeaponDialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
@@ -4251,7 +4253,16 @@ public class Game1 : Game
                 _currentState = GameStates.TalkingDialog;
                 _currentDialogIndex = entity.DialogIndex;
                 _currentDialogEntity = entity;
-                StartDialog(_currentDialogIndex.ToString());
+
+                if (!entity.IsMerchant)
+                {
+                    StartDialog(_currentDialogIndex.ToString());
+                }
+                else
+                {
+                    StartMerchantDialog(entity, _currentDialogIndex.ToString());
+                }
+                
                 return;
             }
             else
@@ -4293,7 +4304,15 @@ public class Game1 : Game
                         _currentState = GameStates.TalkingDialog;
                         _currentDialogIndex = entity2.DialogIndex;
                         _currentDialogEntity = entity2;
-                        StartDialog(_currentDialogIndex.ToString());
+                        if (!entity2.IsMerchant)
+                        {
+                            StartDialog(_currentDialogIndex.ToString());
+                        }
+                        else
+                        {
+                            StartMerchantDialog(entity2, _currentDialogIndex.ToString());
+                        }
+                            
                         return;
                     }
                 }
@@ -6956,6 +6975,67 @@ public class Game1 : Game
             _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
             _selectedDialogOptionIndex = 0;
             _currentState = GameStates.TalkingDialog;
+        }
+    }
+
+    // Call this method to start a merchant dialog by DialogIndex (as string)
+    private void StartMerchantDialog(TownEntity entity, string dialogIndex)
+    {
+        if (entity.IsMerchant)
+        {
+            if (entity.MerchantType == TownEntityMerchantType.WeaponMerchant)
+            {
+                purchaseWeapondialogEntityManager.BuildPurchaseWeaponJSON(entity.MerchantWeapons);
+
+                _activeDialogTree = purchaseWeapondialogEntityManager.GetPurchaseWeaponDialogTree();
+
+                if (_activeDialogTree != null)
+                {
+                    _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+                    _selectedDialogOptionIndex = 0;
+                    _currentState = GameStates.TalkingDialog;
+                }
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.ArmorMerchant)
+            {
+
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.EquipmentMerchant)
+            {
+
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.HealingMerchant)
+            {
+
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.FoodMerchant)
+            {
+
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.ReagentsMerchant)
+            {
+
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.GoldDonationMerchant)
+            {
+
+            }
+            else
+            {
+                _currentDialogIndex = 0;
+                _currentDialogEntity = null;
+                ShowBottomMessage("No one to talk to here!", 2);
+                _soundEffect_BadCommand.Play();
+                return;
+            }
+        }
+        else
+        {
+            _currentDialogIndex = 0;
+            _currentDialogEntity = null;
+            ShowBottomMessage("No one to talk to here!", 2);
+            _soundEffect_BadCommand.Play();
+            return;
         }
     }
 

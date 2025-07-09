@@ -324,7 +324,8 @@ namespace Ultima45Monogame
                     schedule: 0,
                     dialogindex: 1001,
                     preventEnteringTile: true,
-                    isMerchant: true
+                    isMerchant: true,
+                    merchantType: TownEntityMerchantType.WeaponMerchant
                 );
 
             britain_weapon_merchant.MerchantWeapons = FantasyWeaponFactory.GetFantasyWeaponsByTownMerchant(Maps.U4MapBritain, britain_weapon_merchant.EntityID);

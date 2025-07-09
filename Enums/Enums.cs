@@ -10,6 +10,18 @@ namespace Ultima45Monogame
     {
         #region Enums
 
+        public enum TownEntityMerchantType
+        {
+            None = 0,
+            WeaponMerchant = 1,
+            ArmorMerchant = 2,
+            EquipmentMerchant = 3,
+            ReagentsMerchant = 4,
+            FoodMerchant = 5,
+            HealingMerchant = 6,
+            GoldDonationMerchant = 7,
+        }
+
         public enum CastSpellMode
         {
             Combat,
