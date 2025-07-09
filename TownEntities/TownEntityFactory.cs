@@ -27,7 +27,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                 ));
 
             entities.Add(new TownEntity(
@@ -42,7 +43,8 @@ namespace Ultima45Monogame
                 movement: 0,
                 schedule: 0,
                 dialogindex: 0,
-                preventEnteringTile: true
+                preventEnteringTile: true,
+                isMerchant: false
             ));
 
             #endregion
@@ -61,7 +63,8 @@ namespace Ultima45Monogame
                 movement: 0,
                 schedule: 0,
                 dialogindex: 0,
-                preventEnteringTile: true
+                preventEnteringTile: true,
+                isMerchant: false
             ));
 
             #endregion
@@ -80,7 +83,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -95,7 +99,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -110,7 +115,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -125,22 +131,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1,
-                    preventEnteringTile: true
-                    ));
-
-            entities.Add(new TownEntity(
-                    townMap: Maps.U4MapBritain,
-                    entityName: "Rune of Compassion",
-                    entityType: "NPC",
-                    entityId: 8,
-                    startY: 1,
-                    startX: 25,
-                    tileValue: (int)TileType.Blank,
-                    visible: false,
-                    movement: 0,
-                    schedule: 0,
-                    dialogindex: 0,
-                    preventEnteringTile: false
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -155,7 +147,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -170,7 +163,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -185,7 +179,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -200,7 +195,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -215,7 +211,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -230,7 +227,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -245,7 +243,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: true
                     ));
 
             entities.Add(new TownEntity(
@@ -260,7 +259,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: true
                     ));
 
             entities.Add(new TownEntity(
@@ -275,7 +275,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: true
                     ));
 
             entities.Add(new TownEntity(
@@ -290,7 +291,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: true
                     ));
 
             entities.Add(new TownEntity(
@@ -305,10 +307,11 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 0,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: false
                     ));
 
-            entities.Add(new TownEntity(
+            TownEntity britain_weapon_merchant = new TownEntity(
                     townMap: Maps.U4MapBritain,
                     entityName: "Brittania Weapons",
                     entityType: "NPC",
@@ -320,8 +323,13 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1001,
-                    preventEnteringTile: true
-                    ));
+                    preventEnteringTile: true,
+                    isMerchant: true
+                );
+
+            britain_weapon_merchant.MerchantWeapons = FantasyWeaponFactory.GetFantasyWeaponsByTownMerchant(Maps.U4MapBritain, britain_weapon_merchant.EntityID);
+
+            entities.Add(britain_weapon_merchant);
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
@@ -335,7 +343,8 @@ namespace Ultima45Monogame
                     movement: 0,
                     schedule: 0,
                     dialogindex: 1002,
-                    preventEnteringTile: true
+                    preventEnteringTile: true,
+                    isMerchant: true
                     ));
 
             entities.Add(new TownEntity(
@@ -352,7 +361,8 @@ namespace Ultima45Monogame
                     dialogindex: 0,
                     preventEnteringTile: false,
                     openStatus: OpenStatus.Closed,
-                    lockedStatus: LockedStatus.Unlocked
+                    lockedStatus: LockedStatus.Unlocked,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -369,7 +379,8 @@ namespace Ultima45Monogame
                     dialogindex: 0,
                     preventEnteringTile: false,
                     openStatus: OpenStatus.Closed,
-                    lockedStatus: LockedStatus.Unlocked
+                    lockedStatus: LockedStatus.Unlocked,
+                    isMerchant: false
                     ));
 
             entities.Add(new TownEntity(
@@ -386,7 +397,8 @@ namespace Ultima45Monogame
                     dialogindex: 0,
                     preventEnteringTile: false,
                     openStatus: OpenStatus.None,
-                    lockedStatus: LockedStatus.None
+                    lockedStatus: LockedStatus.None,
+                    isMerchant: false
                     ));
 
             #endregion
