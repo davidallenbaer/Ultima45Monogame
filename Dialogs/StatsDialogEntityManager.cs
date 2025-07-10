@@ -46,7 +46,7 @@ namespace Ultima45Monogame.Dialogs
                 node.Options.Add(new DialogOption
                 {
                     Text = "NEXT",
-                    NextNodeId = i < enabledPlayers.Count - 1 ? $"player_{i + 1}" : "weapon_0"
+                    NextNodeId = i < enabledPlayers.Count - 1 ? $"player_{i + 1}" : "weaponinv"
                 });
 
                 node.Options.Add(new DialogOption
@@ -65,67 +65,61 @@ namespace Ultima45Monogame.Dialogs
             }
 
             // === WEAPON INVENTORY NODES ===
-            for (int i = 0; i < weaponinventory.Count; i++)
+            dialogTree.Nodes.Add(new DialogNode
             {
-                dialogTree.Nodes.Add(new DialogNode
+                Id = "weaponinv",
+                Speaker = "==Weapon Inventory==",
+                Text = GetWeaponInventoryStatsText(gameSaveVariables.WeaponInventory),
+                Options = new List<DialogOption>
                 {
-                    Id = $"weapon_{i}",
-                    Speaker = "==Weapon Inventory==",
-                    Text = GetWeaponInventoryStatsText(weaponinventory, weaponinventory[i]),
-                    Options = new List<DialogOption>
+                    new DialogOption
                     {
-                        new DialogOption
-                        {
-                            Text = "NEXT",
-                            NextNodeId = i < weaponinventory.Count - 1 ? $"weapon_{i + 1}" : "armor_0"
-                        },
-                        new DialogOption
-                        {
-                            Text = "PREVIOUS",
-                            NextNodeId = i > 0 ? $"weapon_{i - 1}" : $"player_{enabledPlayers.Count - 1}"
-                        },
-                        new DialogOption
-                        {
-                            Text = "EXIT",
-                            NextNodeId = "end"
-                        }
+                        Text = "NEXT",
+                        NextNodeId = "armorinv"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = $"player_{enabledPlayers.Count - 1}"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
                     }
-                });
-            }
+                }
+            });
 
             // === ARMOR INVENTORY NODES ===
-            for (int i = 0; i < armorinventory.Count; i++)
+            dialogTree.Nodes.Add(new DialogNode
             {
-                dialogTree.Nodes.Add(new DialogNode
+                Id = "armorinv",
+                Speaker = "==Armor Inventory==",
+                Text = GetArmorInventoryStatsText(gameSaveVariables.ArmorInventory),
+                Options = new List<DialogOption>
                 {
-                    Id = $"armor_{i}",
-                    Speaker = "==Armor Inventory==",
-                    Text = GetArmorInventoryStatsText(armorinventory, armorinventory[i]),
-                    Options = new List<DialogOption>
+                    new DialogOption
                     {
-                        new DialogOption
-                        {
-                            Text = "NEXT",
-                            NextNodeId = i < armorinventory.Count - 1 ? $"armor_{i + 1}" : "equipment"
-                        },
-                        new DialogOption
-                        {
-                            Text = "PREVIOUS",
-                            NextNodeId = i > 0 ? $"armor_{i - 1}" : $"weapon_{weaponinventory.Count - 1}"
-                        },
-                        new DialogOption
-                        {
-                            Text = "EXIT",
-                            NextNodeId = "end"
-                        }
+                        Text = "NEXT",
+                        NextNodeId = "equipmentinv"
+                    },
+                    new DialogOption
+                    {
+                        Text = "PREVIOUS",
+                        NextNodeId = "weaponinv"
+                    },
+                    new DialogOption
+                    {
+                        Text = "EXIT",
+                        NextNodeId = "end"
                     }
-                });
-            }
+                }
+            });
 
             // === EQUIPMENT NODE ===
             dialogTree.Nodes.Add(new DialogNode
             {
-                Id = "equipment",
+                Id = "equipmentinv",
                 Speaker = "==Equipment==",
                 Text = GetEquipmentText(gameSaveVariables),
                 Options = new List<DialogOption>
@@ -138,7 +132,7 @@ namespace Ultima45Monogame.Dialogs
                     new DialogOption
                     {
                         Text = "PREVIOUS",
-                        NextNodeId = $"armor_{armorinventory.Count - 1}"
+                        NextNodeId = "armorinv"
                     },
                     new DialogOption
                     {
@@ -164,7 +158,7 @@ namespace Ultima45Monogame.Dialogs
                     new DialogOption
                     {
                         Text = "PREVIOUS",
-                        NextNodeId = $"equipment"
+                        NextNodeId = "equipmentinv"
                     },
                     new DialogOption
                     {
@@ -190,7 +184,7 @@ namespace Ultima45Monogame.Dialogs
                     new DialogOption
                     {
                         Text = "PREVIOUS",
-                        NextNodeId = $"specialitems"
+                        NextNodeId = "specialitems"
                     },
                     new DialogOption
                     {
@@ -216,7 +210,7 @@ namespace Ultima45Monogame.Dialogs
                     new DialogOption
                     {
                         Text = "PREVIOUS",
-                        NextNodeId = $"runes"
+                        NextNodeId = "runes"
                     },
                     new DialogOption
                     {
@@ -242,7 +236,7 @@ namespace Ultima45Monogame.Dialogs
                     new DialogOption
                     {
                         Text = "PREVIOUS",
-                        NextNodeId = $"stones"
+                        NextNodeId = "stones"
                     },
                     new DialogOption
                     {
@@ -270,27 +264,44 @@ namespace Ultima45Monogame.Dialogs
             return _statsDialogTree;
         }
 
-        private string GetArmorInventoryStatsText(List<FantasyArmor> armorinventory, FantasyArmor armor)
+        private string GetArmorInventoryStatsText(List<FantasyArmor> armorinventory)
         {
-            if (armor.Name == "None")
+            if (armorinventory == null || armorinventory.Count == 0)
             {
                 return "None\n";
             }
 
-            int count = armorinventory.Count(a => a.Name == armor.Name);
+            if (armorinventory != null && armorinventory.Count == 1 && armorinventory[0].Name == "None")
+            {
+                return "None\n";
+            }
 
-            return $"{count} {armor.Name}\n";
+            var grouped = armorinventory
+                .GroupBy(w => w.Name)
+                .Select(g => $"{g.Count()} {g.Key}")
+                .ToList();
+
+            return string.Join("\n", grouped);
         }
 
-        private string GetWeaponInventoryStatsText(List<FantasyWeapon> weaponinventory, FantasyWeapon weapon)
+        private string GetWeaponInventoryStatsText(List<FantasyWeapon> weaponinventory)
         {
-            if (weapon.Name == "None")
+            if (weaponinventory == null || weaponinventory.Count == 0)
             {
                 return "None\n";
             }
 
-            int count = weaponinventory.Count(a => a.Name == weapon.Name);
-            return $"{count} {weapon.Name}\n";
+            if (weaponinventory != null && weaponinventory.Count == 1 && weaponinventory[0].Name == "None")
+            {
+                return "None\n";
+            }
+
+            var grouped = weaponinventory
+                .GroupBy(w => w.Name)
+                .Select(g => $"{g.Count()} {g.Key}")
+                .ToList();
+
+            return string.Join("\n", grouped);
         }
 
         private string GetPlayerStatsText(FantasyPlayer player)
