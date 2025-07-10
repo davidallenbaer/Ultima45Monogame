@@ -6905,6 +6905,51 @@ public class Game1 : Game
                 else if (oldKeyboardState.IsKeyUp(Keys.Enter) && newKeyboardState.IsKeyDown(Keys.Enter))
                 {
                     var selectedOption = _activeDialogNode.Options[_selectedDialogOptionIndex];
+
+                    if (_currentDialogEntity != null)
+                    {
+                        if (_currentDialogEntity.IsMerchant)
+                        {
+                            if (_currentDialogEntity.MerchantType == TownEntityMerchantType.WeaponMerchant)
+                            {
+                                // Purchase from weapon merchant
+                                if (selectedOption.NextNodeId.StartsWith("buy_"))
+                                {
+                                    string[] options = selectedOption.NextNodeId.Split('_');
+                                    int weaponid = System.Convert.ToInt32(options[1].ToString());
+                                    FantasyWeapon purchasedWeapon = FantasyWeaponFactory.GetFantasyWeapon(weaponid);
+                                    gameSaveVariables.WeaponInventory.Add(purchasedWeapon);
+                                    gameSaveVariables.GP = gameSaveVariables.GP - purchasedWeapon.Cost;
+                                }
+
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.ArmorMerchant)
+                            {
+                                // Purchase from armor merchant
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.EquipmentMerchant)
+                            {
+                                // Purchase from equipment merchant
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.HealingMerchant)
+                            {
+                                // Purchase from healing merchant
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.FoodMerchant)
+                            {
+                                // Purchase from food merchant
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.ReagentsMerchant)
+                            {
+                                // Purchase from reagents merchant
+                            }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.GoldDonationMerchant)
+                            {
+                                // Purchase from weapon merchant
+                            }
+                        }
+                    }
+
                     var nextNode = _activeDialogTree.GetNodeById(selectedOption.NextNodeId);
                     if (nextNode != null)
                     {
