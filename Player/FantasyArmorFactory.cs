@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Ultima45Monogame;
+using static Ultima45Monogame.RPGEnums;
 
 namespace Ultima45Monogame
 {
@@ -46,5 +47,33 @@ namespace Ultima45Monogame
             return null;
         }
 
+        internal static FantasyArmor GetFantasyArmor(string armorName)
+        {
+            foreach (var armor in GetAllFantasyArmor())
+            {
+                if (armor.Name == armorName)
+                    return armor;
+            }
+            return null;
+        }
+
+        internal static List<FantasyArmor> GetFantasyArmorByTownMerchant(Maps map, int townEntityIndex)
+        {
+            List<FantasyArmor> merchantArmor = new List<FantasyArmor>();
+
+            if (map == Maps.U4MapNone)
+            {
+                return null;
+            }
+            else if (map == Maps.U4MapBritain && townEntityIndex == 1002)
+            {
+                //Britain Merchant Armor
+                merchantArmor.Add(GetFantasyArmor("Cloth"));
+                merchantArmor.Add(GetFantasyArmor("Leather Armor"));
+                merchantArmor.Add(GetFantasyArmor("Chain Mail"));
+            }
+
+            return merchantArmor;
+        }
     }
 }

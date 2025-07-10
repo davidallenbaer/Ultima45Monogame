@@ -70,21 +70,26 @@ Version 4.0.0 - COMPLETE
 	Pressing Z to show player stats, weapons, armor, equipment, items, special items, runes, stones, and reagents.
 	Cast Spell Actions (Non-Combat) for each spell - All Non-Combat Spells implemented.
 	Cast Spell sound effects
---TODO--
-		
-	Populate Britain with NPCs Town Entity's.
+	Implement Weapon Merchant dialogs
+	Implement Armor Merchant dialogs
 
-	Populate towns with shops.
+--TODO--
 	
-Version 5.0.0 - Towns\Shops\Dialog
+	Implement Equipment Merchant dialogs
+    Implement Reagents Merchant
+    Implement Food Merchant
+    Implement Healing Merchant
+    Implement Gold Donation Merchant
+
+	Populate Britain with NPCs Town Entity's.
 
 	Random # of monsters on the combat map needs to show less monsters more often - maybe based on the players level.
 	
-Version 6.0.0 - Menu System
+Version 5.0.0 - Menu System
 	Implement a journal system.
 	Implement a quest system.
 
-Version 7.0.0 - Implement dungeons
+Version 6.0.0 - Implement dungeons
 	Dungeons should be a separate map that you can enter from the overworld map.
 	A dungeon level will be similar to a tile based town map (Not first person view like in the original game).
 	Saving in dungeons should be possible.

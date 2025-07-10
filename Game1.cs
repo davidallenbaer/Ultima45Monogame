@@ -69,6 +69,7 @@ public class Game1 : Game
 
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private PurchaseWeaponDialogEntityManager purchaseWeapondialogEntityManager = new PurchaseWeaponDialogEntityManager();
+    private PurchaseArmorDialogEntityManager purchaseArmordialogEntityManager = new PurchaseArmorDialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
@@ -6926,6 +6927,14 @@ public class Game1 : Game
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.ArmorMerchant)
                             {
                                 // Purchase from armor merchant
+                                if (selectedOption.NextNodeId.StartsWith("buy_"))
+                                {
+                                    string[] options = selectedOption.NextNodeId.Split('_');
+                                    int armorid = System.Convert.ToInt32(options[1].ToString());
+                                    FantasyArmor purchasedArmor = FantasyArmorFactory.GetFantasyArmor(armorid);
+                                    gameSaveVariables.ArmorInventory.Add(purchasedArmor);
+                                    gameSaveVariables.GP = gameSaveVariables.GP - purchasedArmor.Cost;
+                                }
                             }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.EquipmentMerchant)
                             {
@@ -7043,6 +7052,16 @@ public class Game1 : Game
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.ArmorMerchant)
             {
+                purchaseArmordialogEntityManager.BuildPurchaseArmorJSON(entity.MerchantArmor);
+
+                _activeDialogTree = purchaseArmordialogEntityManager.GetPurchaseArmorDialogTree();
+
+                if (_activeDialogTree != null)
+                {
+                    _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+                    _selectedDialogOptionIndex = 0;
+                    _currentState = GameStates.TalkingDialog;
+                }
 
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.EquipmentMerchant)

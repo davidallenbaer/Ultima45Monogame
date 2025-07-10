@@ -332,7 +332,7 @@ namespace Ultima45Monogame
 
             entities.Add(britain_weapon_merchant);
 
-            entities.Add(new TownEntity(
+            TownEntity britain_armor_merchant = new TownEntity(
                     townMap: Maps.U4MapBritain,
                     entityName: "Brittania Armor",
                     entityType: "NPC",
@@ -345,8 +345,13 @@ namespace Ultima45Monogame
                     schedule: 0,
                     dialogindex: 1002,
                     preventEnteringTile: true,
-                    isMerchant: true
-                    ));
+                    isMerchant: true,
+                    merchantType: TownEntityMerchantType.ArmorMerchant
+                    );
+
+            britain_armor_merchant.MerchantArmor = FantasyArmorFactory.GetFantasyArmorByTownMerchant(Maps.U4MapBritain, britain_armor_merchant.EntityID);
+
+            entities.Add(britain_armor_merchant);
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
