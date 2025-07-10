@@ -70,6 +70,7 @@ public class Game1 : Game
     private DialogEntityManager dialogEntityManager = new DialogEntityManager();
     private PurchaseWeaponDialogEntityManager purchaseWeapondialogEntityManager = new PurchaseWeaponDialogEntityManager();
     private PurchaseArmorDialogEntityManager purchaseArmordialogEntityManager = new PurchaseArmorDialogEntityManager();
+    private PurchaseHealingDialogEntityManager purchaseHealingdialogEntityManager = new PurchaseHealingDialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
@@ -6943,6 +6944,27 @@ public class Game1 : Game
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.HealingMerchant)
                             {
                                 // Purchase from healing merchant
+                                if (selectedOption.NextNodeId.StartsWith("buy_"))
+                                {
+                                    string[] options = selectedOption.NextNodeId.Split('_');
+
+                                    string playerName = options[1].ToString();
+                                    FantasyPlayer player = players.Where(p => p.Name == playerName).FirstOrDefault();
+                                    if (player != null)
+                                    {
+                                        if (player != null)
+                                        {
+                                            if (gameSaveVariables.GP >= 25)
+                                            {
+                                                player.Status = RPGEnums.PlayerStatus.Good;
+                                                player.HP = player.MaxHP;
+                                                gameSaveVariables.GP -= 25; // Healing cost
+                                            }
+                                        }
+
+                                    }
+                                }
+
                             }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.FoodMerchant)
                             {
@@ -7062,7 +7084,6 @@ public class Game1 : Game
                     _selectedDialogOptionIndex = 0;
                     _currentState = GameStates.TalkingDialog;
                 }
-
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.EquipmentMerchant)
             {
@@ -7070,6 +7091,16 @@ public class Game1 : Game
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.HealingMerchant)
             {
+                purchaseHealingdialogEntityManager.BuildPurchaseHealingJSON(players);
+
+                _activeDialogTree = purchaseHealingdialogEntityManager.GetPurchaseHealingDialogTree();
+
+                if (_activeDialogTree != null)
+                {
+                    _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+                    _selectedDialogOptionIndex = 0;
+                    _currentState = GameStates.TalkingDialog;
+                }
 
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.FoodMerchant)

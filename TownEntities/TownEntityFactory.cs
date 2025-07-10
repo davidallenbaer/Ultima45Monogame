@@ -281,18 +281,19 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Brittania Healing",
+                    entityName: "Brittania Healer",
                     entityType: "NPC",
-                    entityId: 18,
+                    entityId: 1003,
                     startY: 30,
                     startX: 4,
                     tileValue: (int)TileType.Citizen1,
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 0,
+                    dialogindex: 1003,
                     preventEnteringTile: true,
-                    isMerchant: true
+                    isMerchant: true,
+                    merchantType: TownEntityMerchantType.HealingMerchant
                     ));
 
             entities.Add(new TownEntity(
