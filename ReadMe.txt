@@ -72,13 +72,14 @@ Version 4.0.0 - COMPLETE
 	Cast Spell sound effects
 	Implement Weapon Merchant dialogs
 	Implement Armor Merchant dialogs
+    Implement Healing Merchant
+    Implement Reagents Merchant
 
 --TODO--
 	
-	Implement Equipment Merchant dialogs
-    Implement Reagents Merchant
+	Implement Equipment Merchant dialogs (Torches, Gems, Keys, Sextants)
+
     Implement Food Merchant
-    Implement Healing Merchant
     Implement Gold Donation Merchant
 
 	Populate Britain with NPCs Town Entity's.

@@ -497,6 +497,7 @@ public class Game1 : Game
         //Add Extra Weapons and Armor to Inventory so they show up in the stats dialog
         //gameSaveVariables.WeaponInventory.Add(FantasyWeaponFactory.GetFantasyWeapon(2));
         //gameSaveVariables.ArmorInventory.Add(FantasyArmorFactory.GetFantasyArmor(2));
+        gameSaveVariables.GP = 100; // Set initial gold to 100
     }
 
     #region Load Content
@@ -6956,9 +6957,12 @@ public class Game1 : Game
                                         {
                                             if (gameSaveVariables.GP >= 25)
                                             {
-                                                player.Status = RPGEnums.PlayerStatus.Good;
-                                                player.HP = player.MaxHP;
-                                                gameSaveVariables.GP -= 25; // Healing cost
+                                                if (player.Status != RPGEnums.PlayerStatus.Good || player.HP != player.MaxHP)
+                                                {
+                                                    player.Status = RPGEnums.PlayerStatus.Good;
+                                                    player.HP = player.MaxHP;
+                                                    gameSaveVariables.GP -= 25; // Healing cost
+                                                }
                                             }
                                         }
 
@@ -6976,7 +6980,7 @@ public class Game1 : Game
                             }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.GoldDonationMerchant)
                             {
-                                // Purchase from weapon merchant
+                                // Purchase from donation merchant
                             }
                         }
                     }
