@@ -233,7 +233,7 @@ namespace Ultima45Monogame
 
             entities.Add(new TownEntity(
                     townMap: Maps.U4MapBritain,
-                    entityName: "Brittania Manor Dude",
+                    entityName: "Brittania Manor",
                     entityType: "NPC",
                     entityId: 15,
                     startY: 13,
@@ -242,9 +242,10 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 0,
+                    dialogindex: 1005,
                     preventEnteringTile: true,
-                    isMerchant: true
+                    isMerchant: true,
+                    merchantType: TownEntityMerchantType.InnMerchant
                     ));
 
             entities.Add(new TownEntity(

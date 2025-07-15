@@ -20,6 +20,7 @@ namespace Ultima45Monogame
             FoodMerchant = 5,
             HealingMerchant = 6,
             GoldDonationMerchant = 7,
+            InnMerchant = 8,
         }
 
         public enum CastSpellMode

@@ -72,6 +72,7 @@ public class Game1 : Game
     private PurchaseArmorDialogEntityManager purchaseArmordialogEntityManager = new PurchaseArmorDialogEntityManager();
     private PurchaseHealingDialogEntityManager purchaseHealingdialogEntityManager = new PurchaseHealingDialogEntityManager();
     private PurchaseFoodDialogEntityManager purchaseFoodDialogEntityManager = new PurchaseFoodDialogEntityManager();
+    private PurchaseInnDialogEntityManager purchaseInnDialogEntityManager = new PurchaseInnDialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
@@ -6991,6 +6992,34 @@ public class Game1 : Game
                                     }
                                 }
                             }
+                            else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.InnMerchant)
+                            {
+                                // Purchase from food merchant
+                                if (selectedOption.NextNodeId.StartsWith("buy_"))
+                                {
+                                    string[] options = selectedOption.NextNodeId.Split('_');
+
+                                    string optionText = options[1].ToString();
+                                    if (optionText != null)
+                                    {
+                                        if (gameSaveVariables.GP >= 25)
+                                        {
+                                            if (optionText.ToUpper() == "INN")
+                                            {
+                                                if (currentMap == Maps.U4MapBritain)
+                                                {
+                                                    //Move the PC to the Inn room location in Britain
+                                                    pcTownMapLocationY = 7;
+                                                    pcTownMapLocationX = 30;
+                                                }
+
+                                                gameSaveVariables.GP -= 25; // Deduct cost
+                                                ShowBottomMessage("You purchased a room for the night!", 2);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.ReagentsMerchant)
                             {
                                 // Purchase from reagents merchant
@@ -7128,6 +7157,18 @@ public class Game1 : Game
             {
                 purchaseFoodDialogEntityManager.BuildPurchaseFoodJSON(gameSaveVariables);
                 _activeDialogTree = purchaseFoodDialogEntityManager.GetPurchaseFoodDialogTree();
+
+                if (_activeDialogTree != null)
+                {
+                    _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+                    _selectedDialogOptionIndex = 0;
+                    _currentState = GameStates.TalkingDialog;
+                }
+            }
+            else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.InnMerchant)
+            {
+                purchaseInnDialogEntityManager.BuildPurchaseInnJSON(gameSaveVariables);
+                _activeDialogTree = purchaseInnDialogEntityManager.GetPurchaseInnDialogTree();
 
                 if (_activeDialogTree != null)
                 {
