@@ -37,6 +37,7 @@ namespace Ultima45Monogame
         public int Honor { get; set; } = 0;
         public int Spirituality { get; set; } = 0;
         public int Humility { get; set; } = 0;
+        public int TotalGPDonatedAmount { get; set; } = 0;
         public int Torches { get; set; } = 5;
         public int Gems { get; set; } = 5;
         public int Keys { get; set; } = 5;

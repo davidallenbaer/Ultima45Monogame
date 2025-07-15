@@ -162,9 +162,10 @@ namespace Ultima45Monogame
                     visible: true,
                     movement: 0,
                     schedule: 0,
-                    dialogindex: 0,
+                    dialogindex: 1006,
                     preventEnteringTile: true,
-                    isMerchant: false
+                    isMerchant: true,
+                    merchantType: TownEntityMerchantType.GoldDonationMerchant
                     ));
 
             entities.Add(new TownEntity(

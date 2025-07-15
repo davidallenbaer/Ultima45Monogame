@@ -73,14 +73,15 @@ Version 4.0.0 - COMPLETE
 	Implement Weapon Merchant dialogs
 	Implement Armor Merchant dialogs
     Implement Healing Merchant
-    Implement Reagents Merchant
+	Implement Food Merchant
+	Implement Inn Merchant
+    Implement Gold Donation Merchant
 
 --TODO--
 	
 	Implement Equipment Merchant dialogs (Torches, Gems, Keys, Sextants)
-
-    Implement Food Merchant
-    Implement Gold Donation Merchant
+	
+	Implement Reagents Merchant
 
 	Populate Britain with NPCs Town Entity's.
 
