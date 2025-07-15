@@ -76,12 +76,10 @@ Version 4.0.0 - COMPLETE
 	Implement Food Merchant
 	Implement Inn Merchant
     Implement Gold Donation Merchant
+	Implement Equipment Merchant dialogs (Torches, Gems, Keys, Sextants)
+	Implement Reagents Merchant
 
 --TODO--
-	
-	Implement Equipment Merchant dialogs (Torches, Gems, Keys, Sextants)
-	
-	Implement Reagents Merchant
 
 	Populate Britain with NPCs Town Entity's.
 

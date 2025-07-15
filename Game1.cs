@@ -6967,6 +6967,10 @@ public class Game1 : Game
                                                     gameSaveVariables.GP -= 25; // Healing cost
                                                 }
                                             }
+                                            else
+                                            {
+                                                ShowBottomMessage("You do not have enough gold!", 2);
+                                            }
                                         }
                                     }
                                 }
@@ -6989,6 +6993,10 @@ public class Game1 : Game
                                                 gameSaveVariables.GP -= 25; // Deduct cost
                                                 ShowBottomMessage("You purchased food!", 2);
                                             }
+                                        }
+                                        else
+                                        {
+                                            ShowBottomMessage("You do not have enough gold!", 2);
                                         }
                                     }
                                 }
@@ -7017,6 +7025,10 @@ public class Game1 : Game
                                                 gameSaveVariables.GP -= 25; // Deduct cost
                                                 ShowBottomMessage("You purchased a room for the night!", 2);
                                             }
+                                        }
+                                        else
+                                        {
+                                            ShowBottomMessage("You do not have enough gold!", 2);
                                         }
                                     }
                                 }
