@@ -71,6 +71,7 @@ public class Game1 : Game
     private PurchaseWeaponDialogEntityManager purchaseWeapondialogEntityManager = new PurchaseWeaponDialogEntityManager();
     private PurchaseArmorDialogEntityManager purchaseArmordialogEntityManager = new PurchaseArmorDialogEntityManager();
     private PurchaseHealingDialogEntityManager purchaseHealingdialogEntityManager = new PurchaseHealingDialogEntityManager();
+    private PurchaseFoodDialogEntityManager purchaseFoodDialogEntityManager = new PurchaseFoodDialogEntityManager();
     private ReadyWeaponDialogEntityManager readyweapondialogEntityManager = new ReadyWeaponDialogEntityManager();
     private StatsDialogEntityManager statsdialogEntityManager = new StatsDialogEntityManager();
     private UseItemDialogEntityManager useitemdialogEntityManager = new UseItemDialogEntityManager();
@@ -6965,14 +6966,30 @@ public class Game1 : Game
                                                 }
                                             }
                                         }
-
                                     }
                                 }
-
                             }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.FoodMerchant)
                             {
                                 // Purchase from food merchant
+                                if (selectedOption.NextNodeId.StartsWith("buy_"))
+                                {
+                                    string[] options = selectedOption.NextNodeId.Split('_');
+
+                                    string optionText = options[1].ToString();
+                                    if (optionText != null)
+                                    {
+                                        if (gameSaveVariables.GP >= 25)
+                                        {
+                                            if (optionText.ToUpper() == "FOOD")
+                                            {
+                                                gameSaveVariables.Food += 100; // Increment food count
+                                                gameSaveVariables.GP -= 25; // Deduct cost
+                                                ShowBottomMessage("You purchased food!", 2);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             else if (_currentDialogEntity.MerchantType == TownEntityMerchantType.ReagentsMerchant)
                             {
@@ -7109,7 +7126,15 @@ public class Game1 : Game
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.FoodMerchant)
             {
+                purchaseFoodDialogEntityManager.BuildPurchaseFoodJSON(gameSaveVariables);
+                _activeDialogTree = purchaseFoodDialogEntityManager.GetPurchaseFoodDialogTree();
 
+                if (_activeDialogTree != null)
+                {
+                    _activeDialogNode = _activeDialogTree.GetNodeById(_activeDialogTree.StartNodeId);
+                    _selectedDialogOptionIndex = 0;
+                    _currentState = GameStates.TalkingDialog;
+                }
             }
             else if (entity.IsMerchant && entity.MerchantType == TownEntityMerchantType.ReagentsMerchant)
             {
